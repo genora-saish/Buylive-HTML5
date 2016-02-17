@@ -1,0 +1,3006 @@
+<!DOCTYPE>
+<html>
+<head>
+<title>Buy Live</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script src="cordova.js" type="text/javascript"></script>
+<script src="js/app.js" type="text/javascript"></script>
+
+<script src="js/jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="js/jquery.mobile-1.3.2.min.js" type="text/javascript"></script>
+<script src="js/function.js" type="text/javascript"></script>
+<script src="js/dbsql.js" type="text/javascript"></script>
+ <script type="text/javascript" charset="utf-8" src="js/order_historyPlugin.js"></script>
+ 
+
+<script type="text/javascript">
+
+	
+	
+	document.addEventListener("online", function()
+			{
+		
+			});
+
+	document.addEventListener("offline", function()
+			{
+		
+		custom_alert('Please turn on GPS or wifi to browse through the App','HomePage');
+		load_data();
+			});
+            
+   
+document.addEventListener("deviceready", onDeviceReady, false);
+function onDeviceReady()
+{
+        console.log("Saish...onDeviceready");
+initDatabase();
+change_quantity();
+
+var range = localStorage.getItem('range');
+
+if(range==null)
+	{
+	localStorage.setItem('range' , '50');
+	}
+	else
+	{
+	localStorage.setItem('range' , range);
+	
+	}
+	
+    window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+   window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, gotFS, fail);
+	
+}
+
+function fail() 
+{
+    
+}
+
+var path;
+var path_arr;
+
+var filePath = "";
+var appDir = "";
+function gotFS(fileSystem) {
+
+    window.rootFS = fileSystem.root;
+
+    path  = fileSystem.root.fullPath;
+    
+    console.log("Path:"+path);
+    
+    //folder_name = "OnlineNotes"; 
+    var directoryEntry = fileSystem.root; // to get root path to directory 
+    directoryEntry.getDirectory(app_folder, { create: true, exclusive: false }, onRootDirectorySuccess, onRootDirectoryFail); 
+    // creating folder in sdcard 
+    console.log("creating new folder .... : "+app_folder);
+    filePath = rootFS.toURL()+"/"+app_folder;
+    if( device.platform == "Android")
+
+    {
+
+		path_arr  = path.split('///');
+
+	    path_arr ='/'+path_arr[1];
+
+
+
+    }
+
+    if( device.platform == "iOS")
+
+    {
+
+        path_arr = path.split('/');
+
+        var path_len = path_arr.length;
+
+        
+
+        path_arr[path_len - 1] = 'Library/Caches';
+
+        path_arr = path_arr.join('/');
+        console.log("path_arr:"+path_arr);
+
+    }
+
+}
+
+
+function onRootDirectorySuccess(parent) { 
+    //create sub directory
+    console.log(parent);
+    appDir = parent;
+    if(localStorage.getItem('FolderCreate')=="undefined" || localStorage.getItem('FolderCreate')==null){
+        appDir.getDirectory('Store', { create: true, exclusive: true }, onStoreDirectorySuccess, onStoreDirectoryFail);
+    }
+    else{
+        console.log("folders already created");
+    }
+    
+}
+
+function onRootDirectoryFail(error) { 
+    //directry exists
+    console.log("into onCreateDirectoryFail: " + error.code);
+    
+    
+}
+function onStoreDirectorySuccess(parent) { 
+    console.log("into onStoreDirectorySuccess"); 
+    appDir = parent; 
+    
+}
+function onStoreDirectoryFail(error) { 
+    //directry exists, remove it
+    console.log("into onStoreDirectoryFail " + error.code);
+    appDir.removeRecursively(successStoreDelete, errorStoreDelete);
+    
+}
+
+function successStoreDelete(parent) { 
+    console.log("into successStoreDelete"); 
+    console.log(parent);
+    //folder_name = "OnlineNotes"; 
+    var directoryEntry = window.rootFS; // to get root path to directory 
+    directoryEntry.getDirectory(app_folder, { create: true, exclusive: false }, onRootDirectorySuccess, onRootDirectoryFail); 
+}
+function errorStoreDelete(error) { 
+    //directry exists
+    console.log("into errorStoreDelete " + error.code);
+    
+}
+
+
+function load_s3image()
+{
+	var conn = checkConnection();
+    
+    if(conn='true')
+    
+    {
+        
+        
+        
+        $.ajax({
+               
+               url: 'http://buyzenga.com:7003/APL/rest/CredentialRESTProxy/retrieveS3Credential',
+               
+               type: 'GET',
+               
+               datatype : 'application/xml',
+               
+               
+               
+               contentType: 'application/xml',
+               
+               
+               
+               success: function (result) {
+               
+               var awsAccessKey =  $(result).find("awsAccessKey").text();
+               var awsSecretKey =  $(result).find("awsSecretKey").text();
+               var sessionToken =  $(result).find("sessionToken").text();
+               
+
+               },
+               
+               error: function (jqXHR, tranStatus, errorThrown) {
+               
+               
+               custom_alert('There was an error connecting to the service.Please try again','HomePage');
+               
+               }
+               
+               });
+               
+               
+               
+    }
+    
+    else
+    
+    {
+       
+        custom_alert('You are currently offline','HomePage');
+        
+        
+    }
+}
+
+var geocoder;
+geocoder = new google.maps.Geocoder();
+
+
+var watchId = null;
+
+ 
+$(document).ready(function()
+		{	
+		console.log("saish...1");
+		document.getElementById('catergory').checked = true;
+		document.getElementById('category1').checked = false;
+		$('#radioCat .ui-icon').removeClass('ui-icon-radio-off');
+		$('#radioName .ui-icon').removeClass('ui-icon-radio-on');
+		$('#radioCat .ui-icon').addClass('ui-icon-radio-on');
+		$('#radioName .ui-icon').addClass('ui-icon-radio-off');
+		document.getElementById('lblCat').style.border="1px solid #ff9000";
+	    document.getElementById('lblCat1').style.border="1px solid #e5e5e5";
+	
+	 var eml = localStorage.getItem('email');
+		
+	 if(eml==null)
+		{
+                    console.log("saish...2");
+		  document.getElementById('display_id').innerHTML = '';
+	      $("#display_id").trigger("create");
+		}
+	 
+		if (navigator.geolocation) {
+                    console.log("saish...4");
+			document.addEventListener("deviceready", function(){
+				var options = {maximumAge: 0, timeout: 10000, enableHighAccuracy:true};
+				 watchId = navigator.geolocation.getCurrentPosition(showPosition, showError,options);
+			}, false);
+			  
+		} else {
+		  console.log("saish...5");
+		    custom_alert('Geolocation is not supported in your browser','HomePage');
+		}
+                  
+                  $(window).bind('resize', function () {
+                                 
+                                 console.log("saish...6");
+                                 var divWidth = $('#outer').width();
+                                 var useDivWidth= divWidth-80;
+                                 var radioButtonWidth=0.25*useDivWidth;
+                                 var searchBar=0.5*useDivWidth;
+                                 
+                                 
+                                 
+                                 
+                                 $('#radioCat').css({'width':radioButtonWidth});
+                                 $('#radioName').css({'width':radioButtonWidth});
+                                 $('#searchBar').css({'width':searchBar});
+                                 
+                                 
+                                 }).trigger('resize');
+		});
+		
+function showPosition(position) {
+    console.log("saish...7");
+	var location=localStorage.getItem('postal_location');
+
+	var location_address_1=localStorage.getItem('location_address');
+	
+	  if( !location ) 
+	  {
+	console.log("saish...8");		
+	  var latlng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+	 
+	  localStorage.setItem('latitude', position.coords.latitude);
+	  localStorage.setItem('longitude', position.coords.longitude);
+	  geocoder.geocode({'latLng': latlng}, function(results, status) {
+	    if (status == google.maps.GeocoderStatus.OK) {
+                console.log("saish...9");
+		if (results[1]) {
+                    console.log("saish...10");
+				console.log(results[1]);
+		
+				localStorage.setItem('address', results[1].formatted_address);
+				
+			
+	    		for(var i=0; i < results[0].address_components.length; i++)
+	    		{
+	    		    var component = results[0].address_components[i];
+	    		    if(component.types[0] == "postal_code")
+	    		    {
+					   
+	    		    	localStorage.setItem('postal', component.long_name);
+	    		    	
+	    		        
+	    		    }
+	    		}
+	    		calculate_miles(position.coords.latitude,position.coords.longitude);
+	      } else {
+	        console.log("saish...11");
+	        custom_alert('Your location could not be captured','HomePage');
+	      }
+	    } else {
+	    console.log("saish...12");
+	      custom_alert('Your location could not be captured','HomePage');
+	    }
+	  });
+	  }
+	
+	  else
+	  {
+            console.log("saish...13"); 
+	    localStorage.setItem('postal', location);
+		var latitude=localStorage.getItem('latitude');
+		var longitude=localStorage.getItem('longitude');
+		localStorage.setItem('address', location_address_1);
+		calculate_miles(latitude,longitude);
+		
+	  }
+	}
+
+function showError(error) {
+    console.log("saish...14");
+  switch(error.code) {
+      case error.PERMISSION_DENIED:
+      
+          custom_alert('Your location could not be captured','HomePage');
+          break;
+      case error.POSITION_UNAVAILABLE:
+      
+          custom_alert('Your location could not be captured','HomePage');
+          break;
+      case error.TIMEOUT:
+      
+          custom_alert('Your location could not be captured','HomePage');
+          break;
+      case error.UNKNOWN_ERROR:
+      
+          custom_alert('Your location could not be captured','HomePage');
+          break;
+  }
+}
+
+
+function calculate_miles(Lat,Lon)
+{
+console.log("saish...15");
+var map;
+var lat_or  =localStorage.getItem('lat_or');
+var lon_or  =localStorage.getItem('lon_or');
+
+var bounds = new google.maps.LatLngBounds();
+var markersArray = [];
+
+
+var origin1 = new google.maps.LatLng(Lat, Lon);
+
+var destinationA = new google.maps.LatLng(lat_or, lon_or);
+
+
+var destinationIcon = 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=D|FF0000|000000';
+var originIcon = 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=O|FFFF00|000000';
+
+var service = new google.maps.DistanceMatrixService();
+service.getDistanceMatrix(
+  {
+    origins: [origin1],
+    destinations: [destinationA],
+    travelMode: google.maps.TravelMode.DRIVING,
+    unitSystem: google.maps.UnitSystem.IMPERIAL,
+    avoidHighways: false,
+    avoidTolls: false
+  }, callback_store);
+  
+  
+  
+ 
+
+     }
+
+function callback_store(response, status) {
+	  if (status != google.maps.DistanceMatrixStatus.OK) {
+	   // alert('Error was: ' + status);
+	   // custom_alert('Error was: ' + status,'HomePage');
+	  } else {
+			
+	    var origins = response.originAddresses;
+	    var destinations = response.destinationAddresses;
+	    var set_text = "";
+		
+	    for (var i = 0; i < origins.length; i++) {
+	      var results = response.rows[i].elements;
+	    
+	      for (var j = 0; j < results.length; j++) {
+	   	  if(results[j].distance && typeof results[j].distance!=undefined)
+	   		  {
+	   		  
+	   		set_text = results[j].distance.text;
+	   		  }
+	   	  else
+	   		  {
+	   		
+	   		set_text = '0';
+	   		  }
+	     
+         
+	      }
+	    }
+	
+	  var splittext=set_text.split('mi');
+	
+        if(splittext[0] >=50)
+        {
+	    	sen_zip();
+           
+        }
+	    else
+        {
+            
+                var rangechanged  =localStorage.getItem('rangechanged');
+             
+                if(rangechanged == '1')
+                {
+                    localStorage.setItem('rangechanged','0');
+                    sen_zip();
+                  
+                    
+                }
+                else
+                {
+                    load_data();
+                  
+                }
+        }
+        
+	  }
+	 
+	}
+var arr = new Array();
+var c= 0;
+function cal_miles(streetno,streetname,city,state,country,category,storeid)
+{
+    console.log("saish...17");
+var map;
+
+arr[c] = storeid;
+
+var bounds = new google.maps.LatLngBounds();
+var markersArray = [];
+
+var lati =  localStorage.getItem('latitude');
+var longi =  localStorage.getItem('longitude');
+var address =  localStorage.getItem('address');
+localStorage.setItem('category', category);
+localStorage.setItem('storeid', storeid);
+var address_store = streetno+' '+streetname+' '+city+' '+state+' '+country;
+
+
+
+var origin1 = new google.maps.LatLng(lati, longi);
+
+
+var destinationA = address_store;
+
+
+var destinationIcon = 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=D|FF0000|000000';
+var originIcon = 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=O|FFFF00|000000';
+
+var service = new google.maps.DistanceMatrixService();
+service.getDistanceMatrix(
+  {
+    origins: [origin1],
+    destinations: [destinationA],
+    travelMode: google.maps.TravelMode.DRIVING,
+    unitSystem: google.maps.UnitSystem.IMPERIAL,
+    avoidHighways: false,
+    avoidTolls: false
+  }, callback);
+  
+  
+  
+ 
+  c++;
+     }
+
+var flag=0;
+var k=0;
+function callback(response, status) {
+
+	  if (status != google.maps.DistanceMatrixStatus.OK) {
+		  
+	  } else {
+          var size_len = localStorage.getItem('size');
+	    var origins = response.originAddresses;
+	    var destinations = response.destinationAddresses;
+	    var set_text = "";
+		
+	    for (var i = 0; i < origins.length; i++) {
+	      var results = response.rows[i].elements;
+	    
+	      for (var j = 0; j < results.length; j++) {
+	   	  if(results[j].distance && typeof results[j].distance!=undefined)
+	   		  {
+	   		  
+	   		set_text = results[j].distance.text;
+	   		  }
+	   	  else
+	   		  {
+	   		
+	   		set_text = 'NA';
+	   		  }
+	      insert_miles(set_text,arr[k],k,size_len);
+         
+	     
+	      }
+	    }
+	    
+	  }
+	 k++;
+	}
+	
+	
+	
+	var arr1 = new Array();
+var m= 0;		
+function cal_miles_deal(streetno,streetname,city,state,country,category,storeid)
+{
+	console.log("saish...18");
+		var map;
+		arr1[m] = storeid;
+
+		var bounds = new google.maps.LatLngBounds();
+		var markersArray = [];
+
+		var lati =  localStorage.getItem('latitude');
+		var longi =  localStorage.getItem('longitude');
+		var address =  localStorage.getItem('address');
+		localStorage.setItem('category', category);
+		localStorage.setItem('storeid', storeid);
+		var address_store = streetno+' '+streetname+' '+city+' '+state+' '+country;
+
+
+
+		var origin1 = new google.maps.LatLng(lati, longi);
+		
+		var destinationA = address_store;
+		
+
+		var destinationIcon = 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=D|FF0000|000000';
+		var originIcon = 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=O|FFFF00|000000';
+
+		var service = new google.maps.DistanceMatrixService();
+		service.getDistanceMatrix(
+		  {
+			origins: [origin1],
+			destinations: [destinationA],
+			travelMode: google.maps.TravelMode.DRIVING,
+			unitSystem: google.maps.UnitSystem.IMPERIAL,
+			avoidHighways: false,
+			avoidTolls: false
+		  }, callback_deal);
+		  
+		  
+		  
+		 
+		  m++;
+     }
+
+var flag=0;
+var n=0;
+function callback_deal(response, status) {
+
+	  if (status != google.maps.DistanceMatrixStatus.OK) {
+		 
+	  } else {
+          var size_len = localStorage.getItem('size');
+	    var origins = response.originAddresses;
+	   
+	    var set_text = "";
+		
+	    for (var i = 0; i < origins.length; i++) {
+	      var results = response.rows[i].elements;
+	    
+	      for (var j = 0; j < results.length; j++) {
+	   	  if(results[j].distance && typeof results[j].distance!=undefined)
+	   		  {
+	   		  
+	   		set_text = results[j].distance.text;
+	   		  }
+	   	  else
+	   		  {
+	   		
+	   		set_text = 'NA';
+	   		  }
+	      insert_miles_deal(set_text,arr1[n],n,size_len);
+         
+	    
+	      }
+	    }
+	   
+	  }
+	   n++;
+	}
+	
+function checkConnection() {
+    console.log("saish...19");
+    var networkState = navigator.connection.type;
+
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.NONE]     = 'No network connection';
+
+    
+    
+  if(states[Connection.NONE] != states[networkState] )
+{
+return 'true';
+}
+else
+{
+return 'false';
+}
+
+}
+	function hideMeGroceries()
+	 {
+	 console.log("saish...20");
+	var id = document.getElementById('firstStore');
+	
+	
+	
+	 if(id.style.display =="block")
+	 {
+		id.style.display = "none";
+	 
+	 }
+	 else if(id.style.display =="none")
+	 {
+	 	id.style.display = "block";
+	 }
+	
+	}
+
+	function hideMeRestaurant()
+	 {
+	 
+	var id = document.getElementById('firstRestaurant');
+	
+	
+	
+	 if(id.style.display =="block")
+	 {
+		id.style.display = "none";
+	 
+	 }
+	 else if(id.style.display =="none")
+	 {
+	 	id.style.display = "block";
+	 }
+	
+}
+
+
+	 $(document).ready(function(){
+			
+		});
+		
+		
+	var selectedval;
+
+    
+	function sen_zip()
+
+	 {
+		console.log("saish...21");
+		 k=0;
+		 n=0;
+		 c=0;
+		 m=0;
+		selectedval=1; 
+		counter_size = 0;
+		counter_size1 = 0;
+		counter_size_item = 0;
+		counter_size_search = 0;
+		$('#loadTry').popup("open");
+		$("#loadTry").popup({dismissible:false});
+		 localStorage.setItem('selectedval', '1');
+
+		 document.getElementById('display_id').innerHTML = "";
+		 text = "";
+		document.getElementById('catergory').checked = true;
+		document.getElementById('category1').checked = false;
+		$('#radioCat .ui-icon').removeClass('ui-icon-radio-off');
+		$('#radioName .ui-icon').removeClass('ui-icon-radio-on');
+		$('#radioCat .ui-icon').addClass('ui-icon-radio-on');
+		$('#radioName .ui-icon').addClass('ui-icon-radio-off');
+		document.getElementById('lblCat').style.border="1px solid #ff9000";
+	    document.getElementById('lblCat1').style.border="1px solid #e5e5e5";
+		
+		$('#find_favourites').addClass('navbarBorderNonActive');
+		$('#find_deal').addClass('navbarBorderNonActive');
+		$('#find_favourites').removeClass('navbarBorderActive');
+		$('#find_favourites_link').removeClass('navbarBorderActive');
+		$('#near_me').addClass('navbarBorderActive');
+		$('#near_me_link').addClass('navbarBorderActive');
+		$('#near_me').removeClass('navbarBorderNonActive');
+		$('#find_deal').removeClass('navbarBorderActive');
+		$('#find_deal_link').removeClass('navbarBorderActive');
+		$("#near_me_link .ui-btn-text").css("color","#ffffff");
+		$("#find_favourites_link .ui-btn-text").css("color","#007aff");
+		$("#find_deal_link .ui-btn-text").css("color","#007aff");
+
+
+	 var conn = checkConnection();
+
+	     if(conn='true')
+
+	    {
+
+            console.log("saish...22");
+	var postal = localStorage.getItem('postal');
+	var range = localStorage.getItem('range');
+
+	 txt='';
+
+	 txt='<?xml version="1.0" encoding="UTF-8"?><searchReq:searchRequest xsi:schemaLocation="http://schema.ayenda.com/smartBuy/search search.xsd" xmlns:searchReq="http://schema.ayenda.com/smartBuy/search" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> <zip>'+postal+'</zip><radius>'+range+'</radius></searchReq:searchRequest>';
+
+
+
+
+
+	 $.ajax({
+
+	  url: 'http://buyzenga.com:7003/BPL/rest/CouponRESTProxy/locateStore',
+
+	  type: 'POST',
+
+	  datatype : 'application/xml',
+
+	  data: txt,
+
+	  contentType: 'application/xml',
+
+
+
+	  success: function (result) {
+console.log("saish...23");
+	  del_stores();
+	  del_storedeal();
+	  del_store_deal_item();
+	  del_store_deal_coupon();
+	  del_store_deal_review();
+
+	 var response_val = $(result).find("store").size();
+         var image_arrayhomepage = new Array();
+         var checkcounthomepage=0;
+	
+	 if(response_val!= 0)
+		 {
+                 console.log("saish...24");    
+		localStorage.setItem('size',$(result).find("store").size());
+		for(var i =0;i<response_val;i++)
+		{
+		var val =  $(result).find("store")[i];
+           
+		var location = $(result).find("location")[i];
+            
+		insert_store($(val).find("storeID").text(),$(val).find("storeName").text(),$(val).find("deliveryFee").text(),
+				$(location).find("zipCode").text(),$(val).find("imageURL").text(),$(val).find("category").text(),
+				$(val).find("phoneNumber").text(),$(val).find("description").text(),$(val).find("website_url").text(),
+				$(location).find("streetNumber").text(),$(location).find("streetName").text(),$(location).find("city").text(),
+				$(location).find("state").text(),$(location).find("country").text());
+       
+				
+                cal_miles($(location).find("streetNumber").text(),$(location).find("streetName").text(),$(location).find("city").text(),$(location).find("state").text(),$(location).find("country").text(),$(val).find("category").text(),$(val).find("storeID").text());
+				
+				
+            image_arrayhomepage[checkcounthomepage]=$(val).find("imageURL").text();
+            console.log($(val).find("imageURL").text());
+            var getitemsizehomepage=localStorage.getItem('size');
+            
+            checkcounthomepage++;
+                if(checkcounthomepage==getitemsizehomepage)
+                {
+                console.log("calling creteStoreDir");
+               // callNativePlugin(image_arrayhomepage);
+                localStorage.setItem('FolderCreate','1');
+                creteStoreDir(image_arrayhomepage);
+                
+                
+            }
+				
+			    
+           
+            
+		}
+           
+		 }
+	 else
+		 {
+                     console.log("saish...25");
+		 text="";
+		 document.getElementById('display_id').innerHTML = "";
+		
+		 custom_alert('No stores available in area around zipcode.  Try changing zip code radius under settings page or use the search box to search for particular store','HomePage');
+		 $('#loadTry').popup("close");
+		 }
+	
+		
+	
+		 
+		
+	  },
+
+	  error: function (jqXHR, tranStatus, errorThrown) {
+
+	     console.log("saish...26");
+	      custom_alert('There was an error connecting to the service.Please try again','HomePage');
+	    	$('#loadTry').popup("close");		
+	  }
+
+	 });
+
+
+
+	 }
+
+	     else
+
+	    	 {
+
+
+	    	 custom_alert('You are currently offline','HomePage');
+		    	
+				$('#loadTry').popup("close");
+	    	 }
+
+	 }
+         
+         function creteStoreDir(imageArray){ 
+             console.log("into creteStoreDir");
+             console.log(imageArray);
+             var imgArry = imageArray;
+             for(var i=0;imageArray.length;i++){
+                 var imgFullName = imageArray[i];
+                 var imgFolder = imgFullName.split("/")[0];
+                 var imgStore = imgFullName.split("/")[1];
+                 var imgName = imgFullName.split("/")[2];
+                 console.log("imgFolder:"+imgFolder+" imgStore:"+imgStore+" imgName:"+imgName);
+                 
+                 var directoryEntry = window.rootFS; // to get root path to directory
+                 directoryEntry.getDirectory(app_folder, { create: true, exclusive: false }, 
+                 function(parent1){
+                     //success
+                     console.log("Success 1");
+                     parent1.getDirectory("store", { create: true, exclusive: false }, 
+                        function(parent2){
+                            //success
+                            console.log("Success 2");
+                            parent2.getDirectory(imgStore, { create: true, exclusive: false }, 
+                                function(parent){
+                                    //success
+                                    console.log("success creating directory for store:"+imgStore);
+                                    begin_fileDownload(imgFolder,imgStore,imgName);
+                                },
+                                function(error){
+                                    cosole.log("Error occured creating directory for store:"+imgStore+" code:"+error.code);
+                                    
+                                });
+                        },
+                        function(error){
+                            cosole.log("Error accessing store directory, code:"+error.code);
+                             
+                        });
+                 },
+                 function(error){
+                     cosole.log("Error accesing image directory, code:"+error.code);
+                      
+                 });
+                  
+            }
+        }
+        function begin_fileDownload(imgFolder,imgStore,imgName){
+            console.log("into begin_fileDownload");
+            var fileTransfer = new FileTransfer();
+            var path;
+            var imgFullName= imgFolder+"/"+imgStore+"/"+imgName;
+            path = aws_cloud_front_url+"/"+imgFullName;
+
+            console.log("fileTransfer begining at..."+path);
+
+            fileTransfer.download(path,
+                                    filePath+"/store/"+imgStore+"/"+imgName,
+                                    function(entry) {
+                                             console.log("success image");
+                                             select_products();
+                                    },
+                                    function(error) {
+                                        console.log("failed image");
+                                    }
+            );
+        }
+                
+	 
+     function callNativePlugin( returnSuccess ) 
+	 {
+            console.log("saish...27:");
+            console.log(returnSuccess);
+            
+            order_historyPlugin.callNativeFunction( nativePluginResultHandler, nativePluginErrorHandler, returnSuccess );
+         
+     }
+	 
+     var counter_size = 0;
+	function nativePluginResultHandler (result) 
+	{
+		
+	console.log("saish...28");	
+           setTimeout(function(){select_products()},3000);
+		  
+	  
+	}
+
+	function nativePluginErrorHandler (error) 
+	{ 
+	
+		console.log("into nativePluginErrorHandler");
+		var size_Store = localStorage.getItem("size");
+		counter_size = counter_size + 1;
+		
+		if(size_Store==counter_size)
+		  {
+           setTimeout(function(){select_products()},3000);
+		  
+		  }
+
+	}	
+
+
+	 function callNativePlugin_search( returnSuccess ) 
+	 {
+      
+         order_historyPlugin.callNativeFunction( nativePluginResultHandler_search, nativePluginErrorHandler_search, returnSuccess );
+         
+     }
+	 
+     var counter_size_search = 0;
+	function nativePluginResultHandler_search (result) 
+	{
+		
+		var size_Store = localStorage.getItem("search_size");
+		counter_size_search = counter_size_search + 1;
+		
+		
+           setTimeout(function(){select_products_search()},1000);
+		  
+	  
+	}
+
+	function nativePluginErrorHandler_search (error) 
+	{ 
+	
+		
+		var size_Store = localStorage.getItem("size");
+		counter_size_search = counter_size_search + 1;
+		
+		if(size_Store==counter_size_search)
+		  {
+           setTimeout(function(){select_products_search()},1000);
+		  
+		  }
+
+	}
+	
+	
+	  function callNativePlugin_deal( returnSuccess )
+	 {
+
+      
+         order_historyPlugin.callNativeFunction( nativePluginResultHandler_deal, nativePluginErrorHandler_deal, returnSuccess );
+         
+     }
+	 
+     var counter_size1 = 0;
+	function nativePluginResultHandler_deal (result) 
+	{
+		
+
+		var size_Store = localStorage.getItem("size");
+		counter_size1 = counter_size1 + 1;
+		
+
+
+			setTimeout(function(){select_store_deals()},2000);
+		 
+	  
+	}
+
+
+
+	function nativePluginErrorHandler_deal (error) 
+	{
+		
+		var size_Store = localStorage.getItem("size");
+		counter_size1 = counter_size1 + 1;
+		
+
+		if(size_Store==counter_size1)
+		  {
+			
+			setTimeout(function(){select_store_deals()},2000);
+		 
+		  }
+
+	}	
+	
+	 function callNativePlugin_deal_item( returnSuccess ) 
+	 {
+
+      
+         HelloPlugin.callNativeFunction( nativePluginResultHandler_deal_item, nativePluginErrorHandler_deal_item, returnSuccess );
+         
+     }
+	 
+     var counter_size_item = 0;
+	function nativePluginResultHandler_deal_item (result) 
+	{
+		
+
+
+	  
+	}
+
+
+
+	function nativePluginErrorHandler_deal_item (error) 
+	{
+		
+
+	}
+	
+function find_favourites()
+	 {
+             console.log("saish...29");
+	 k=0;
+	 n=0;
+	 c=0;
+	 m=0;
+	 selectedval=2; 
+	 localStorage.setItem('selectedval', '2');
+	document.getElementById('catergory').checked = true;
+	document.getElementById('category1').checked = false;
+	$('#radioCat .ui-icon').removeClass('ui-icon-radio-off');
+	$('#radioName .ui-icon').removeClass('ui-icon-radio-on');
+	$('#radioCat .ui-icon').addClass('ui-icon-radio-on');
+    $('#radioName .ui-icon').addClass('ui-icon-radio-off');
+	document.getElementById('lblCat').style.border="1px solid #ff9000";
+	document.getElementById('lblCat1').style.border="1px solid #e5e5e5";
+	
+	$('#find_favourites').removeClass('navbarBorderNonActive');
+	$('#find_favourites').addClass('navbarBorderActive');
+	$('#find_favourites_link').addClass('navbarBorderActive');
+	$('#near_me').removeClass('navbarBorderActive');
+	$('#near_me_link').removeClass('navbarBorderActive');
+	$('#near_me').addClass('navbarBorderNonActive');
+	$('#find_deal').addClass('navbarBorderNonActive');
+	$('#find_deal').removeClass('navbarBorderActive');
+	$('#find_deal_link').removeClass('navbarBorderActive');
+	$("#find_favourites_link .ui-btn-text").css("color","#ffffff");
+	$("#near_me_link .ui-btn-text").css("color","#007aff");
+	$("#find_deal_link .ui-btn-text").css("color","#007aff");
+	
+	 document.getElementById('display_id').innerHTML = "";
+	 var arr = new Array();
+	 
+	  
+      
+	  BUYDEMO.transaction(function(tx) 
+	  {
+
+	 tx.executeSql('SELECT count(*) as num,category FROM favourites group by category', [], function (tx, results)
+	 {
+	         var len = results.rows.length;
+	   	
+			   	  
+				  text='';
+				  if(len=='0')
+				  {
+					 document.getElementById('display_id').innerHTML = "";
+					 text = text +'<div id="" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+					 text = text +'<p>No products marked favourite</p>';
+					 text = text +'</div>';
+					 document.getElementById('display_id').innerHTML = text;
+				  }
+			   	 else
+				 {
+				 
+		         for(var k=0 ;k<len;k++)
+	        	 {
+	                 var result = results.rows.item(k);
+					  
+	               var s=0;
+	        	 	  tx.executeSql('select * from favourites where category="'+result.category+'"',[], function (tx, results_res) {
+					 var len_res = results_res.rows.length;
+					
+					 
+					  var l=0;
+					 
+					 var resultres = results_res.rows.item(l);
+					
+	         			text = text +'<div data-role="collapsible" id="test-collapsible1'+s+'" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" style="position: relative; top: -10px;">';
+	          			text = text +'<h4 class="bluetext" style="background-color: #e5e5e5;" data-role="button" onclick="del_fav_div(\''+resultres.category+'\','+s+');" data-inline="true">'+resultres.category+'('+len_res+')</h4>';
+	         			
+	          			text = text +'<ul data-role="listview" >';
+		    	
+	    	  for (var i = 0; i < len_res; i++) {
+	    		 
+ 		            var resultres = results_res.rows.item(i);
+					
+ 		            var store_img_name = resultres.store_img.split('/')[1];
+                            var store_img = resultres.store_img.split('/')[2];
+ 		             
+ 		          text = text + '<li data-icon="arrow-r2" style="border: 5px solid #e5e5e5; padding-left: 0px; padding-top: 2px;">';
+ 				  text = text +'<div style="width: 100%; padding-left: 20px; padding-top: 20px;"><div style="float: left;"><img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" /></div>';
+ 				  text = text +'<div id="storeAddress'+resultres.store_id+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+ 				  text = text +'<label class="lab" style="position: relative; left: -5px; top: -2px">'+resultres.store_name+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -30px;">'+resultres.streetno+' '+resultres.streetname+',<br />'+resultres.city+' '+resultres.state+'</label></div>';
+
+ 		          text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: 5px;"><span class="fontfourteen lab1"  style="font-weight: normal; position: relative; right: 0px;">'+resultres.miles+'</span><br /> <input type="hidden" id="favourite'+resultres.store_id+'" value="1">';
+ 		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage1('+i+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br />';
+ 		          text = text + '<img style="position: relative; top: 40px;" src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+ 		          text = text + '</div>';
+ 		          text = text + '<div style="clear: both"></div>';
+ 		          text = text + '</div>';
+ 		          text = text + '<div style="height: 20px;"></div>';
+ 		          text = text + '<p class="paraStore">'+resultres.description+'</p>';
+				  text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-20px;margin-right:-3px;font-weight:normal;" class="seemore">See more ..</div></li>';
+ 		        
+ 		     
+ 	 		 }
+	    	  text = text +'</ul></div>';
+	  		  
+	  		
+	  	
+		  			
+  		      var resultres = results_res.rows.item(0);
+			  
+			   var store_img_name = resultres.store_img.split('/')[1];
+                        var store_img = resultres.store_img.split('/')[2];
+			  
+   	 		  var div = resultres.category+'0';
+  		      text = text +'<div id="'+resultres.category+'0" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+   	 		  text = text +'<div style="width: 100%; padding-left: 1px; padding-top: 3px;">';
+   	 		  text = text +'<div style="float: left;">';
+   	 		  text = text + '<img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" />';
+   	 		  text = text + '</div>';
+
+   	 		  text = text + '<div id="storeAddress'+s+'" class="storeAddPopUp" onclick="StoreAddressPopUp(this.id);">';
+
+   	 		  text = text + '<label class="lab" style="position: relative; left: -5px;">'+resultres.store_name+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -10px;">'+resultres.streetno+' '+resultres.streetname+',<br />'+resultres.city+' '+resultres.state+'</label>';
+
+   	 		  text = text + '</div>';
+   	 		 
+
+   	 		  text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: -15px; margin-top: 2px;">';
+   	 		  text = text + '<span class="fontfourteen lab1" style="font-weight: normal;" >'+resultres.miles+'</span>';
+   	 		  text = text + '<br /> <input type="hidden" id="favourite'+s+'" value="1"> ';
+   	 		  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+s+'" onclick="changeFavImage_div1('+s+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br /> ';
+   	 		 
+			  text = text + '<img style="margin-top: 30px;" src="images/arrow_right.png"  width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+			  text = text + ' </div>';
+   	 		  text = text + '<div style="clear: both"></div>';
+   	 		  text = text + '</div>';
+   	 		  text = text + '<div style="height: 0px;"></div>';
+   	 		  text = text + '<p class="paraStore1">'+resultres.description+'</p>';
+			  text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-22px;margin-right:-3px;" class="seemore">See more ..</div></div><br/><hr/><br/></div>';
+   	 	
+   	 		 
+	  		
+	  	
+	          
+	
+	    	 
+	  	
+	         
+	      
+	    	 
+	        		l++;
+	        		s++;
+    		         
+    		         document.getElementById('display_id').innerHTML = text;
+    		         $("#display_id").trigger("create");
+    		         
+    		        
+	        		}); 
+	        	
+	        }
+	        }
+	            });
+				
+	        	 	 
+	          });   
+	         
+ 
+
+
+	 }
+	 
+	 function find_deals()
+
+	 {
+             console.log("saish...30");
+		 k=0;
+		 n=0;
+		 c=0;
+		 m=0;
+		
+		counter_size1 = 0;
+        counter_size = 0;
+		counter_size_item = 0;
+		counter_size_search = 0;
+		$('#loadTry').popup("open");
+		$("#loadTry").popup({dismissible:false});
+		
+		 del_storedeal();
+		 del_store_deal_item();
+		 del_store_deal_coupon();
+		 del_store_deal_review();
+		selectedval=3; 
+		localStorage.setItem('selectedval', '3');
+		document.getElementById('catergory').checked = true;
+		document.getElementById('category1').checked = false;
+		$('#radioCat .ui-icon').removeClass('ui-icon-radio-off');
+		$('#radioName .ui-icon').removeClass('ui-icon-radio-on');
+		$('#radioCat .ui-icon').addClass('ui-icon-radio-on');
+		$('#radioName .ui-icon').addClass('ui-icon-radio-off');
+		document.getElementById('lblCat').style.border="1px solid #ff9000";
+	    document.getElementById('lblCat1').style.border="1px solid #e5e5e5";
+		
+		$('#find_deal').removeClass('navbarBorderNonActive');
+		$('#find_favourites').addClass('navbarBorderNonActive');
+		$('#find_favourites').removeClass('navbarBorderActive');
+		$('#near_me').addClass('navbarBorderNonActive');
+		$('#near_me').removeClass('navbarBorderActive');
+		$('#near_me_link').removeClass('navbarBorderActive');
+		$('#find_favourites_link').removeClass('navbarBorderActive');
+		$('#find_deal').addClass('navbarBorderActive');
+		$('#find_deal_link').addClass('navbarBorderActive');
+
+		$("#find_deal_link .ui-btn-text").css("color","#ffffff");
+		$("#find_favourites_link .ui-btn-text").css("color","#007aff");
+		$("#near_me_link .ui-btn-text").css("color","#007aff");
+	 var conn = checkConnection();
+
+	   if(conn='true')
+
+	   {
+		
+	 var postal = localStorage.getItem('postal');
+	 var range = localStorage.getItem('range');
+	 txt1='';
+
+	 
+	 txt1='<?xml version="1.0" encoding="UTF-8"?><couponReq:couponRequest xsi:schemaLocation="http://schema.ayenda.com/smartBuy/couponReq couponRequest.xsd" xmlns:coupon="http://schema.ayenda.com/smartBuy/coupon" xmlns:couponReq="http://schema.ayenda.com/smartBuy/couponReq" xmlns:ed1="http://schema.ayenda.com/smartBuy/customer" xmlns:item="http://schema.ayenda.com/smartBuy/item" xmlns:ed2="http://schema.ayenda.com/smartBuy/store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><zip>'+postal+'</zip><requestType>DEALS</requestType></couponReq:couponRequest>';
+
+
+
+
+
+	 $.ajax({
+
+	  url: 'http://buyzenga.com:7003/BPL/rest/CouponRESTProxy/retrieveCoupons',
+
+	  type: 'POST',
+
+	  datatype : 'application/xml',
+
+	  data: txt1,
+
+	  contentType: 'application/xml',
+
+
+
+	  success: function (result) {
+
+	 var response_val = $(result).find("store").size();
+     var image_arraydeal = new Array();
+     var checkcountdeal=0;
+	 var checkcount=1;
+	 if(response_val!= 0)
+		 {
+		localStorage.setItem('size',$(result).find("store").size());
+		for(var i =0;i<response_val;i++)
+		{
+		var store_number = $(result).find("store")[i];
+		var store_num = $(store_number).find("item").size();
+	
+	
+		insert_store_deals($(store_number).find("storeID").text(),$(store_number).find("storeNumber").text(),$(store_number).find("storeName").text(),$(store_number).find("deliveryFee").text(),$(store_number).children("imageURL").text(),$(store_number).find("streetNumber").text(),$(store_number).find("streetName").text(),$(store_number).find("city").text(),$(store_number).find("state").text(),$(store_number).find("zipCode").text(),$(store_number).find("country").text(),$(store_number).children("category").text(),$(store_number).find("description").text(),$(store_number).find("phoneNumber").text(),$(store_number).find("website_url").text());
+		
+		cal_miles_deal($(store_number).find("streetNumber").text(),$(store_number).find("streetName").text(),$(store_number).find("city").text(),$(store_number).find("state").text(),$(store_number).find("country").text(),$(store_number).children("category").text(),$(store_number).find("storeID").text());
+		
+		
+            image_arraydeal[checkcountdeal]=$(store_number).children("imageURL").text();
+           
+            var getitemsizedeal=localStorage.getItem('size');
+           
+            checkcountdeal++;
+            if(checkcountdeal==getitemsizedeal)
+            {
+            
+            callNativePlugin_deal(image_arraydeal);
+            }
+            
+				
+		for(var j=0;j<store_num;j++)
+		{
+		var val =  $(store_number).find("item")[j];
+		var coupon_size =  $(val).find("coupon").size();
+		var coupon =  $(val).find("coupon")[0];
+
+		var review_size =  $(val).find("review").size();
+		
+		var itemid=$(val).find("itemID").text();
+	
+		insert_store_deal_item_homepage($(val).find("itemID").text(),$(store_number).find("storeID").text(),$(val).find("itemName").text(),$(val).find("itemDescription").text(),$(val).find("price").text(),$(val).find("category").text(),$(val).find("totalReviews").text(),$(val).find("imageURL").text(),$(val).find("qty").text(),$(val).find("averagRating").text(),$(val).find("taxRate").text());
+            checkcount++;
+		var returnSuccess1 = new Array();
+
+				 returnSuccess1[0] = $(val).find("imageURL").text();
+					
+
+            
+				var imgarray  = $(val).find("imageURL").text().split('/');
+				var imglen = imgarray.length;
+				var imgname = imgarray[imglen - 1];
+				returnSuccess1[1] = imgname;
+				
+			  
+
+
+				callNativePlugin_deal_item( returnSuccess1 );
+		if(coupon_size!=0)
+		{	
+		insert_store_deal_coupon($(coupon).find("couponID").text(),itemid,$(coupon).find("couponNumber").text(),$(coupon).find("expirationDate").text(),$(coupon).find("offer").text());
+		}
+		
+		if(review_size!=0)
+		{
+			for(var k=0;k<review_size;k++)
+			{
+			var review =  $(val).find("review")[k];
+			
+			insert_store_deal_review($(review).find("review_id").text(),itemid,$(review).find("reviewComments").text(),$(review).find("rating").text(),$(review).find("user").text());
+			}
+		}
+           
+            
+		}
+		
+		
+		
+           
+		 }
+		 
+		
+		 
+		 
+		 }
+	 else
+		 {
+		 text="";
+		 document.getElementById('display_id').innerHTML = "";
+		
+		 custom_alert('No results found','HomePage');
+		 $('#loadTry').popup("close");
+		
+		 }
+	
+		
+		
+		 
+		
+	  },
+
+	  error: function (jqXHR, tranStatus, errorThrown) {
+
+	      
+	      custom_alert('There was an error connecting to the service.Please try again','HomePage');
+		  $('#loadTry').popup("close");
+	  }
+
+	 });
+
+
+
+	 }
+
+	     else
+
+	    	 {
+
+	    	 custom_alert('You are currently offline','HomePage');
+			 $('#loadTry').popup("close");
+
+	    	 }
+			 
+			
+
+	 }
+	 
+	
+		 var text = '';
+	 function select_products()
+	 {
+	console.log("saish...31");
+	 k=0;
+		 n=0;
+		 c=0;
+		 m=0;
+		 text = '';
+		 selectedval=1; 
+		
+		  document.getElementById('display_id').innerHTML = "";
+		 var arr = new Array();
+                 $('#loadTry').popup("close");
+		 BUYDEMO.transaction(function(tx) {
+			del_storedeal();
+			del_store_deal_item();
+			del_store_deal_coupon();
+			del_store_deal_review();
+		
+	         tx.executeSql('SELECT count(*) as num,category  FROM store_products group by category ', [], function (tx, results) {
+	         var len = results.rows.length;
+                        
+			 if(len=='0')
+			 {
+					 document.getElementById('display_id').innerHTML = "";
+					 text = text +'<div id="" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+					 text = text +'<p>No Stores available</p>';
+					 text = text +'</div>';
+					 document.getElementById('display_id').innerHTML = text;
+					  
+			 }
+			 else
+			 {
+	         for(var k=0 ;k<len;k++)
+	        	 {
+	                 var result = results.rows.item(k);
+	               var s=0;
+	        	 	  tx.executeSql('select store_products.*,favourites.store_id as favid from store_products left join favourites on store_products.store_id=favourites.store_id where store_products.category="'+result.category+'"',[], function (tx, results_res) {
+                           
+					 var len_res = results_res.rows.length;
+                                 
+					  var l=0;
+					 
+					 var resultres = results_res.rows.item(l);
+					
+	         			text = text +'<div data-role="collapsible" id="test-collapsible'+s+'" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" style="position: relative; top: -10px;">';
+	          			text = text +'<h4 class="bluetext" style="background-color: #e5e5e5;" data-role="button" onclick="del_div(\''+resultres.category+'\','+s+');" data-inline="true">'+resultres.category+'('+len_res+')</h4>';
+	         			
+	          			text = text +'<ul data-role="listview" >';
+		    	
+	    	  for (var i = 0; i < len_res; i++) {
+	    		 
+ 		             var resultres = results_res.rows.item(i);
+ 		          
+					   
+                        var store_img_name = resultres.store_img.split('/')[1];
+                        var store_img = resultres.store_img.split('/')[2];
+ 		        console.log("store image:"+store_img);      
+ 		          text = text + '<li data-icon="arrow-r2" style="border: 5px solid #e5e5e5; padding-left: 0px; padding-top: 2px;">';
+                                   
+
+ 				  text = text +'<div style="width: 100%; padding-left: 20px; padding-top: 20px;"><div style="float: left;"><img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" /></div>';
+ 				  text = text +'<div id="storeAddress'+resultres.store_id+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+ 				  text = text +'<label class="lab" style="position: relative; left: -5px; top: -2px">'+resultres.store_name+'</label> <br/><br/> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -25px;padding-top:8px;">'+resultres.streetno+' '+resultres.streetname+',<br/>'+resultres.city+' '+resultres.state+'</label></div>';
+
+ 		          text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: 5px;"><span class="fontfourteen lab1"  style="font-weight: normal; position: relative; right: 0px;">'+resultres.miles+'</span><br />';
+				  
+				  if(!!resultres.favid)
+				  {
+				   text = text + '<input type="hidden" id="favStatus'+resultres.store_id+'" value="1">';
+ 		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage('+i+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br />';
+				  }
+				  else
+				  {
+				  
+				   text = text + '<input type="hidden" id="favStatus'+resultres.store_id+'" value="0">';
+ 		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_blue.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage('+i+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br />';
+				  }
+ 		          text = text + '<img style="position: relative; top: 30px;" src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+                                  
+				 text = text + '</div>';
+ 		          text = text + '<div style="clear: both"></div>';
+ 		          text = text + '</div>';
+ 		          text = text + '<div style="height: 20px;"></div>';
+ 		          text = text + '<p class="paraStore">'+resultres.description+'</p>';
+				  text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-20px;margin-right:-3px;font-weight:normal;" class="seemore">See more ..</div></li>';
+				  
+				  
+				  text = text + '<div style="clear: both"></div>';
+				
+				  $('#loadTry').popup("close");
+ 			
+ 	 		 }
+	    	  text = text +'</ul></div>';
+	  		  
+	  		
+	  	
+		  			
+  		      var resultres = results_res.rows.item(0);
+   	 		  var div = resultres.category+'0';
+                          
+			  var store_img_name = resultres.store_img.split('/')[1];
+                        var store_img = resultres.store_img.split('/')[2];
+  		      text = text +'<div id="'+resultres.category+'0" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+   	 		  text = text +'<div style="width: 100%; padding-left: 1px; padding-top: 3px;">';
+   	 		  text = text +'<div style="float: left;">';
+   	 		  text = text + '<img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" />';
+   	 		  text = text + '</div>';
+
+   	 		  text = text + '<div id="storeAddress'+s+'" class="storeAddPopUp" onclick="StoreAddressPopUp(this.id);">';
+
+   	 		  text = text + '<label class="lab" style="position: relative; left: -5px;">'+resultres.store_name+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -10px;">'+resultres.streetno+' '+resultres.streetname+',<br />'+resultres.city+' '+resultres.state+'</label>';
+
+   	 		  text = text + '</div>';
+   	 		 
+
+   	 		  text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: -15px; margin-top: 2px;">';
+   	 		  text = text + '<span class="fontfourteen lab1" style="font-weight: normal;" >'+resultres.miles+'</span>';
+   	 		  
+			   
+			  if(!!resultres.favid)
+			  {
+			  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="1"> ';
+   	 		  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+s+'" onclick="changeFavImage_div('+s+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br /> ';
+			  }
+			  else
+			  {
+			  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="0"> ';
+			  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_blue.png" id="favImage'+s+'" onclick="changeFavImage_div('+s+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br /> ';
+			  }
+   	 		  text = text + '<img style="margin-top: 30px;" src="images/arrow_right.png"  width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+				text = text + ' </div>';
+   	 		  text = text + '<div style="clear: both"></div>';
+   	 		  text = text + '</div>';
+   	 		  text = text + '<div style="height: 0px;"></div>';
+   	 		  text = text + '<p class="paraStore1">'+resultres.description+'</p>';
+			   text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-22px;margin-right:-3px;" class="seemore">See more ..</div></div><br/><hr/><br/></div>';
+   	 	
+   	 		 
+	  		
+	  	
+	          
+	
+	    	 
+	  	
+	         
+	      
+	    	 
+	        		l++;
+	        		s++;
+    		         
+    		         document.getElementById('display_id').innerHTML = text;
+    		         $("#display_id").trigger("create");
+    		         
+	
+    		        
+	        		 
+	        	
+	        
+	        
+	            });
+	        	 	 
+	          }   
+	         
+        	 }
+	           });
+	         
+	         
+	        
+	           } );
+		 
+		
+       
+       	
+	 }
+	 
+	 
+	  var text = '';
+	 function select_products_search()
+	 {
+	console.log("saish...32");
+	 k=0;
+		 n=0;
+		 c=0;
+		 m=0;
+		 text = '';
+		 selectedval=1; 
+		
+		  document.getElementById('display_id').innerHTML = "";
+		 var arr = new Array();
+		 BUYDEMO.transaction(function(tx) {
+			del_storedeal();
+			del_store_deal_item();
+			del_store_deal_coupon();
+			del_store_deal_review();
+		
+	         tx.executeSql('SELECT count(*) as num,category  FROM store_products_search group by category ', [], function (tx, results) {
+	         var len = results.rows.length;
+                          
+	         for(var k=0 ;k<len;k++)
+	        	 {
+	                 var result = results.rows.item(k);
+	               var s=0;
+	        	 	  tx.executeSql('select store_products_search.*,favourites.store_id as favid from store_products_search left join favourites on store_products_search.store_id=favourites.store_id where store_products_search.category="'+result.category+'"',[], function (tx, results_res) {
+					 var len_res = results_res.rows.length;
+                                    
+					  var l=0;
+					 
+					 var resultres = results_res.rows.item(l);
+					
+	         			text = text +'<div data-role="collapsible" id="test-collapsible'+s+'" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" style="position: relative; top: -10px;">';
+	          			text = text +'<h4 class="bluetext" style="background-color: #e5e5e5;" data-role="button" onclick="del_div(\''+resultres.category+'\','+s+');" data-inline="true">'+resultres.category+'('+len_res+')</h4>';
+	         			
+	          			text = text +'<ul data-role="listview" >';
+		    	
+	    	  for (var i = 0; i < len_res; i++) {
+	    		 
+ 		             var resultres = results_res.rows.item(i);
+ 		           
+					   
+                        var store_img_name = resultres.store_img.split('/')[1];
+                        var store_img = resultres.store_img.split('/')[2];
+ 		              
+ 		          text = text + '<li data-icon="arrow-r2" style="border: 5px solid #e5e5e5; padding-left: 0px; padding-top: 2px;">';
+ 				  text = text +'<div style="width: 100%; padding-left: 20px; padding-top: 20px;"><div style="float: left;"><img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" /></div>';
+ 				  text = text +'<div id="storeAddress'+resultres.store_id+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+ 				  text = text +'<label class="lab" style="position: relative; left: -5px; top: -2px">'+resultres.store_name+'</label> <br/><br/> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -25px;padding-top:8px;">'+resultres.streetno+' '+resultres.streetname+',<br/>'+resultres.city+' '+resultres.state+'</label></div>';
+
+ 		          text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: 5px;"><span class="fontfourteen lab1"  style="font-weight: normal; position: relative; right: 0px;">'+resultres.miles+'</span><br />';
+				 
+				  if(!!resultres.favid)
+				  {
+				   text = text + '<input type="hidden" id="favStatus'+resultres.store_id+'" value="1">';
+ 		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage('+i+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br />';
+				  }
+				  else
+				  {
+				  
+				   text = text + '<input type="hidden" id="favStatus'+resultres.store_id+'" value="0">';
+ 		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_blue.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage('+i+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br />';
+				  }
+ 		          text = text + '<img style="position: relative; top: 30px;" src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+ 		          
+				 text = text + '</div>';
+ 		          text = text + '<div style="clear: both"></div>';
+ 		          text = text + '</div>';
+ 		          text = text + '<div style="height: 20px;"></div>';
+ 		          text = text + '<p class="paraStore">'+resultres.description+'</p>';
+				  text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-20px;margin-right:-3px;font-weight:normal;" class="seemore">See more ..</div></li>';
+				  
+				  
+				  text = text + '<div style="clear: both"></div>';
+				
+				  $('#loadTry').popup("close");
+ 			
+ 	 		 }
+	    	  text = text +'</ul></div>';
+	  		  
+	  		
+	  	
+		  			
+  		      var resultres = results_res.rows.item(0);
+   	 		  var div = resultres.category+'0';
+			   var store_img_name = resultres.store_img.split('/')[1];
+                        var store_img = resultres.store_img.split('/')[2];
+  		      text = text +'<div id="'+resultres.category+'0" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+   	 		  text = text +'<div style="width: 100%; padding-left: 1px; padding-top: 3px;">';
+   	 		  text = text +'<div style="float: left;">';
+   	 		  text = text + '<img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" />';
+   	 		  text = text + '</div>';
+
+   	 		  text = text + '<div id="storeAddress'+s+'" class="storeAddPopUp" onclick="StoreAddressPopUp(this.id);">';
+
+   	 		  text = text + '<label class="lab" style="position: relative; left: -5px;">'+resultres.store_name+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -10px;">'+resultres.streetno+' '+resultres.streetname+',<br />'+resultres.city+' '+resultres.state+'</label>';
+
+   	 		  text = text + '</div>';
+   	 		 
+
+   	 		  text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: -15px; margin-top: 2px;">';
+   	 		  text = text + '<span class="fontfourteen lab1" style="font-weight: normal;" >'+resultres.miles+'</span>';
+   	 		  
+			   
+			  if(!!resultres.favid)
+			  {
+			  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="1"> ';
+   	 		  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+s+'" onclick="changeFavImage_div('+s+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br /> ';
+			  }
+			  else
+			  {
+			  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="0"> ';
+			  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_blue.png" id="favImage'+s+'" onclick="changeFavImage_div('+s+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br /> ';
+			  }
+   	 		  text = text + '<img style="margin-top: 30px;" src="images/arrow_right.png"  width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+				text = text + ' </div>';
+   	 		  text = text + '<div style="clear: both"></div>';
+   	 		  text = text + '</div>';
+   	 		  text = text + '<div style="height: 0px;"></div>';
+   	 		  text = text + '<p class="paraStore1">'+resultres.description+'</p>';
+			   text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-22px;margin-right:-3px;" class="seemore">See more ..</div></div><br/><hr/><br/></div>';
+   	 	
+   	 		 
+	  		
+	  	
+	          
+	
+	    	 
+	  	
+	         
+	      
+	    	 
+	        		l++;
+	        		s++;
+    		         
+    		         document.getElementById('display_id').innerHTML = text;
+    		         $("#display_id").trigger("create");
+    		         
+	
+    		        
+	        		 
+	        	
+	        
+	        
+	            });
+	        	 	 
+	          }   
+	         
+        	 
+	           });
+	         
+	         
+	        
+	           } );
+		 
+		
+       
+       	
+	 }
+	 
+	 function select_store_deals()
+	 {
+	   
+	 console.log("saish...33");
+		 k=0;
+		 n=0;
+		 c=0;
+		 m=0;
+		
+		 text = '';
+		
+		 
+		  document.getElementById('display_id').innerHTML = "";
+		 var arr = new Array();
+		 BUYDEMO.transaction(function(tx) {
+			 
+		
+	         tx.executeSql('SELECT count(*) as num,category FROM store_deal group by category', [], function (tx, results) {
+	         var len = results.rows.length;
+	   
+	         for(var k=0 ;k<len;k++)
+	        	 {
+	                 var result = results.rows.item(k);
+					
+	               var s=0;
+	        	 	  tx.executeSql('select store_deal.*,favourites.store_id as favid from store_deal left join favourites on store_deal.store_id=favourites.store_id where store_deal.category="'+result.category+'"',[], function (tx, results_res) {
+					 var len_res = results_res.rows.length;
+					  var l=0;
+					 
+					 var resultres = results_res.rows.item(l);
+					
+	         			text = text +'<div data-role="collapsible" id="test-collapsible-deal'+s+'" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" style="position: relative; top: -10px;">';
+	          			text = text +'<h4 class="bluetext" style="background-color: #e5e5e5;" data-role="button" onclick="del_deals_div(\''+resultres.category+'\','+s+');" data-inline="true">'+resultres.category+'('+len_res+')</h4>';
+	         			
+	          			text = text +'<ul data-role="listview" >';
+		    	
+	    	  for (var i = 0; i < len_res; i++) {
+	    		 
+ 		             var resultres = results_res.rows.item(i);
+					
+			var store_img_name = resultres.store_img.split('/')[1];
+                        var store_img = resultres.store_img.split('/')[2];
+ 		          text = text + '<li data-icon="arrow-r2" style="border: 5px solid #e5e5e5; padding-left: 0px; padding-top: 2px;">';
+ 				  text = text +'<div style="width: 100%; padding-left: 20px; padding-top: 20px;"><div style="float: left;"><img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" /></div>';
+ 				  text = text +'<div id="storeAddress'+resultres.store_id+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+ 				  text = text +'<label class="lab" style="position: relative; left: -5px; top: -2px">'+resultres.storeName+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -30px;">'+resultres.streetNumber+' '+resultres.streetName+',<br />'+resultres.city+' '+resultres.state+'</label></div>';
+
+ 		          text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: 5px;"><span class="fontfourteen lab1"  style="font-weight: normal; position: relative; right: 0px;">'+resultres.miles+'</span><br /> <input type="hidden" id="favStatus'+resultres.store_id+'" value="0">';
+ 		          
+				  if(!!resultres.favid)
+				  {
+				   text = text + '<input type="hidden" id="favStatus'+resultres.store_id+'" value="1">';
+ 		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage('+i+','+resultres.store_id+',\''+resultres.storeName+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetNumber+',\''+resultres.streetName+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.storeimg+'\');" alt="" /> <br />';
+				  }
+				  else
+				  {
+				  
+				   text = text + '<input type="hidden" id="favStatus'+resultres.store_id+'" value="0">';
+ 		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_blue.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage('+i+','+resultres.store_id+',\''+resultres.storeName+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetNumber+',\''+resultres.streetName+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.storeimg+'\');" alt="" /> <br />';
+				  }
+				  
+ 		          text = text + '<img style="position: relative; top: 40px;" src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+ 		          text = text + '</div>';
+ 		          text = text + '<div style="clear: both"></div>';
+ 		          text = text + '</div>';
+ 		          text = text + '<div style="height: 20px;"></div>';
+ 		          text = text + '<p class="paraStore">'+resultres.description+'</p>';
+				  text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-20px;margin-right:-3px;font-weight:normal;" class="seemore">See more ..</div></li>';
+				  $('#loadTry').popup("close");
+ 		     
+ 	 		 }
+	    	  text = text +'</ul></div>';
+	  		  
+	  		
+	  	
+		  			
+  		      var resultres = results_res.rows.item(0);
+   	 		  var div = resultres.category+'0';
+			  
+			  var store_url = resultres.storeimg.split('/');
+			
+              var store_len = store_url.length;
+              var store_img = store_url[store_len - 1];
+		console.log('store_img:'+store_img);	
+  		      text = text +'<div id="'+resultres.category+'0" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+   	 		  text = text +'<div style="width: 100%; padding-left: 1px; padding-top: 3px;">';
+   	 		  text = text +'<div style="float: left;">';
+   	 		  text = text + '<img style="width: 80px; height: 80px;" src="d1pk8m5pkfnhxe.cloudfront.net/images/Poet_Cloth/'+store_img+'" alt="" />';
+   	 		  text = text + '</div>';
+
+   	 		  text = text + '<div id="storeAddress'+s+'" class="storeAddPopUp" onclick="StoreAddressPopUp(this.id);">';
+
+   	 		  text = text + '<label class="lab" style="position: relative; left: -5px;">'+resultres.storeName+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -10px;">'+resultres.streetNumber+' '+resultres.streetName+',<br />'+resultres.city+' '+resultres.state+','+resultres.country+'</label>';
+
+   	 		  text = text + '</div>';
+   	 		
+
+   	 		  text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: -15px; margin-top: 2px;">';
+   	 		  text = text + '<span class="fontfourteen lab1" style="font-weight: normal;" >'+resultres.miles+'</span>';
+   	 		  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="0"> ';
+   	 		 
+			  if(!!resultres.favid)
+			  {
+			  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="1"> ';
+   	 		  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+s+'" onclick="changeFavImage_div('+s+','+resultres.store_id+',\''+resultres.storeName+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetNumber+',\''+resultres.streetName+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.storeimg+'\');" alt="" /> <br /> ';
+			  }
+			  else
+			  {
+			  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="0"> ';
+			  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_blue.png" id="favImage'+s+'" onclick="changeFavImage_div('+s+','+resultres.store_id+',\''+resultres.storeName+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetNumber+',\''+resultres.streetName+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.storeimg+'\');" alt="" /> <br /> ';
+			  }
+			  
+   	 		 
+   	 	
+   	 		  text = text + '<img style="margin-top: 30px;" src="images/arrow_right.png"  width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+				text = text + ' </div>';
+   	 		  text = text + '<div style="clear: both"></div>';
+   	 		  text = text + '</div>';
+   	 		  text = text + '<div style="height: 0px;"></div>';
+   	 		  text = text + '<p class="paraStore1">'+resultres.description+'</p>';
+			   text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-22px;margin-right:-3px;" class="seemore">See more ..</div></div><br/><hr/><br/></div>';
+	  		
+	  	
+	          
+	
+	    	 
+	  	
+	         
+	      
+	    	 
+	        		l++;
+	        		s++;
+    		         
+    		         document.getElementById('display_id').innerHTML = text;
+    		         $("#display_id").trigger("create");
+    		         
+    		        
+	        		 
+	        	
+	        
+	        
+	            });
+	        	 	 
+	          }   
+	         
+        	 
+	           });
+	         
+	         
+	        
+	           } );
+		 
+		
+       
+       	
+	 }
+	 
+	 
+	  
+	 function display_by_name()
+	 {
+        console.log("saish...34");
+		if(selectedval=='1')
+		{
+			$('#loadTry').popup("open");
+			$("#loadTry").popup({dismissible:false});
+			sel_name();
+		}
+		if(selectedval=='2')
+		{
+			
+			sel_fav_name();
+		}
+		if(selectedval=='3')
+		{
+			$('#loadTry').popup("open");
+			$("#loadTry").popup({dismissible:false});
+			sel_deal_name();
+		}
+	 }
+	 function display_by_category()
+	 {
+             console.log("saish...35");
+		if(selectedval=='1')
+		{
+			$('#loadTry').popup("open");
+			$("#loadTry").popup({dismissible:false});
+			select_products();
+		}
+		if(selectedval=='2')
+		{
+			
+			find_favourites();
+		}
+		if(selectedval=='3')
+		{
+			
+			$('#loadTry').popup("open");
+			$("#loadTry").popup({dismissible:false});
+			select_store_deals();
+		}
+	}
+	 
+	 function del_div(text,id)
+	 
+	 {
+		 
+		 console.log("saish...36");
+		 $(document).on( "collapse", "#test-collapsible"+id, function( event, ui ){
+			   document.getElementById(text+'0').style.display="block";
+			});
+
+			$(document).on( "expand", "#test-collapsible"+id, function( event, ui ){
+			    document.getElementById(text+'0').style.display="none";
+			}); 
+		 
+	 }
+	 
+function del_fav_div(text,id)
+	 
+	 {
+		console.log("saish...37");
+		 $(document).on( "collapse", "#test-collapsible1"+id, function( event, ui ){
+			   document.getElementById(text+'0').style.display="block";
+			});
+
+			$(document).on( "expand", "#test-collapsible1"+id, function( event, ui ){
+			    document.getElementById(text+'0').style.display="none";
+			}); 
+		 
+	 }
+	 
+	 function del_deals_div(text,id)
+	 
+	 {
+		console.log("saish...38");
+		 $(document).on( "collapse", "#test-collapsible-deal"+id, function( event, ui ){
+			   document.getElementById(text+'0').style.display="block";
+			});
+
+			$(document).on( "expand", "#test-collapsible-deal"+id, function( event, ui ){
+			    document.getElementById(text+'0').style.display="none";
+			}); 
+		 
+	 }
+	 
+	 function closepopup()
+	 {
+		$('#loadTry').popup("close");
+	 }
+	 
+	function StoreAddressPopUp(t)
+	{
+						
+
+					   if ($('#'+t).innerWidth()< $('#'+t)[0].scrollWidth) {
+   							document.getElementById('transitionExampl').innerHTML = document.getElementById(t).innerHTML;
+							$( '#transitionExampl' ).popup( "open" );
+							}
+						 
+	}
+	 
+	 function sel_name()
+	 {
+		 k=0;
+		 n=0;
+		 c=0;
+		 m=0;
+		 
+		  text = '';
+		  document.getElementById('display_id').innerHTML = '';
+		 var arr = new Array();
+		 BUYDEMO.transaction(function(tx) {
+			 
+			  var text = '';
+			 
+	         tx.executeSql('SELECT SUBSTR(store_name,1,1) GRP, COUNT(store_name) as num FROM store_products WHERE SUBSTR(store_name,1,1)=SUBSTR(store_name,1,1) GROUP BY GRP ORDER BY GRP ASC', [], function (tx, results) {
+	         var len = results.rows.length;
+	         
+	         
+	         for(var k=0 ;k<len;k++)
+        	 {
+                 var result = results.rows.item(k);
+                 
+         var s=0
+         
+         
+        	  tx.executeSql('SELECT SUBSTR(store_products.store_name,1,1) GRP,store_products.*,favourites.store_id as favid FROM store_products left join favourites on store_products.store_id=favourites.store_id WHERE store_products.store_name LIKE "'+result.GRP+'%"',[], function (tx, results_res) {
+				 var len_res = results_res.rows.length;
+				  var l=0;
+				 
+				 var resultres = results_res.rows.item(l);
+				
+         			text = text +'<div data-role="collapsible" id="testcollapsible'+s+'" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" style="position: relative; top: -10px;">';
+          			text = text +'<h4 class="bluetext" style="background-color: #e5e5e5;" data-role="button" onclick="del_div1(\''+resultres.GRP+'\','+s+')" data-inline="true">'+resultres.GRP+'('+len_res+')</h4>';
+         			
+          			text = text +'<ul data-role="listview" >';
+	    	
+          			 for (var i = 0; i < len_res; i++) {
+    		 
+		             var resultres = results_res.rows.item(i);
+				var store_img_name = resultres.store_img.split('/')[1];
+                        var store_img = resultres.store_img.split('/')[2];
+		         
+		             
+		          text = text + '<li data-icon="arrow-r2" style="border: 5px solid #e5e5e5; padding-left: 0px; padding-top: 2px;">';
+				  text = text +'<div style="width: 100%; padding-left: 20px; padding-top: 20px;"><div style="float: left;"><img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" /></div>';
+				  text = text +'<div id="storeAddress'+resultres.store_id+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+				  text = text +'<label class="lab" style="position: relative; left: -5px; top: -2px">'+resultres.store_name+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -25px;">'+resultres.streetno+' '+resultres.streetname+',<br />'+resultres.city+' '+resultres.state+'</label></div>';
+
+		          text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: 5px;"><span class="fontfourteen lab1"  style="font-weight: normal; position: relative; right: 0px;">'+resultres.miles+'</span><br /> <input type="hidden" id="favStatus'+resultres.store_id+'" value="0">';
+		        
+				 
+				   if(!!resultres.favid)
+				  {
+				   text = text + '<input type="hidden" id="favStatus'+resultres.store_id+'" value="1">';
+ 		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage('+i+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br />';
+				  }
+				  else
+				  {
+				  
+				   text = text + '<input type="hidden" id="favStatus'+resultres.store_id+'" value="0">';
+ 		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_blue.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage('+i+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br />';
+				  }
+				  text = text + '<img style="position: relative; top: 40px;" src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+		          text = text + '</div>';
+		          text = text + '<div style="clear: both"></div>';
+		          text = text + '</div>';
+		          text = text + '<div style="height: 20px;"></div>';
+		          text = text + '<p class="paraStore">'+resultres.description+'</p>';
+				  text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-20px;margin-right:-3px;font-weight:normal;" class="seemore">See more ..</div></li>';
+		        
+				  $('#loadTry').popup("close");
+	 		 }
+    	  text = text +'</ul></div>';
+  		  
+  		
+  	
+	  			
+		      var resultres = results_res.rows.item(0);
+			   var store_img_name = resultres.store_img.split('/')[1];
+                        var store_img = resultres.store_img.split('/')[2];
+			  
+	 		  var div = resultres.GRP+'0';
+		      text = text +'<div id="'+resultres.GRP+'0" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+	 		  text = text +'<div style="width: 100%; padding-left: 1px; padding-top: 3px;">';
+	 		  text = text +'<div style="float: left;">';
+	 		  text = text + '<img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" />';
+	 		  text = text + '</div>';
+
+	 		  text = text + '<div id="storeAddress'+s+'" class="storeAddPopUp" onclick="StoreAddressPopUp(this.id);">';
+
+	 		  text = text + '<label class="lab" style="position: relative; left: -5px;">'+resultres.store_name+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -10px;">'+resultres.streetno+' '+resultres.streetname+',<br />'+resultres.city+' '+resultres.state+'</label>';
+
+	 		  text = text + '</div>';
+	 		 
+
+	 		  text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: -15px; margin-top: 2px;">';
+	 		  text = text + '<span class="fontfourteen lab1" style="font-weight: normal;" >'+resultres.miles+'</span>';
+	 		  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="0"> ';
+	 		  
+			  if(!!resultres.favid)
+			  {
+			  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="1"> ';
+   	 		  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+s+'" onclick="changeFavImage_div('+s+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br /> ';
+			  }
+			  else
+			  {
+			  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="0"> ';
+			  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_blue.png" id="favImage'+s+'" onclick="changeFavImage_div('+s+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br /> ';
+			  }
+	 	
+			  
+			   text = text + '<img style="margin-top: 30px;" src="images/arrow_right.png"  width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+				text = text + ' </div>';
+   	 		  text = text + '<div style="clear: both"></div>';
+   	 		  text = text + '</div>';
+   	 		  text = text + '<div style="height: 0px;"></div>';
+   	 		  text = text + '<p class="paraStore1">'+resultres.description+'</p>';
+			   text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-22px;margin-right:-3px;" class="seemore">See more ..</div></div><br/><hr/><br/></div>';
+	 	
+	 		 
+  		
+  	
+          
+
+    	 
+  	
+         
+	 		
+    	 
+        		l++;
+        		s++;
+		         
+		         document.getElementById('display_id').innerHTML = text;
+		         $("#display_id").trigger("create");
+		         
+		        
+			
+        
+        
+            });
+        	 	 
+          }    
+         
+	      
+	         });
+	         
+		 });
+	 }
+	 
+	 
+	 function sel_fav_name()
+	 {
+		 k=0;
+		 n=0;
+		 c=0;
+		 m=0;
+		 text = '';
+		 document.getElementById('display_id').innerHTML = "";
+		
+		 var arr = new Array();
+		 BUYDEMO.transaction(function(tx) {
+			 
+			  var text = '';
+			 
+	         tx.executeSql('SELECT SUBSTR(store_name,1,1) GRP, COUNT(store_name) as num FROM favourites WHERE SUBSTR(store_name,1,1)=SUBSTR(store_name,1,1) GROUP BY GRP ORDER BY GRP ASC', [], function (tx, results) {
+	         var len = results.rows.length;
+	         
+	         
+			 
+			  text='';
+			if(len=='0')
+			{
+					 document.getElementById('display_id').innerHTML = "";
+					 text = text +'<div id="" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+					 text = text +'<p>No products marked favourite</p>';
+					 text = text +'</div>';
+					 document.getElementById('display_id').innerHTML = text;
+    		        
+			}
+			else
+			{
+			 
+	         for(var k=0 ;k<len;k++)
+        	 {
+                 var result = results.rows.item(k);
+                 
+         var s=0
+         
+         
+        	  tx.executeSql('SELECT SUBSTR(store_name,1,1) GRP,* FROM favourites WHERE store_name LIKE "'+result.GRP+'%"',[], function (tx, results_res) {
+				 var len_res = results_res.rows.length;
+				  var l=0;
+				 
+				 var resultres = results_res.rows.item(l);
+				
+         			text = text +'<div data-role="collapsible" id="testcollapsible'+s+'" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" style="position: relative; top: -10px;">';
+          			text = text +'<h4 class="bluetext" style="background-color: #e5e5e5;" data-role="button" onclick="del_div1(\''+resultres.GRP+'\','+s+')" data-inline="true">'+resultres.GRP+'('+len_res+')</h4>';
+         			
+          			text = text +'<ul data-role="listview" >';
+	    	
+          			 for (var i = 0; i < len_res; i++) {
+    		 
+		             var resultres = results_res.rows.item(i);
+					  
+					 var store_img_name = resultres.store_img.split('/')[1];
+                        var store_img = resultres.store_img.split('/')[2];
+		             
+		          text = text + '<li data-icon="arrow-r2" style="border: 5px solid #e5e5e5; padding-left: 0px; padding-top: 2px;">';
+				  text = text +'<div style="width: 100%; padding-left: 20px; padding-top: 20px;"><div style="float: left;"><img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" /></div>';
+				  text = text +'<div id="storeAddress'+resultres.store_id+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+				  text = text +'<label class="lab" style="position: relative; left: -5px; top: -2px">'+resultres.store_name+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -30px;">'+resultres.streetno+' '+resultres.streetname+',<br />'+resultres.city+' '+resultres.state+'</label></div>';
+
+		          text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: 5px;"><span class="fontfourteen lab1"  style="font-weight: normal; position: relative; right: 0px;">'+resultres.miles+'</span><br /> <input type="hidden" id="favourite'+resultres.store_id+'" value="1">';
+		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage1('+i+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br />';
+		          text = text + '<img style="position: relative; top: 40px;" src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+		          text = text + '</div>';
+		          text = text + '<div style="clear: both"></div>';
+		          text = text + '</div>';
+		          text = text + '<div style="height: 20px;"></div>';
+		          text = text + '<p class="paraStore">'+resultres.description+'</p>';
+				  text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-20px;margin-right:-3px;font-weight:normal;" class="seemore">See more ..</div></li>';
+		        
+				  $('#loadTry').popup("close");
+	 		 }
+    	  text = text +'</ul></div>';
+  		  
+  		
+  	
+	  			
+		      var resultres = results_res.rows.item(0);
+			  
+			   var store_img_name = resultres.store_img.split('/')[1];
+                        var store_img = resultres.store_img.split('/')[2];
+	 		  var div = resultres.GRP+'0';
+		      text = text +'<div id="'+resultres.GRP+'0" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+	 		  text = text +'<div style="width: 100%; padding-left: 1px; padding-top: 3px;">';
+	 		  text = text +'<div style="float: left;">';
+	 		  text = text + '<img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" />';
+	 		  text = text + '</div>';
+
+	 		  text = text + '<div id="storeAddress'+s+'" class="storeAddPopUp" onclick="StoreAddressPopUp(this.id);">';
+
+	 		  text = text + '<label class="lab" style="position: relative; left: -5px;">'+resultres.store_name+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -10px;">'+resultres.streetno+' '+resultres.streetname+',<br />'+resultres.city+' '+resultres.state+'</label>';
+
+	 		  text = text + '</div>';
+	 		
+
+	 		  text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: -15px; margin-top: 2px;">';
+	 		  text = text + '<span class="fontfourteen lab1" style="font-weight: normal;" >'+resultres.miles+'</span>';
+	 		  text = text + '<br /> <input type="hidden" id="favourite'+s+'" value="1"> ';
+	 		  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+s+'" onclick="changeFavImage_div1('+s+','+resultres.store_id+',\''+resultres.store_name+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetno+',\''+resultres.streetname+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.store_img+'\');" alt="" /> <br /> ';
+	 		
+			  
+			  text = text + '<img style="margin-top: 30px;" src="images/arrow_right.png"  width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+			  text = text + ' </div>';
+   	 		  text = text + '<div style="clear: both"></div>';
+   	 		  text = text + '</div>';
+   	 		  text = text + '<div style="height: 0px;"></div>';
+   	 		  text = text + '<p class="paraStore1">'+resultres.description+'</p>';
+			  text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-22px;margin-right:-3px;" class="seemore">See more ..</div></div><br/><hr/><br/></div>';
+	 	
+	 		 
+  		
+  	
+          
+
+    	 
+  	
+         
+	 		
+    	 
+        		l++;
+        		s++;
+		         
+		         document.getElementById('display_id').innerHTML = text;
+		         $("#display_id").trigger("create");
+		         
+		        
+			
+        
+        
+            });
+        	 	 
+          }    
+         
+	      }
+	         });
+	         
+		 });
+	 }
+	 
+	 
+	 
+	 function sel_deal_name()
+	 {
+		 k=0;
+		 n=0;
+		 c=0;
+		 m=0;
+		 text = '';
+		 document.getElementById('display_id').innerHTML = "";
+		 var arr = new Array();
+		 BUYDEMO.transaction(function(tx) {
+			 
+			  var text = '';
+			 
+	         tx.executeSql('SELECT SUBSTR(storeName,1,1) GRP, COUNT(storeName) as num FROM store_deal WHERE SUBSTR(storeName,1,1)=SUBSTR(storeName,1,1) GROUP BY GRP ORDER BY GRP ASC', [], function (tx, results) {
+	         var len = results.rows.length;
+	         
+	         
+	         for(var k=0 ;k<len;k++)
+        	 {
+                 var result = results.rows.item(k);
+                 
+         var s=0
+         
+         
+        	  tx.executeSql('SELECT SUBSTR(store_deal.storeName,1,1) GRP,store_deal.*,favourites.store_id as favid FROM store_deal left join favourites on store_deal.store_id=favourites.store_id WHERE store_deal.storeName LIKE "'+result.GRP+'%"',[], function (tx, results_res) {
+				 var len_res = results_res.rows.length;
+				  var l=0;
+				 
+				 var resultres = results_res.rows.item(l);
+				
+         			text = text +'<div data-role="collapsible" id="testcollapsible'+s+'" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" style="position: relative; top: -10px;">';
+          			text = text +'<h4 class="bluetext" style="background-color: #e5e5e5;" data-role="button" onclick="del_div1(\''+resultres.GRP+'\','+s+')" data-inline="true">'+resultres.GRP+'('+len_res+')</h4>';
+         			
+          			text = text +'<ul data-role="listview" >';
+	    	
+          			 for (var i = 0; i < len_res; i++) {
+    		 
+		             var resultres = results_res.rows.item(i);
+		         
+		             var store_img_name = resultres.store_img.split('/')[1];
+                        var store_img = resultres.store_img.split('/')[2];
+					 
+		          text = text + '<li data-icon="arrow-r2" style="border: 5px solid #e5e5e5; padding-left: 0px; padding-top: 2px;">';
+				  text = text +'<div style="width: 100%; padding-left: 20px; padding-top: 20px;"><div style="float: left;"><img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" /></div>';
+				  text = text +'<div id="storeAddress'+resultres.store_id+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+				  text = text +'<label class="lab" style="position: relative; left: -5px; top: -2px">'+resultres.storeName+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -30px;">'+resultres.streetNumber+' '+resultres.streetName+',<br />'+resultres.city+' '+resultres.state+'</label></div>';
+
+		          text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: 5px;"><span class="fontfourteen lab1"  style="font-weight: normal; position: relative; right: 0px;">'+resultres.miles+'</span><br /> <input type="hidden" id="favStatus'+resultres.store_id+'" value="0">';
+		         
+				  if(!!resultres.favid)
+				  {
+				   text = text + '<input type="hidden" id="favStatus'+resultres.store_id+'" value="1">';
+ 		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage('+i+','+resultres.store_id+',\''+resultres.storeName+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetNumber+',\''+resultres.streetName+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.storeimg+'\');" alt="" /> <br />';
+				  }
+				  else
+				  {
+				 
+				   text = text + '<input type="hidden" id="favStatus'+resultres.store_id+'" value="0">';
+ 		          text = text + '<img style="position: relative; top: 15px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_blue.png" id="favImage'+resultres.store_id+'" onclick="changeFavImage('+i+','+resultres.store_id+',\''+resultres.storeName+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetNumber+',\''+resultres.streetName+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.storeimg+'\');" alt="" /> <br />';
+				  }
+		          text = text + '<img style="position: relative; top: 40px;" src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+		          text = text + '</div>';
+		          text = text + '<div style="clear: both"></div>';
+		          text = text + '</div>';
+		          text = text + '<div style="height: 20px;"></div>';
+		          text = text + '<p class="paraStore">'+resultres.description+'</p>';
+				  text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-20px;margin-right:-3px;font-weight:normal;" class="seemore">See more ..</div></li>';
+		        
+				  $('#loadTry').popup("close");
+	 		 }
+    	  text = text +'</ul></div>';
+  		  
+  		
+  	
+	  			
+		      var resultres = results_res.rows.item(0);
+			  
+			  var store_url = resultres.storeimg.split('/');
+			  var store_len = store_url.length;
+			  var store_img = store_url[store_len - 1];
+			  
+	 		  var div = resultres.GRP+'0';
+		      text = text +'<div id="'+resultres.GRP+'0" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+	 		  text = text +'<div style="width: 100%; padding-left: 1px; padding-top: 3px;">';
+	 		  text = text +'<div style="float: left;">';
+	 		  text = text + '<img style="width: 80px; height: 80px;" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" alt="" />';
+	 		  text = text + '</div>';
+
+	 		  text = text + '<div id="storeAddress'+s+'" class="storeAddPopUp" onclick="StoreAddressPopUp(this.id);">';
+
+	 		  text = text + '<label class="lab" style="position: relative; left: -5px;">'+resultres.storeName+'</label> <br /> <br /> <label class="lab1 fontfourteen" style="position: relative; left: -5px; top: -10px;">'+resultres.streetNumber+' '+resultres.streetName+',<br />'+resultres.city+' '+resultres.state+'</label>';
+
+	 		  text = text + '</div>';
+	 		  
+
+	 		  text = text + '<div style="float: right; width: 15%; text-align: right; margin-right: -15px; margin-top: 2px;">';
+	 		  text = text + '<span class="fontfourteen lab1" style="font-weight: normal;" >'+resultres.miles+'</span>';
+	 		  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="0"> ';
+	 		
+			  if(!!resultres.favid)
+			  {
+			  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="1"> ';
+   	 		  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_orange.png" id="favImage'+s+'" onclick="changeFavImage_div('+s+','+resultres.store_id+',\''+resultres.storeName+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetNumber+',\''+resultres.streetName+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.storeimg+'\');" alt="" /> <br /> ';
+			  }
+			  else
+			  {
+			  text = text + '<br /> <input type="hidden" id="favStatus'+s+'" value="0"> ';
+			  text = text + '<img style="margin-top: 20px; padding-left: 3px; padding-top: 10px; padding-bottom: 5px;" width="25px" height="25px" src="images/heart_blue.png" id="favImage'+s+'" onclick="changeFavImage_div('+s+','+resultres.store_id+',\''+resultres.storeName+'\',\''+resultres.category+'\',\''+resultres.description+'\','+resultres.streetNumber+',\''+resultres.streetName+'\',\''+resultres.city+'\',\''+resultres.state+'\',\''+resultres.miles+'\',\''+resultres.storeimg+'\');" alt="" /> <br /> ';
+			  }
+	 		 
+			  text = text + '<img style="margin-top: 30px;" src="images/arrow_right.png"  width="20px" height="20px" onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" alt="" />';
+				text = text + ' </div>';
+   	 		  text = text + '<div style="clear: both"></div>';
+   	 		  text = text + '</div>';
+   	 		  text = text + '<div style="height: 0px;"></div>';
+   	 		  text = text + '<p class="paraStore1">'+resultres.description+'</p>';
+			  text = text + '<div onclick="changeFile('+resultres.store_id+',\''+store_img_name+'\')" style="font-size:12px;width:65px;float:right;margin-top:-22px;margin-right:-3px;" class="seemore">See more ..</div></div><br/><hr/><br/></div>';
+	 	
+	 		 
+  		
+  	
+          
+
+    	 
+  	
+         
+	 		
+    	 
+        		l++;
+        		s++;
+		         
+		         document.getElementById('display_id').innerHTML = text;
+		         $("#display_id").trigger("create");
+		         
+		        
+			
+        
+        
+            });
+        	 	 
+          }    
+         
+	      
+	         });
+	         
+		 });
+	 }
+	 
+ function del_div1(text,id)
+	 
+	 {
+		 k=0;
+		 n=0;
+		 c=0;
+		 m=0;
+		 
+		 $(document).on( "collapse", "#testcollapsible"+id, function( event, ui ){
+			   document.getElementById(text+'0').style.display="block";
+			});
+
+			$(document).on( "expand", "#testcollapsible"+id, function( event, ui ){
+			    document.getElementById(text+'0').style.display="none";
+			}); 
+		 
+	 }
+	 function search_stores()
+	 {
+		 k=0;
+		 n=0;
+		 c=0;
+		 m=0;
+		 counter_size = 0;
+		 counter_size1 = 0;
+		 counter_size_search = 0;
+		 
+		 if(document.getElementById('search').value.length==0)
+		 {
+		 
+		 custom_alert('Search cannot be blank','HomePage');
+		
+		 return false;
+		 }
+		$('#loadTry').popup("open");
+		$("#loadTry").popup({dismissible:false});
+		 document.getElementById('lblCat').style.border="1px solid #ff9000";
+		document.getElementById('lblCat1').style.border="1px solid #e5e5e5";
+		 var conn = checkConnection();
+
+	     if(conn='true')
+
+	    {
+
+		 var  txt='';
+
+		 txt='<?xml version="1.0" encoding="UTF-8"?><searchReq:searchRequest xsi:schemaLocation="http://schema.ayenda.com/smartBuy/search search.xsd" xmlns:searchReq="http://schema.ayenda.com/smartBuy/search"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><name>'+$("#search").val()+'</name></searchReq:searchRequest>';
+		 
+
+
+
+		 $.ajax({
+
+		  url: 'http://buyzenga.com:7003/BPL/rest/CouponRESTProxy/search',
+
+		  type: 'POST',
+
+		  datatype : 'application/xml',
+
+		  data: txt,
+
+		  contentType: 'application/xml',
+
+
+
+		  success: function (result) {
+
+          
+
+		 	var response_val = $(result).find("store").size();
+            localStorage.setItem('search_size',response_val);
+            var checkcountsearch=0;
+            var image_arraysearch= new Array();
+			del_stores_search();
+               
+			if(response_val==0)
+				{
+				
+				 custom_alert('No results found','HomePage');
+			    document.getElementById('display_id').innerHTML = '';
+		        $("#display_id").trigger("create");
+				$('#loadTry').popup("close");
+				return false;
+				}
+			for(var i =0;i<response_val;i++)
+			{
+			var val =  $(result).find("store")[i];
+			
+			var location = $(result).find("location")[i];
+			insert_store_search($(val).find("storeID").text(),$(val).find("storeName").text(),
+					$(location).find("zipCode").text(),$(val).find("imageURL").text(),$(val).find("category").text(),
+					$(val).find("phoneNumber").text(),$(val).find("description").text(),$(val).find("website_url").text(),
+					$(location).find("streetNumber").text(),$(location).find("streetName").text(),$(location).find("city").text(),
+					$(location).find("state").text(),$(location).find("country").text());
+			 cal_miles($(location).find("streetNumber").text(),$(location).find("streetName").text(),$(location).find("city").text(),$(location).find("state").text(),$(location).find("country").text(),$(val).find("category").text(),$(val).find("storeID").text());
+	           
+			  
+                image_arraysearch[checkcountsearch]=$(val).find("imageURL").text();
+                
+                var getitemsizesearch=localStorage.getItem('search_size');
+                
+                checkcountsearch++;
+                if(checkcountsearch==getitemsizesearch)
+                {
+                
+                callNativePlugin_search(image_arraysearch);
+                }
+			} 
+			
+
+		
+			
+			 
+			
+		  },
+
+		  error: function (jqXHR, tranStatus, errorThrown) {
+
+		     
+		      custom_alert('There was an error connecting to the service.Please try again','HomePage');
+		      $('#loadTry').popup("close");
+		  }
+
+		 }); 
+		 
+		 
+	    	 }
+	     else
+	    	 {
+	    	 
+	    	
+	    	 custom_alert('You are currently offline','HomePage');
+	    	 $('#loadTry').popup("close");
+	    	 }
+	 }
+	 
+	 
+	 function change_quantity()
+		{
+                    console.log("saish...change_quantity");
+		var count=0;
+		var userid=localStorage.getItem('userid');
+       
+		BUYDEMO.transaction(function(tx) {
+		tx.executeSql('SELECT * FROM customer_items_details inner join customer_items on customer_items.ID=customer_items_details.mainid where customer_items.customerid="'+userid+'"', [], function (tx, results) {
+		var len=results.rows.length;
+            
+			for(var j=0;j<len;j++)
+			{
+			 var resultres = results.rows.item(j);
+			
+			 count=count+resultres.quantity;
+			
+			
+			
+			}
+                    
+			if(count<10)
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '16px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			else if(count>9 && count<100)
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '20px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			else if(count>99 && count<1000)
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '25px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			else
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '30px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			
+			 document.getElementById('total_count').innerHTML =count;
+		 });
+		
+		});
+		}
+	</script>
+
+
+
+<link rel="stylesheet" type="text/css"
+	href="css/jquery.mobile.flatui.css" />
+
+<style type="text/css">
+.clr {
+	clear: both;
+	margin: 0;
+	padding: 0;
+	float: none;
+}
+
+.ui-page .ui-content .ui-btn.my-btn .ui-btn-inner {
+	color: green;
+	background: red;
+}
+​
+.disableScroll{
+      overflow-y:hidden;
+      overflow-x:hidden;
+}
+
+ .seemore
+	   {
+		color:#636668;
+	   }
+</style>
+</head>
+<body class="disableScroll" style="overflow:hidden" >
+	<div data-role="page" id="#buyNew-page" data-theme="j">
+
+		<div id="loginHeader" data-role="header" data-position="fixed"  data-tap-toggle="false" style="height:140px;" class="headerNavbarHeight"
+			data-theme="h">
+			<h1>Buy Live</h1>
+			<a href="settings.html" rel="external" style="margin-top: -15px;"
+				class="ui-btn-right"><img class="imagesize"
+				style="position: relative; top: 9px; width: 30px; height: 30px;"
+				src="images/settings_blue.png" alt="" /></a>
+			<div data-role="navbar"
+				style="width: 95%; height: 28px; margin-left: 2.5%; font-size: 4px;">
+				<ul>
+					<li class="navbarBorderActive navbarExtremeleft ui-state-persist" id="near_me"><a
+						href="#" rel="external" class="navbarBorderActive" id="near_me_link" onclick="sen_zip()">Near me</a></li>
+
+					<li class="navbarBorderNonActive ui-state-persist" id="find_favourites"><a
+						href="" rel="external"  onclick="find_favourites()" id="find_favourites_link">My Favourites</a></li>
+
+					<li
+						class="navbarBorderNonActive navbarExtremeright ui-state-persist" id="find_deal"><a 
+						href="" rel="external" onclick="find_deals()" id="find_deal_link" style="width:100%;">Deals</a></li>
+
+
+				</ul>
+			</div>
+			<!-- /navbar -->
+			<div  style="width:100%;height:50px;background-color:#e5e5e5;">
+			<div id="outer" style="width: 95%;margin-left: 2.5%;margin-top:30px;">
+
+					<div id="radioCat" style="float: left">
+						<div style="float: left; width: 100%">
+							<label
+								style="font-weight: normal; border: 1px solid #ff9000; min-width: 62px;"
+								id="lblCat"> <input type="radio" name="category"
+								id="catergory" value="0" onclick="demo(this);display_by_category();">Category
+							</label>
+						</div>
+					</div>
+
+					<div style="float: left; width: 20px; height: 43px;"></div>
+
+					<div id="radioName" style="float: left">
+						<div style="float: left; width: 100%">
+							<label style="font-weight: normal; min-width: 62px;" id="lblCat1">
+								<input type="radio" name="category" id="category1" value="1"
+								onclick="demo(this);display_by_name();">Name
+							</label>
+						</div>
+					</div>
+
+					<div style="float: left; width: 25px; height: 43px;"></div>
+
+					<div id="searchBar" style="float: left;">
+						<input type="text" name="search" id="search" value=""
+							placeholder="Search" style="border: none"
+							onkeyup="changeSearch(this.id);" >
+					</div>
+
+					<div style="float: left; width: 30px; height: 30px;">
+						<img id="searchIcon"
+							style="background-color: white; border: 1px solid #e5e5e5; height: 25.5px; position: relative; top: 9px; left: 2px; float: right;"
+							src="images/search_grey.png" onclick="search_stores();"  alt="" />
+					</div>
+					<div class="clr"></div>
+
+				</div>
+		</div>
+		</div>
+		<!-- /header -->
+
+
+
+		<div data-role="content">
+			
+
+		<div id="display_id" style="overflow:auto">
+
+		</div>
+
+
+
+
+			
+		<div data-role="popup" id="transitionExampl" class="ui-content" data-theme="d" style="border:1px solid #007aff">
+  									 
+		</div>
+		<div id="loadTry" data-role="popup" data-overlay-theme="a" class="ui-content">
+                     <img  src="images/ajax-loader.gif"/>
+		</div>
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-id="footer" data-position="fixed" data-tap-toggle="false" data-theme="h">
+			<div data-role="navbar">
+				<ul>
+					<li><a id="home" href="homepage.html" rel="external"
+						data-icon="home-orange" class="ui-state-persist"></a></li>
+					
+					<li><div id="total_count" style="background-color:#ff9000;display:inline-block;margin-left:58%;margin-top:2%;color:black;text-align:center;z-index:2000;position:relative;font-size:12px;"></div><a id="basket" href="shopping.html" rel="external" data-icon="basket-blue" class="ui-state-persist bluetext" style="vertical-align: middle;margin-top:-18px"></a></li>
+					<li><a id="list" href="menu.html" rel="external"
+						data-icon="list-blue" class="ui-state-persist" onclick="return check_selected()"></a></li>
+
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+
+
+
+	</div>
+	<!-- /page -->
+	<script src="js/function.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		/*$("input").blur(function() 
+		{
+			$("[data-role=footer]").show();
+		});
+
+		$("input").focus(function() 
+		{
+			$("[data-role=footer]").hide();
+		});*/
+		
+		var initialScreenSize = window.innerHeight;
+	window.addEventListener("resize", function() {
+    if(window.innerHeight < initialScreenSize){
+        $("[data-role=footer]").hide();
+	//	alert("SSSSS");
+    }
+    else{
+        $("[data-role=footer]").show();
+		
+  $('#search').blur();
+  
+		
+    }
+	});
+	
+	
+		function check_selected()
+		{
+		var checkflag = localStorage.getItem('menuflag');
+			if(checkflag!=1)
+			{
+			 
+			 custom_alert('Please click on the listed store','HomePage');
+			 return false;
+			}
+			else
+			{
+			 return true;
+			}
+		
+		}
+		
+		function changeFavImage(i,id,store_name,category,description,streetno,streetname,city,state,miles,imgurl){
+
+			var user =localStorage.getItem('userid');
+				
+			if(document.getElementById('favStatus'+id).value=="0"){
+				
+				document.getElementById('favImage'+id).src="images/heart_orange.png";
+				document.getElementById('favStatus'+id).value="1";
+				document.getElementById('favImage'+i).src="images/heart_orange.png";
+				document.getElementById('favStatus'+i).value="1";
+				
+				select_fav(id,user,store_name,category,description,streetno,streetname,city,state,miles,imgurl);
+
+			}
+			else if(document.getElementById('favStatus'+id).value=="1")
+			{
+				document.getElementById('favImage'+id).src="images/heart_blue.png";
+				document.getElementById('favStatus'+id).value="0";
+				document.getElementById('favImage'+i).src="images/heart_blue.png";
+				document.getElementById('favStatus'+i).value="0";
+				unsele_fav(id,user);
+			}
+		}
+		function changeFavImage_div(i,id,store_name,category,description,streetno,streetname,city,state,miles,imgurl){
+		
+
+			var user =localStorage.getItem('userid');
+				
+			if(document.getElementById('favStatus'+i).value=="0"){
+				
+				document.getElementById('favImage'+i).src="images/heart_orange.png";
+				document.getElementById('favStatus'+i).value="1";
+				document.getElementById('favImage'+id).src="images/heart_orange.png";
+				document.getElementById('favStatus'+id).value="1";
+				
+				select_fav(id,user,store_name,category,description,streetno,streetname,city,state,miles,imgurl);
+
+			}
+			else if(document.getElementById('favStatus'+i).value=="1")
+			{
+				document.getElementById('favImage'+i).src="images/heart_blue.png";
+				document.getElementById('favStatus'+i).value="0";
+				document.getElementById('favImage'+id).src="images/heart_blue.png";
+				document.getElementById('favStatus'+id).value="0";
+				unsele_fav(id,user);
+			}
+		}
+		
+		
+		
+		function changeFavImage1(i,id,store_name,category,description,streetno,streetname,city,state,miles,imgurl){
+			var user =localStorage.getItem('userid');
+				
+			if(document.getElementById('favourite'+id).value=="0"){
+				
+				document.getElementById('favImage'+id).src="images/heart_orange.png";
+				document.getElementById('favourite'+id).value="1";
+				
+				select_fav(id,user,store_name,category,description,streetno,streetname,city,state,miles,imgurl);
+				
+			}
+			else if(document.getElementById('favourite'+id).value=="1")
+			{
+				document.getElementById('favImage'+id).src="images/heart_blue.png";
+				document.getElementById('favourite'+id).value="0";
+				unsele_fav(id,user);
+				find_favourites();
+			}
+		}
+		function changeFavImage_div1(i,id,store_name,category,description,streetno,streetname,city,state,miles,imgurl){
+		
+			var user =localStorage.getItem('userid');
+				
+			if(document.getElementById('favourite'+i).value=="0"){
+				
+				document.getElementById('favImage'+i).src="images/heart_orange.png";
+				document.getElementById('favourite'+i).value="1";
+				
+				select_fav(id,user,store_name,category,description,streetno,streetname,city,state,miles,imgurl);
+			}
+			else if(document.getElementById('favourite'+i).value=="1")
+			{
+				document.getElementById('favImage'+i).src="images/heart_blue.png";
+				document.getElementById('favourite'+i).value="0";
+				unsele_fav(id,user);
+				find_favourites();
+			}
+		}
+
+		function demo(id){
+			if(id.value==0)
+			{
+
+				document.getElementById('lblCat').style.border="1px solid #ff9000";
+				document.getElementById('lblCat1').style.border="1px solid #e5e5e5";
+			}
+			else if(id.value==1)
+			{
+
+				document.getElementById('lblCat1').style.border="1px solid #ff9000";
+				document.getElementById('lblCat').style.border="1px solid #e5e5e5";
+			}
+		}
+
+
+		function changeSearch(s)
+		{
+			
+			if(document.getElementById(s).value.length>=1)
+			{
+
+				
+				document.getElementById('searchIcon').src="images/search_orange.png";
+				document.getElementById('searchIcon').style.border="1px solid #ff9000";
+			}
+			else
+			{
+				document.getElementById('searchIcon').src="images/search_grey.png";
+				document.getElementById('searchIcon').style.border="1px solid #e5e5e5";
+				sen_zip();
+			}
+		}
+
+		function changeFile(id,storeName){
+
+        var networkState = navigator.connection;
+
+        var states = {};
+        states[Connection.UNKNOWN]  = 'Unknown connection';
+        states[Connection.ETHERNET] = 'Ethernet connection';
+        states[Connection.WIFI]     = 'WiFi connection';
+        states[Connection.CELL_2G]  = 'Cell 2G connection';
+        states[Connection.CELL_3G]  = 'Cell 3G connection';
+        states[Connection.CELL_4G]  = 'Cell 4G connection';
+        states[Connection.NONE]     = 'No network connection';
+
+        
+  if(states[Connection.NONE] != states[networkState] )
+  {
+	 
+			location.href="menu.html";
+			localStorage.setItem('menuid',id);
+                        localStorage.setItem('storeName',storeName);
+}
+else
+{
+
+custom_alert('You are currently offline','HomePage');
+}
+		}
+	</script>
+</body>
+</html>
+

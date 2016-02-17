@@ -1,0 +1,63 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "cordova-plugin-vibration": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        },
+        "nl.x-services.plugins.socialsharing": {
+            "PACKAGE_NAME": "com.ayenda.buylive.mobile"
+        }
+    },
+    "dependent_plugins": {}
+}

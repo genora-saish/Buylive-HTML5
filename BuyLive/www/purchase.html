@@ -1,0 +1,1080 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+   <title>Buy Live</title>
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+   
+  
+   <script src="js/jquery-1.9.1.min.js"></script>
+   <script src="js/jquery.mobile-1.3.2.js"></script>
+    <script src="cordova.js"></script>
+    <script src="js/app.js" type="text/javascript"></script>
+    <script type="text/javascript" charset="utf-8" src="js/PayPal.js"></script>	
+     <script src="js/dbsql.js"></script>
+   <script>
+   document.addEventListener("online", function()
+			{
+		
+			});
+
+	document.addEventListener("offline", function()
+			{
+		
+		custom_alert('Please turn on GPS or wifi to browse through the App','Purchase');
+			});
+
+	document.addEventListener("deviceready", onDeviceReady, false);
+	function onDeviceReady()
+   {
+			
+                        $("#initialtable").css("display","none");
+                        $("#initialtable1").css("display","block");
+                        
+                        $('#DeliveryAddressDiv').css({'display':'block'});
+                        $('#DeliveryAddressDiv').trigger('expand');
+                        
+			initDatabase();
+			order_details();
+			setuserdetails();
+                        localStorage.setItem('deliverymethod','Delivery');
+                       
+			
+	}
+	    $(document).ready(function(){
+	    
+	   
+		
+			$(window).bind('resize', function () {
+			    console.log('width = ' + $('[data-role="page"]').width());
+			    console.log('height = ' + $('[data-role="page"]').height()); 
+			    var contentHeight = $('[data-role="content"]').height();
+			     var pageHeight = $('[data-role="page"]').height();
+			  
+			    var divHeight = $('#loginHeader').height()+$('#loginDiv').height();
+			    
+			    var marginDiv = ((pageHeight-divHeight)/8);
+			   		    
+
+			    $('#loginTitle').css({'margin-top':marginDiv});
+
+			}).trigger('resize');
+			
+		});
+		
+		var text;
+		function order_details()
+		{
+		text='';
+		document.getElementById('order_details').innerHTML = "";
+		
+		var count=0;
+		var userid=localStorage.getItem('userid');
+		var storeid=localStorage.getItem('checkout_storeid');
+		var subtotal=localStorage.getItem('checkout_subtotal');
+		var tax=localStorage.getItem('checkout_tax');
+                var deliveryfee=localStorage.getItem('checkout_deliveryfee');
+                var addtionalfee = localStorage.getItem('checkout_additionalfee');
+                var handlingCharges = parseFloat(deliveryfee) + parseFloat(addtionalfee);
+                console.log("1deliveryfee:"+deliveryfee+" "+addtionalfee);
+                var finaltotal = localStorage.getItem('checkout_finaltotal');
+		localStorage.setItem('checkout_finaltotal1',finaltotal);
+			
+			 BUYDEMO.transaction(function(tx) {
+		tx.executeSql('SELECT * FROM customer_items_details inner join customer_items on customer_items.ID=customer_items_details.mainid where customer_items.customerid="'+userid+'" and customer_items.storeid="'+storeid+'"', [], function (tx, results) {
+		var len=results.rows.length;
+            
+			for(var j=0;j<len;j++)
+			{
+			 var resultres = results.rows.item(j);
+			// alert(resultres.quantity);
+			 count=count+resultres.quantity;
+			
+			
+			
+			}
+				text = text +'<table style="padding-left:11px;font-size:14px;display:none;" id="initialtable">';
+			    text = text +'<tr>';
+				    text = text +'<td><label>Number of items in Order:</label></td>';
+				    text = text +'<td></td>';
+				    text = text +'<td></td>';
+				    text = text +'<td>'+count+'</td>';
+			    text = text +'</tr>';
+			   
+			   	text = text +'<tr>';
+			   		text = text +'<td><label>Subtotal:</label></td>';
+			   		text = text +'<td></td>';
+			   		text = text +'<td>$</td>';
+			   		text = text +'<td>'+subtotal+'</td>';
+			   text = text +'</tr>';
+			   	 text = text +'<tr>';
+			   		text = text +'<td><label>Tax</label></td>';
+			   		text = text +'<td></td>';
+			   		text = text +'<td>$</td>';
+			   		text = text +'<td>'+tax+'</td>';
+			   	text = text +'</tr>';
+                      text = text +'<tr style="padding-top:3px;">';
+                      text = text +'<td><label><b>Order Total:</b></label></td>';
+                      text = text +'<td></td>';
+                      text = text +'<td><b>$</b></td>';
+                      text = text +'<td><b>'+finaltotal+'</b></td>';
+                      text = text +'</tr>';
+                 text = text +'</table>';
+                
+                      text = text +'<table style="padding-left:11px;font-size:14px;" id="initialtable1">';
+                      text = text +'<tr>';
+                      text = text +'<td><label>Number of items in Order:</label></td>';
+                      text = text +'<td></td>';
+                      text = text +'<td></td>';
+                      text = text +'<td>'+count+'</td>';
+                      text = text +'</tr>';
+                      
+                      text = text +'<tr>';
+                      text = text +'<td><label>Subtotal:</label></td>';
+                      text = text +'<td></td>';
+                      text = text +'<td>$</td>';
+                      text = text +'<td>'+subtotal+'</td>';
+                      text = text +'</tr>';
+                      text = text +'<tr>';
+                      text = text +'<td><label>Tax</label></td>';
+                      text = text +'<td></td>';
+                      text = text +'<td>$</td>';
+                      text = text +'<td>'+tax+'</td>';
+			   	 text = text +'<tr>';
+			   		text = text +'<td><label>Shipping & Handling:</label></td>';
+			   		text = text +'<td></td>';
+			   		text = text +'<td>$</td>';
+			   		text = text +'<td>'+handlingCharges+'</td>';
+			   	text = text +'</tr>';
+                      var includedshipping=parseFloat(handlingCharges) + parseFloat(finaltotal);
+                      includedshipping=(Math.round(includedshipping*100)/100).toFixed(2);
+                      
+			   	text = text +'<tr style="padding-top:3px;">';
+			   		text = text +'<td><label><b>Order Total:</b></label></td>';
+			   		text = text +'<td></td>';
+			   		text = text +'<td><b>$</b></td>';
+			   		text = text +'<td><b>'+includedshipping+'</b></td>';
+			   	text = text +'</tr>';
+			   	text = text +'</table>';
+				
+				
+				console.log(text);
+		         document.getElementById('order_details').innerHTML = text;
+		         $("#order_details").trigger("create");
+				 
+				 });
+				 });
+		
+		}
+		
+	
+	</script>
+  
+   <link rel="stylesheet" type="text/css" href="css/jquery.mobile.flatui.css" />
+   <style>
+   .clr{
+		clear: both;
+		margin:0;
+		padding:0;
+		float:none;
+	}
+	#EditOrSave:hover{
+		border:none;
+	}
+	#Confirm .ui-btn-inner {
+padding-left: 6px;
+padding-right: 6px;
+margin-right: 0px;
+margin-left: 0px;
+}
+
+
+	</style>
+	<style>
+	.addressExplicit{
+
+		margin: 0;background: #ffffff;outline: 0 !important;font-size: 14px;border: none;padding: 4px;-webkit-appearance: none;letter-spacing: normal;word-spacing: normal;text-transform: none;text-indent: 0px;text-shadow: none;text-align: start;
+	}
+
+	#deliveryDiv .ui-li .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li {
+		padding: .7em 3px;
+		display: block;
+		line-height: 28px;
+		}
+
+	#deliveryDiv .ui-collapsible-inset .ui-collapsible-content {
+	margin: 0;
+	border-right-width: 0px;
+	border-left-width: 0px;
+	}
+	
+	.ui-radio .ui-btn-icon-left .ui-btn-inner {
+	padding-left: 18px;
+	}
+
+	#lblCat .ui-btn-text{
+		position: relative;
+		top: -6px;
+	}
+
+	#lblCat1 .ui-btn-text{
+		position: relative;
+		top: -6px;
+	}
+	</style>
+	<style> 
+	h4.test
+	{
+	white-space:nowrap; 
+
+	overflow:hidden; 
+	
+	}
+
+	#payment .ui-btn-text {
+	position: relative;
+	left: -3px;
+	}
+
+	#deliveryDiv .ui-btn-text {
+	position: relative;
+	left: -3px;}
+
+
+	</style>
+	<script>
+	function pickUp(){
+		$('#DeliveryAddressDiv').trigger('collapse');
+		if(document.getElementById('pickUp').style.background=='rgb(229, 229, 229)')
+		{
+		document.getElementById('pickUp').style.background='#dbdbdb';
+		document.getElementById('pickUpInner').style.background='#dbdbdb';
+		}
+		
+	}
+	function pickUpReverse(){
+		document.getElementById('pickUp').style.background='#e5e5e5';
+	    	document.getElementById('pickUpInner').style.background='#e5e5e5';
+		
+	}
+    
+    
+    function setuserdetails()
+	{
+		var conn = checkConnection();
+        
+	    if(conn ='true')
+        
+	    {
+            
+            var userID = localStorage.getItem('userid');
+           
+            
+            
+            
+            $.ajax({
+                   
+                   url: 'http://buyzenga.com:7003/BPL/rest/CouponRESTProxy/retrieveCustomer',
+                   
+                   type: 'POST',
+                   
+                   datatype : 'application/xml',
+                   
+                   data: userID,
+                   
+                   contentType: 'application/xml',
+                   
+                   
+                   
+                   success: function (result) {
+                   
+                   var firstname = $(result).find("firstName").text();
+                  
+                   var lastname = $(result).find("lastName").text();
+                   var streetNumber = $(result).find("streetNumber").text();
+                   var streetName = $(result).find("streetName").text();
+                   var city = $(result).find("city").text();
+                   var state = $(result).find("state").text();
+                   var country = $(result).find("country").text();
+                   var zipcode = $(result).find("zipCode").text();
+                   var avitar_url = $(result).find("avitar_url").text();
+                   var email = $(result).find("email").text();
+                   var phonenumber = $(result).find("phoneNumber").text();
+                   
+                   console.log("received resp zip:"+zipcode+" country:"+country);
+                   localStorage.setItem('avtarurl',avitar_url);                   
+                   localStorage.setItem('phonenumber',phonenumber);
+                   localStorage.setItem('email',email);
+                   localStorage.setItem('country',country); 
+                   localStorage.setItem('zip',zipcode); 
+                   
+                   document.getElementById('ReceipientName').innerHTML= firstname;
+                   document.getElementById('ReceipientlastName').innerHTML=lastname;
+                   document.getElementById('StreetNo').innerHTML=streetNumber;
+                   document.getElementById('StreetName').innerHTML=streetName;
+                   document.getElementById('City').innerHTML=city;
+                   document.getElementById('State').innerHTML=state;
+                   document.getElementById('EmailId').innerHTML=email;
+                   document.getElementById('PhoneNo').innerHTML=phonenumber;
+                   },
+                   
+                   error: function (jqXHR, tranStatus, errorThrown) {
+                   
+                   custom_alert('There was an error connecting to the service.Please try again','Purchase');
+                   
+                   }
+                   
+                   }); 
+                   
+                   
+	    }
+        else
+	    {
+            
+            custom_alert('You are currently offline','Purchase');
+            
+	    } 
+        
+	}
+		
+	function getDateTime() {
+    var now     = new Date(); 
+    var year    = now.getFullYear();
+    var month   = now.getMonth()+1; 
+    var day     = now.getDate();
+    var hour    = now.getHours();
+    var minute  = now.getMinutes();
+    var second  = now.getSeconds(); 
+    if(month.toString().length == 1) {
+        var month = '0'+month;
+    }
+    if(day.toString().length == 1) {
+        var day = '0'+day;
+    }   
+    if(hour.toString().length == 1) {
+        var hour = '0'+hour;
+    }
+    if(minute.toString().length == 1) {
+        var minute = '0'+minute;
+    }
+    if(second.toString().length == 1) {
+        var second = '0'+second;
+    }   
+    var dateTime = year+'-'+month+'-'+day+'T'+hour+':'+minute+':'+second+'Z';   
+    return dateTime;
+	}
+	
+	
+	        var returnSuccess  = new Array();
+function okies()
+{
+    edit_address();
+	
+    var finaltotal=localStorage.getItem('checkout_finaltotal1');
+	var cust_username = localStorage.getItem('cust_username');
+    returnSuccess[0] = finaltotal;
+	returnSuccess[1] = cust_username;
+    callNativePlugin( returnSuccess );
+}
+    function callNativePlugin( returnSuccess )
+    {
+       
+       
+        PayPal.callNativeFunction( nativePluginResultHandler, nativePluginErrorHandler, returnSuccess );
+        
+    }
+    
+    var counter_size = 0;
+	function nativePluginResultHandler (result)
+	{
+		
+       
+        
+        $('#loadTry').popup("open");
+        $("#loadTry").popup({dismissible:false});
+         processorder();
+         
+        
+        
+        
+        
+	}
+    
+	function nativePluginErrorHandler (error)
+	{
+       
+        callerror();
+		
+       
+        
+        
+	}
+    
+    function callerror()
+    {
+        
+        custom_alert('Payment Unsuccessfull','Purchase');
+        
+    }
+
+    
+    
+	
+	function processorder()
+	{
+		var finaltotal=localStorage.getItem('checkout_finaltotal1');
+		var subtotal=localStorage.getItem('checkout_subtotal');
+		var tax=localStorage.getItem('checkout_tax');
+		var store_id = localStorage.getItem('checkout_storeid');
+		var email = localStorage.getItem('email');
+		var cust_username = localStorage.getItem('cust_username');
+		var deliverymethod = localStorage.getItem('deliverymethod');
+        var phonenumber = localStorage.getItem('phonenumber');
+        
+        /*alert('finaltotal'+finaltotal);
+         alert('subtotal'+subtotal);
+         alert('tax'+tax);
+         alert('storeid'+store_id);
+         alert('custname'+cust_username);*/
+        var firstname=document.getElementById('ReceipientName').innerText;
+        var lastname=document.getElementById('ReceipientlastName').innerText;
+        var StoreStreetNo=document.getElementById('StreetNo').innerText;
+        var StoreStreetName=document.getElementById('StreetName').innerText;
+        var StoreCity=document.getElementById('City').innerText;
+        var StoreState=document.getElementById('State').innerText;
+        var StoreCountry=document.getElementById('Country').innerText;
+        var StoreZipCode=document.getElementById('ZipCode').innerText;
+		var comment=document.getElementById('comments').value;
+		//alert(comment);
+        console.log('str no'+StoreStreetNo);
+        console.log('str country'+StoreCountry);
+		
+        
+		var txt='';
+        var userid= localStorage.getItem('userid');
+        var date=getDateTime();
+        // alert('date'+date);
+        txt='';
+		var conn = checkConnection();
+        
+        if(conn='true')
+        
+        {
+            BUYDEMO.transaction(function(tx) {
+                                tx.executeSql('SELECT * FROM customer_items_details inner join customer_items on customer_items.ID=customer_items_details.mainid where customer_items.customerid="'+userid+'"', [], function (tx, results) {
+                                              var len=results.rows.length;
+                                              
+                                              txt = txt + '<?xml version="1.0" encoding="UTF-8"?><couponReq:couponRequest xsi:schemaLocation="http://schema.ayenda.com/smartBuy/couponReq couponRequest.xsd" xmlns:coupon="http://schema.ayenda.com/smartBuy/coupon" xmlns:couponReq="http://schema.ayenda.com/smartBuy/couponReq" xmlns:ns2="http://schema.ayenda.com/smartBuy/customer" xmlns:ns3="http://schema.ayenda.com/smartBuy/credential" xmlns:item="http://schema.ayenda.com/smartBuy/item" xmlns:ns1="http://schema.ayenda.com/smartBuy/order" xmlns:ed2="http://schema.ayenda.com/smartBuy/store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+                                              txt = txt + '<ed2:store>';
+                                              txt = txt + '<storeID>'+store_id+'</storeID>';
+                                              txt = txt + '<ns1:order>';
+                                              txt = txt + '<tax>'+tax+'</tax>';
+                                              txt = txt + '<sub_total>'+subtotal+'</sub_total>';
+                                              txt = txt + '<total>'+finaltotal+'</total>';
+                                              
+                                              for(var j=0;j<len;j++)
+                                              {
+                                              var resultres = results.rows.item(j);
+                                              txt = txt + '<item:item>';
+                                              txt = txt + '<itemID>'+resultres.itemid+'</itemID>';
+                                              txt = txt + '<qty>'+resultres.quantity+'</qty>';
+                                              txt = txt + '</item:item>';
+                                              }
+                                              txt = txt + '<status>NEW</status>';
+                                              txt = txt + '<create_date>'+date+'</create_date>';
+                                              txt = txt + '<comments>'+comment+'</comments>';
+                                              txt = txt + '<type>'+deliverymethod+'</type>';
+                                              txt = txt + '<ns2:customer>';
+                                            
+                                              txt = txt + '<firstName>'+firstname+'</firstName>';
+                                              txt = txt + '<lastName>'+lastname+'</lastName>';
+                                              txt = txt + '<phoneNumber>'+phonenumber+'</phoneNumber>';
+                                              txt = txt + '<ns2:location>';
+                                              /*txt = txt + '<streetNumber>Lane 9</streetNumber>';
+                                               txt = txt + '<streetName>Blue Angel</streetName>';
+                                               txt = txt + '<city>Los Angeles </city>';
+                                               txt = txt + '<state>California</state>';
+                                               txt = txt + '<zipCode>92656</zipCode>';
+                                               txt = txt + '<country>United States</country>';*/
+                                              txt = txt + '<streetNumber>'+StoreStreetNo+'</streetNumber>';
+                                              txt = txt + '<streetName>'+StoreStreetName+'</streetName>';
+                                              txt = txt + '<city>'+StoreCity+'</city>';
+                                              txt = txt + '<state>'+StoreState+'</state>';
+                                              txt = txt + '<zipCode>'+StoreZipCode+'</zipCode>';
+                                              txt = txt + '<country>'+StoreCountry+'</country>';
+                                              txt = txt + '</ns2:location>';
+                                              txt = txt + '<ns3:credential>';
+                                              txt = txt + '<userName>'+cust_username+'</userName>';
+                                              txt = txt + '<email>'+email+'</email>';
+                                              txt = txt + '<type>CUSTOMER</type>';
+                                              txt = txt + '</ns3:credential>';
+                                              txt = txt + '</ns2:customer>';
+                                              txt = txt + '</ns1:order>';
+                                              txt = txt + '</ed2:store>';
+                                              txt = txt + '<requestType>CUSTOMER</requestType>';
+                                              txt = txt + '</couponReq:couponRequest>';
+                                              
+                                              //alert('text'+txt);
+                                              //console.log("text: "+txt);
+                                              $.ajax({
+                                                     
+                                                     url: 'http://buyzenga.com:7003/BPL/rest/CouponRESTProxy/processOrder',
+                                                     
+                                                     type: 'POST',
+                                                     
+                                                     datatype : 'application/xml',
+                                                     
+                                                     data: txt,
+                                                     
+                                                     contentType: 'application/xml',
+                                                     
+                                                     
+                                                     
+                                                     success: function (result) {
+                                                     delete_shopped_items(store_id);
+                                                     custom_alert('Payment Successfull','Purchase');
+                                                     //location.href="shopping.html";
+                                                     $('#loadTry').popup("close");
+                                                     
+                                                     },
+                                                     
+                                                     error: function (jqXHR, tranStatus, errorThrown) {
+                                                     
+                                                     // alert('There was an error connecting to the service.Please try again');
+                                                     custom_alert('There was an error connecting to the service.Please try again','PurchasePage');
+                                                     $('#loadTry').popup("close");		
+                                                     }
+                                                     
+                                                     });
+                                              });
+                                });
+                                
+        }
+        else
+        {
+            
+	    	// alert('You are currently offline');
+            custom_alert('You are currently offline','PurchasePage');
+            
+            
+        }
+        
+	}
+	
+	function edit_address()
+	{
+		
+		
+		/*if($("#fname").val()=="")
+         {
+         //alert('Enter First Name');
+         custom_alert('Enter First Name','Profile');
+         return false;
+         }
+         
+         if($("#lname").val()=="")
+         {
+         //alert('Enter Last Name');
+         custom_alert('Enter Last Name','Profile');
+         return false;
+         }*/
+        
+        
+        
+        var method = localStorage.getItem('deliverymethod');
+        //alert(method);
+        
+        if(method == "Delivery")
+        {
+         $("#initialtable").css("display","none");
+         $("#initialtable1").css("display","block");
+        if(document.getElementById('Rname').innerText == "")
+        {
+            
+            custom_alert('Enter the first name','PurchasePage');
+            return false;
+        }
+        
+        if(document.getElementById('lname').innerText == "")
+        {
+            
+            custom_alert('Enter the last name','PurchasePage');
+            return false;
+        }
+        if(document.getElementById('LStreetNo').innerText == "")
+        {
+            
+            custom_alert('Enter the street number','PurchasePage');
+            return false;
+        }
+        if(document.getElementById('LStreetName').innerText == "")
+        {
+            
+            custom_alert('Enter the street name','PurchasePage');
+            return false;
+        }
+        if(document.getElementById('LCity').innerText == "")
+        {
+            
+            custom_alert('Enter the city','PurchasePage');
+            return false;
+        }
+        if(document.getElementById('state').innerText == "")
+        {
+            
+            custom_alert('Select State','PurchasePage');
+            return false;
+        }
+        if(document.getElementById('LCountry').innerText == "")
+        {
+            
+            custom_alert('Select Country','PurchasePage');
+            return false;
+        }
+        if(document.getElementById('LZipCode').innerText == "")
+        {
+            
+            custom_alert('Enter the zip code','PurchasePage');
+            return false;
+        }
+        else{
+            if($.isNumeric($("#LZipCode").val())){
+                if($("#LZipCode").val()<0){
+                    custom_alert('Enter Valid numeric value for zipcode','PurchasePage');
+                    return false; 
+                }
+            }
+            else{
+                custom_alert('Only Numberic values allowed for zipcode','PurchasePage');
+                return false; 
+            }
+        }
+        if(document.getElementById('LPhone').innerText == "")
+        {
+            
+            custom_alert('Enter Phone Number','PurchasePage');
+            return false;
+        }
+        }
+     
+     
+		var userid = localStorage.getItem("userid");
+		var ReceipientName=document.getElementById('Rname').innerText;
+		var ReceipientlastName=document.getElementById('lname').innerText;
+		var StoreStreetNo=document.getElementById('LStreetNo').innerText;
+                var StoreStreetName=document.getElementById('LStreetName').innerText;
+                var StoreCity=document.getElementById('LCity').innerText;
+                var StoreState=document.getElementById('state').innerText;
+                var StoreCountry=document.getElementById('LCountry').innerText;
+                var StoreZipCode=document.getElementById('LZipCode').innerText;
+		var phonenumber = localStorage.getItem('LPhone');
+		var email = localStorage.getItem("email");
+		var cust_username = localStorage.getItem("cust_username");
+		var avtarurl = localStorage.getItem("avtarurl");
+       
+		var conn = checkConnection();
+		
+        
+		
+		if(conn=='true')
+		{
+			var avitar;
+			
+            
+			
+            
+            var txt='';
+            
+            txt +='<?xml version="1.0" encoding="UTF-8"?>';
+            //txt +='<!--Sample XML file generated by XMLSpy v2012 (http://www.altova.com)-->';
+            txt +='<customer:customer xsi:schemaLocation="http://schema.ayenda.com/smartBuy/customer customer.xsd" xmlns:ns2="http://schema.ayenda.com/smartBuy/credential" xmlns:customer="http://schema.ayenda.com/smartBuy/customer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+            txt +='<customerID>'+userid+'</customerID>';
+            txt +='<firstName>'+ReceipientName+'</firstName>';
+            txt +='<lastName>'+ReceipientlastName+'</lastName>';
+            txt +='<avitar_url>'+avtarurl+'</avitar_url>';
+            txt +='<phoneNumber>'+phonenumber+'</phoneNumber>';
+            txt +='<customer:location>';
+            txt +='<streetNumber>'+StoreStreetNo+'</streetNumber>';
+            txt +='<streetName>'+StoreStreetName+'</streetName>';
+            txt +='<city>'+StoreCity+'</city>';
+            txt +='<state>'+StoreState+'</state>';
+            txt +='<country>'+StoreCountry+'</country>';
+            txt +='<zipCode>'+StoreZipCode+'</zipCode>';
+            txt +='</customer:location>';
+            txt +='<ns2:credential>';
+            txt +='<email>'+email+'</email>';
+            txt +='<userName>'+cust_username+'</userName>';
+            txt +='<type>CUSTOMER</type>';
+            txt +='</ns2:credential>';
+            txt +='</customer:customer>';			  
+            
+            
+            
+            
+            
+            console.log(txt);
+            
+            $.ajax({
+                   url: 'http://buyzenga.com:7003/BPL/rest/CouponRESTProxy/editCustomerProfile',
+                   type: 'POST',
+                   datatype : 'application/xml',
+                   data: txt,
+                   contentType: 'application/xml',
+                   
+                   success: function (result) {
+                   
+                   return true;
+                   
+                   
+                   },
+                   error: function (jqXHR, tranStatus, errorThrown) {
+                   
+                   
+                   //custom_alert('address not updated','Profile');
+                   }
+                   });
+		}
+		else
+		{
+            //alert('You are currently offline');
+            custom_alert('You are currently offline','Login');
+		}
+	}
+			  
+
+function checkConnection() {
+    var networkState = navigator.connection.type;
+
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.NONE]     = 'No network connection';
+
+    
+    
+  if(states[Connection.NONE] != states[networkState] )
+{
+return 'true';
+}
+else
+{
+return 'false';
+}
+
+}
+	</script>
+ </head>
+ <body>
+ 	<div data-role="page" data-theme="j">
+
+	   <div id="loginHeader" data-role="header" class="headerheight" data-theme="h">
+			<a href="shopping.html" rel="external" style="margin-top:-15px;" class="ui-btn-left"><div style="width:40px; height:44px;"><img class="imagesize" style="position:relative; top:17px;width:18px;height:18px;" src="images/arrow_left.png"/></div></a>	
+			<h1>Purchase Details</h1>
+		</div><!-- /header -->
+
+
+
+		<div data-role="content">
+
+<div id="loadTry" data-role="popup" data-overlay-theme="a" class="ui-content">
+    <img  src="images/ajax-loader.gif"/>
+</div>
+
+<div id="deliveryDiv" data-role="collapsible" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" >
+    <h4 class="bluetext" style="background-color:#e5e5e5;" data-role="button"   data-inline="true" >Delivery Method &nbsp;(<span id="mode">Delivery</span>)</h4>
+    <ul data-role="listview">
+        
+        
+        <li style="padding-left:17px;">
+            <div id="radioName" style="float: left">
+                <div style="float: left; width: 100%">
+                    <label style="font-weight: normal; border: 1px solid #ff9000; min-width: 62px;height:27px;" id="lblCat1"  >
+                        <input type="radio" name="category" id="category1" value="1" onclick="demo(this.value)">Delivery
+							</label>
+                </div>
+            </div>
+            
+            
+            
+            <div style="float: left; width: 20px; height: 43px;"></div>
+            
+            
+            <div id="radioCat" style="float: left">
+                <div style="float: left; width: 100%">
+                    <label
+                        style="font-weight: normal; min-width: 62px;height:27px;"
+                        id="lblCat"> <input style="padding-left:5px;" type="radio" name="category"
+                            id="catergory" value="0" onclick="demo(this.value)">Pick Up
+							</label>
+                </div>
+            </div>
+            
+            <div class="clr"></div>
+            
+            <div id="DeliveryAddressDiv" style="padding:5px;">
+		   		
+                <label>Your Shipping Address</label>
+                <table class="blacktext" style="font-weight:normal">
+                    <tr id="OuterReceipientName">
+                        <td>
+                            <label id="ReceipientName" class="blacktext" style="font-weight:normal" ></label> <label id="ReceipientlastName" class="blacktext" style="font-weight:normal" ></label>
+                        </td>
+                    </tr>
+                    
+                    <tr id="OuterStreetNo">
+			    	 	<td>
+                            <label id="StreetNo" class="blacktext" style="font-weight:normal" ></label>
+                            <label class="blacktext">,</label>
+                            <label id="StreetName" class="blacktext" style="font-weight:normal"></label>
+			    		</td>
+			    	</tr>
+                    <tr id="OuterCountry">
+			    	 	<td>
+                            <label id="Country" class="blacktext" style="font-weight:normal"></label>
+			    	 	</td>
+                    </tr>
+                    <tr id="OuterCity">
+                            <td>
+                <label id="City" class="blacktext" style="font-weight:normal"></label>
+                <label class="blacktext">,</label>
+                <label id="State" class="blacktext" style="font-weight:normal"></label>
+                            </td>
+                    </tr>
+			    	
+                    
+                    
+                    <tr id='OuterZipCode'>
+                        <td>
+                            <label id="ZipCode" class="blacktext" style="font-weight:normal"></label>
+                        </td>
+                    </tr>
+                    <tr id="EmptyCountry"></tr>
+                    <tr id="EmptyZip"></tr>
+                    <tr id="OuterEmail">
+			    	 	<td>
+                            <label id="EmailId" class="blacktext" style="font-weight:normal"></label>
+			    	 	</td>
+                    </tr>
+                    <tr id="OuterPhone">
+			    	 	<td>
+                            <label id="PhoneNo" class="blacktext" style="font-weight:normal"></label>
+			    	 	</td>
+                    </tr>
+                    
+                </table>
+                <p style="text-align:right"><a href="javascript:EditAddress();" id="EditOrSave" data-role="button" data-inline="true" style="background:#f2f2f2;border:none"><img id='Edit' src="images/pencil.png" style="width:30px; height:30px;"/></a></p>
+                
+                
+                
+            </div>
+        </li>
+    </ul>
+    
+</div>
+
+
+    <h2 style="padding-left:7px;">
+                    
+                    <label class="bluetext" style="background-color:#e5e5e5;font-size:14px;font-weight:bold;"  onclick="hideMefirstBeverage()" data-inline="true" >Comments</label></h2>
+                
+                
+                <textarea id="comments" rows="6" style="background-color:#f2f2f2;"> </textarea>
+	
+    <h2 style="padding-left:7px;">
+        
+        <label class="bluetext" style="background-color:#e5e5e5;font-size:14px;font-weight:bold;"  onclick="hideMefirstBeverage()" data-inline="true" >Order Details</label></h2>
+    <div style="background-color:#f2f2f2;padding:5px;border-bottom-left-radius:5px;border-bottom-right-radius:5px;position: relative;top: -5px;" id="order_details">
+        
+    </div>
+    
+		
+
+
+			
+
+			<p style="text-align:center"><a href="#" id="Confirm" data-role="button" data-inline="true" onclick="okies();"  style="background-color:#007aff;color:#ffffff">Confirm Purchase</a></p>
+		</div><!-- /content -->
+
+ 
+
+		
+	</div><!-- /page -->
+	<script>
+            
+	function changeCountry(online,stateName){
+            //online 0: if called from UI
+            //       1: if called from function
+            //stateName : name of the selected state
+            console.log("changeCountry.."+online);
+            document.getElementById('stateListing').innerHTML = "";
+            var text = '<select name="state" id="state"><option value="" >Select State</option>';
+            var stateList = getStates($("#LCountry").val()); 
+            var x;
+            for (x in stateList) {
+                text = text+'<option value="'+stateList[x]+'" >'+stateList[x]+'</option>';
+            }   
+            text =  text+'</select>';
+            document.getElementById('stateListing').innerHTML = text;
+            
+            if(online==1){
+                $("#state").val(stateName);
+            }
+            else{
+                $("#state").val("");
+            }
+        
+        }
+
+    function EditAddress(){
+		
+		document.getElementById('EditOrSave').style.border='none';
+		if(document.getElementById('Edit')){
+                    console.log("into Edit");
+			document.getElementById('EditOrSave').innerHTML='<span class="ui-btn-inner"><span class="ui-btn-text"><img id="Save" src="images/save.png" style="width:30px; height:30px;"/></span></span>';
+			var StoreRName=document.getElementById('ReceipientName').innerText;
+			var StoreLName=document.getElementById('ReceipientlastName').innerText;
+			var StoreStreetNo=document.getElementById('StreetNo').innerText;
+			var StoreStreetName=document.getElementById('StreetName').innerText;
+			var StoreCity=document.getElementById('City').innerText;
+			var StoreState=document.getElementById('State').innerText;
+                        console.log("$('#Country').val():"+$('#Country').val());
+                        if((($("#Country").val()=="") || ($("#Country").val()=="undefined")) && (($("#ZipCode").val() == "") || ($("#ZipCode").val() == "undefined"))){
+                            $("#Country").val(localStorage.getItem('country')); 
+                            $('#ZipCode').val(localStorage.getItem('zip')); 
+                        }
+                        
+                        console.log("1$('#Country').val():"+$('#Country').val());
+                        console.log("$('#ZipCode').val():"+$('#ZipCode').val());
+                        
+			var StoreCountry=document.getElementById('Country').value;
+                        
+			var StoreZipCode=$('#ZipCode').val();
+                        var email = localStorage.getItem("email");
+                        var phone = document.getElementById('PhoneNo').innerText;
+                        console.log('StoreCountry:'+StoreCountry);
+			$( "#OuterReceipientName" ).replaceWith( "<tr id='ReceipientNameEditable'><td class='fontTwelve'>First Name</td><td><input class='addressExplicit' type='text' name='Rname' id='Rname'  value='"+StoreRName+"' placeholder='firstname'/></td></tr><tr id='ReceipientlastNameEditable'><td class='fontTwelve'>Last Name</td><td><input class='addressExplicit' type='text' name='lname' id='lname'  value='"+StoreLName+"' placeholder='lastname'/></td></tr>" );
+			$( "#OuterStreetNo" ).replaceWith( "<tr id='StreetNoEditable' ><td class='fontTwelve'>Street No.</td><td><input class='addressExplicit' id='LStreetNo' name='LStreetNo' type='text' value='"+StoreStreetNo+"' placeholder='Street No'/></td></tr>" );
+			
+			$( "#OuterCountry" ).replaceWith( "<tr id='StreetNameEditable'><td class='fontTwelve'>Street Name</td><td><input class='addressExplicit' id='LStreetName' name='LStreetName' type='text' value='"+StoreStreetName+"' placeholder='Street Name'/></td></tr>" );
+                        $( "#OuterCity" ).replaceWith( "<tr id='CityEditable'><td class='fontTwelve'>City</td><td><input class='addressExplicit' id='LCity' name='LCity' type='text' value='"+StoreCity+"' placeholder='City'/></td></tr>" );
+                        
+                         
+                        
+                        
+			
+                        
+                        
+			$( "#EmptyCountry" ).replaceWith( "<tr id='CountryEditable'><td class='fontTwelve'>Country</td><td><select name='country' id='LCountry' onchange='changeCountry(0,0)' ><option value=''>Select Country</option><option value='USA'>USA</option><option value='Canada'  >Canada</option></select></td></tr>" );
+                        $( "#EmptyZip" ).replaceWith("<tr id='StateEditable'><td class='fontTwelve'>State</td><td><div id='stateListing'></div></td></tr>");
+                        $( "#OuterZipCode" ).replaceWith( "<tr id='ZipCodeEditable'><td class='fontTwelve'>Zip code</td><td><input class='addressExplicit' id='LZipCode' name='LZipCode' type='text' value='"+StoreZipCode+"' placeholder='Zip code'/></td></tr>" );
+                        $( "#OuterEmail" ).replaceWith( "<tr id='EmailIdEditable'><td class='fontTwelve'>Email</td><td><label id='EmailId' class='blacktext' style='font-weight:normal'>"+email+"</label></td></tr>" );
+                        $( "#OuterPhone" ).replaceWith( "<tr id='PhoneEditable'><td class='fontTwelve'>Phone</td><td><input class='addressExplicit' id='LPhone' name='LPhone' type='text' value='"+phone+"' placeholder='Phone No'/></td></tr>" );
+                        
+                        $("#LCountry").val(StoreCountry);
+                        if(StoreCountry!=""){
+                            changeCountry(1,StoreState);
+                        }
+            
+			
+		}
+        
+		else if(document.getElementById('Save')){
+                    console.log("into Save");
+                    if(edit_address()){
+			document.getElementById('EditOrSave').style.border='none';
+			document.getElementById('EditOrSave').innerHTML='<span class="ui-btn-inner"><span class="ui-btn-text"><img id="Edit" src="images/pencil.png" style="width:30px; height:30px;"/></span></span>';
+			
+			var StoreRName=document.getElementById('Rname').value;
+			var StoreLName=document.getElementById('lname').value;
+			var StoreStreetNo=document.getElementById('LStreetNo').value;
+			var StoreStreetName=document.getElementById('LStreetName').value;
+			var StoreCity=document.getElementById('LCity').value;
+			var StoreState=document.getElementById('state').value;
+			var StoreCountry=document.getElementById('LCountry').value;
+			var StoreZipCode=document.getElementById('LZipCode').value;
+                        var email = localStorage.getItem("email");
+                        var phone=document.getElementById('LPhone').value;
+                        console.log('StoreCountry:'+StoreCountry);
+			$( "#ReceipientNameEditable" ).replaceWith( "<tr id='OuterReceipientName'><td><label id='ReceipientName' class='blacktext' style='font-weight:normal'></label><label id='ReceipientlastName' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+			$( "#ReceipientlastNameEditable" ).replaceWith("<label></label>");
+			$( "#StreetNoEditable" ).replaceWith( " <tr id='OuterStreetNo'><td><label id='StreetNo' class='blacktext' style='font-weight:normal'>Lane 9</label><label class='blacktext'>,</label><label id='StreetName' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+			$( "#StreetNameEditable" ).replaceWith( "<tr id='OuterCity'><td><label id='City' class='blacktext' style='font-weight:normal'></label><label class='blacktext'>,</label><label id='State' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+            
+			$( "#CityEditable" ).replaceWith( "<tr id='OuterCountry'><td><label id='Country' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+			$( "#StateEditable" ).replaceWith( "<tr id='OuterZipCode'><td><label id='ZipCode' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+			$( "#CountryEditable" ).replaceWith( " <tr id='EmptyCountry'></tr>" );
+            
+			$( "#ZipCodeEditable" ).replaceWith( "<tr id='EmptyZip'></tr>" );
+                        
+                        $( "#EmailIdEditable" ).replaceWith( "<tr id='OuterEmail'><td class='fontTwelve'>Email</td><td><label id='EmailId' class='blacktext' style='font-weight:normal'>"+email+"</label></td></tr>" );
+                        
+                      $( "#PhoneEditable" ).replaceWith( "<tr id='OuterPhone'><td class='fontTwelve'>Phone</td><td><label id='PhoneNo' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+                      
+			document.getElementById('ReceipientName').innerText=StoreRName;
+			document.getElementById('ReceipientlastName').innerText=StoreLName;
+			document.getElementById('StreetNo').innerText=StoreStreetNo;
+			document.getElementById('StreetName').innerText=StoreStreetName;
+			document.getElementById('City').innerText=StoreCity;
+			document.getElementById('State').innerText=StoreState;
+			document.getElementById('Country').innerText=StoreCountry;
+			document.getElementById('ZipCode').innerText=StoreZipCode;
+                        document.getElementById('EmailId').innerText=email;
+                        document.getElementById('PhoneNo').innerText=phone;
+                       // edit_address();
+                   }
+			
+		}
+		
+    }
+
+	</script>
+	<script>
+			function demo(value){
+			console.log("demo.."+value);
+			if(value==0)
+			{
+				$("#initialtable").css("display","block");
+                                $("#initialtable1").css("display","none");
+				document.getElementById('mode').innerHTML="Pick Up";
+				$('#DeliveryAddressDiv').trigger('collapse');
+				document.getElementById('lblCat').style.border="1px solid #ff9000";
+				document.getElementById('lblCat1').style.border="1px solid #e5e5e5";
+				//document.getElementById('DeliveryAddressDiv').style.display="none";
+				$('#DeliveryAddressDiv').css({'display':'none'});
+                                localStorage.setItem('deliverymethod','Pick Up');
+                                var finaltotal=localStorage.getItem('checkout_finaltotal');
+             
+				localStorage.setItem('checkout_finaltotal1',finaltotal);
+				
+			}
+			else if(value==1)
+			{
+                                $("#initialtable").css("display","none");
+                                $("#initialtable1").css("display","block");
+				document.getElementById('mode').innerHTML="Delivery";
+				document.getElementById('lblCat1').style.border="1px solid #ff9000";
+				document.getElementById('lblCat').style.border="1px solid #e5e5e5";
+				
+				$('#DeliveryAddressDiv').css({'display':'block'});
+                                localStorage.setItem('deliverymethod','Delivery');
+                
+                                var deliveryfee = localStorage.getItem('checkout_deliveryfee');
+                                var addtionalfee = localStorage.getItem('checkout_additionalfee');
+                                console.log("deliveryfee:"+deliveryfee+" "+addtionalfee);
+                                var finaltotal = parseFloat(deliveryfee) + parseFloat(addtionalfee) + localStorage.getItem('checkout_finaltotal');
+                                var finaltotal1 = parseFloat(finaltotal);
+                                finaltotal1=(Math.round(finaltotal1*100)/100).toFixed(2);
+				localStorage.setItem('checkout_finaltotal1',finaltotal1);
+			}
+
+
+		}
+
+
+	</script>
+ </body>
+</html>
+

@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+   <title>Buy Live</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+  <!-- <script src="js/cordova.js"></script>  -->
+   <script src="js/jquery-1.9.1.min.js"></script>
+   <script src="js/jquery.mobile-1.3.2.js"></script>
+   <script>
+
+
+	    $(document).ready(function(){
+			$(window).bind('resize', function () {
+			    console.log('width = ' + $('[data-role="page"]').width());
+			    console.log('height = ' + $('[data-role="page"]').height()); 
+			    var contentHeight = $('[data-role="content"]').height();
+			     var pageHeight = $('[data-role="page"]').height();
+			  
+			    var divHeight = $('#loginHeader').height()+$('#loginDiv').height();
+			    
+			    var marginDiv = ((pageHeight-divHeight)/8);
+			   		    
+
+			    $('#loginTitle').css({'margin-top':marginDiv});
+
+			}).trigger('resize');
+		});
+	</script>
+  
+   <link rel="stylesheet" type="text/css" href="css/jquery.mobile.flatui.css" />
+   <style>
+   .clr{
+		clear: both;
+		margin:0;
+		padding:0;
+		float:none;
+	}
+   
+   .justifytext
+   {
+     line-height: 20px;
+     font-size:12px;
+   }
+	
+	</style>
+ </head>
+ <body>
+ 	<div data-role="page" data-theme="j">
+
+	   <div id="loginHeader" data-role="header" data-position="fixed"  data-tap-toggle="false" class="headerheight" data-theme="h">
+			<a href="settings.html" rel="external" style="margin-top:-15px;" class="ui-btn-left"><div style="width:40px; height:44px;"><img class="imagesize" style="position:relative; top:17px;width:18px;height:18px;" src="images/arrow_left.png"/></div></a>	
+			<h1>Legal and Privacy</h1>
+			</div><!-- /header -->
+
+
+
+		<div data-role="content">	<div id="loginDiv" class="divcolor  blackText fontfourteen">
+            <p style="text-align:justify;line-height: 20px;">
+            
+            <p> Return Policy</p>
+            <p class="justifytext">
+            We care about customer satisfaction. If there are any problems with your order or an incorrect charge on your credit card, e-mail us at info@ayenda.com.  BuyLive is not responsible for the content and/or authenticity of the merchant or products being sold/advertised.  We will do our best to verify the vendors using our Sites, but cannot guarantee the validity of products being sold.
+            </p>
+            
+            <p>Privacy Policy</p>
+            <p class="justifytext">
+            Ayenda or BuyLive collects certain information through its websites, mobile application (BuyLive), and vendor application BuyLive Vendor (collectively, "Sites"). Your privacy is important to BuyLive and this Privacy Policy lays out BuyLive&#146;s policies and procedures surrounding the collection and handling of such information. If you do not agree to all the terms and conditions of this Privacy Policy, do not use the Sites. This Privacy Policy applies only to the Sites. It does not apply to any merchant websites, other third party services linked to BuyLive Sites or offline activities related to BuyLive services.
+            </p>
+            <p>
+            <p> Information BuyLive Collects</p>
+            <p class="justifytext">
+            BuyLive may collect the following information from users of our Sites: first name, last name, street address, city, state, zip code, phone number, e-mail address, Sites-specific display name, GPS location (mobile), electronic signature and credit card information (BuyLive does not store card information) (collectively, "Personally Identifiable Information" or "PII"). BuyLive is not intended for use by children under the age of 16, and BuyLive does not knowingly collect PII from children under the age of 16. Use of the Sites requires that you register and/or create an account ("Account") or use the Sites as a guest. In addition to the PII set forth above, BuyLive may collect information regarding Account holders' orders, favorites, customer service inquiries, product/merchant reviews, and certain social networking preferences relating to the Sites (e.g. pages or entities you like, recommend or follow).
+            </p>
+            <p class="justifytext">
+            BuyLive also collects aggregated information, demographic information and other information that does not reveal your specific identity ("Non-PII"). Non-PII may include information about the device you use to access the Sites, information from referring websites and your engagement with the Sites. BuyLive also aggregates certain information, not limited to, certain order data, gratuity information, delivery locations, delivery driver mileage, and delivery driver location. BuyLive may publish these statistics or share them with third parties without including PII.
+            </p>
+            
+            
+            <p> &#149; BuyLive Use Of Collected Information</p>
+            <p class="justifytext">
+            BuyLive uses PII to create users' BuyLive Accounts, to communicate with users, assist with Customer service inquiries, offer promotions and special offers.  BuyLive uses certain stored PII to customize future order processing for you. You may request that BuyLive cease storing certain PII at any time, but you might not be able to take advantage of certain customized features. Users may affirmatively opt-out of receiving promotional communications from BuyLive by sending e-mail to info@ayenda.com.
+            </p>
+            <p class="justifytext">
+            Full credit card numbers are transmitted to Payapl credit card processor but are not stored by BuyLive. BuyLive allows certain social media platforms to host plug-ins or widgets on the Sites which may collect certain information about those users who choose to use those plug-ins or widgets. BuyLive may also disclose PII to third parties such as attorneys, collection agencies, tribunals or law enforcement authorities pursuant to valid requests in connection with alleged violations of BuyLive terms of use and service or other alleged contract violations, infringement or similar harm to persons or property.
+            </p>
+            <p class="justifytext">
+            User generated content posted through the Sites such as service/merchant reviews and certain social networking preferences (e.g. pages you "Like" or "Follow") may be viewed by the general public. Accordingly, BuyLive cannot ensure the privacy of any PII included in such user generated content.
+            </p>
+            <p>&#149; BuyLive Protection of PII</p>
+            <p class="justifytext">
+            BuyLive uses reasonable security measures equal to or exceeding industry standard to protect PII from unauthorized access, destruction, use, modification and disclosure. Unfortunately, even with these measures, BuyLive cannot guarantee the security of PII. By using the Sites, you acknowledge and agree that GrubHub makes no such guarantee, and that you use the Sites at your own risk.
+            </p>
+            <p>
+            &#149; Accessing and Correcting Your PII</p>
+            <p class="justifytext">
+            Registered BuyLive Account holders can access and change their own PII using the "Profile" under the settings function on the BuyLive application. Account e-mail addresses cannot be deleted. However, an Account may be closed and BuyLive will cause the corresponding e-mail address to be deleted. A user may then open a new Account with a different e-mail address. If you have questions regarding BuyLive&#146;s use or collection of your PII, please contact BuyLive  at: info@ayenda.com
+            
+            </p>
+            
+            <p>Privacy Policy Amendments</p>
+            <p class="justifytext">
+            BuyLive may change this Privacy Policy at any time by posting a new version on this page or on a successor page. You agree that you will check for new versions of this Privacy Policy. By continuing to access and/or use the Sites following the posting of a new Privacy Policy version, you agree to be bound by the then-current version. If you do not agree to the terms of the new version of the Privacy Policy, you will stop using the Sites.
+            </p>
+        
+        </div>	</div><!-- /content -->
+
+
+
+
+	</div><!-- /page -->
+ </body>
+</html>
+

@@ -1,0 +1,2852 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+   <title>Buy Live</title>
+ <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+   <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densityDpi=device-dpi" />-->
+      <link rel="stylesheet" type="text/css" href="css/rating.css">
+   <link rel="stylesheet" type="text/css" href="css/edit.quantity.css">
+   <link rel="stylesheet" type="text/css" href="css/jquery.mobile.flatui.css" />
+  	<link href="css/mobiscroll.scroller.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.jqm.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.android.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.android-ics.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.ios.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.sense-ui.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.wp.css" rel="stylesheet" type="text/css" /> 
+	<link href="css/mobiscroll.animation.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" charset="utf-8" src="js/order_historyPlugin.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/order_historyPlugin1.js"></script>
+    <link href="css/owl.carousel.css" rel="stylesheet">
+    <link href="css/owl.theme.css" rel="stylesheet">
+	
+<script src="cordova.js"></script>
+<script src="js/app.js" type="text/javascript"></script>
+ <script src="js/jquery-1.9.1.min.js"></script>
+   <script src="js/jquery.mobile-1.3.2.js"></script>
+   
+   <script src="js/function.js"></script>
+   <script src="js/dbsql.js" type="text/javascript"></script>
+  <script src="js/jquery.animate_from_to-1.0.js"></script>
+
+
+  
+   <script type="text/javascript" src="js/jquery.rating.js"></script>
+ <script src="js/mobiscroll.core.js"></script>
+    <script src="js/mobiscroll.scroller.js" type="text/javascript"></script>
+
+  
+    <script src="js/mobiscroll.select.js" type="text/javascript"></script>
+    
+   
+   
+
+    <script src="js/magnific_popup/jquery.magnific-popup.min.js"> </script>
+    
+    <link rel="Stylesheet" type="text/css" href="js/magnific_popup/magnific-popup.css" />
+   
+    <!-- Styles for my specific scrolling content -->
+	
+
+   
+    <style>
+   .clr{
+		clear: both;
+		margin:0;
+		padding:0;
+		float:none;
+	}
+	
+		
+	
+
+
+	.storeAddPopUpList
+	{
+	float:left;width:98%;margin-left:-20px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin-top:-3px;position: relative;
+	}
+
+	}
+
+	@media all and (max-width: 100000px) and (min-width:436px){
+
+	  .storeAddPopUpList{
+	float:left;width:98%;margin-left:-20px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin-top:6px;position: relative;
+	}
+	}
+	
+	 .demo {
+           display: none;
+        }
+	
+       .seemore
+	   {
+		color:#636668;
+	   }
+        
+        *:focus {
+    outline: 0;
+}
+
+.cancel{
+		visibility:hidden;
+	}
+	
+	#try1 .cancel{
+	visibility: visible;
+	}
+
+	//.ui-body-c, .ui-overlay-c { background: none;}
+	</style>
+
+	<script type="text/javascript">
+		$.mobile.silentScroll(0); 
+		function cal_rating(id,ratingarray)
+		{
+                    console.log("Saish...16");
+		// alert('in rating');
+		  for(var i=0;i<id.length;i++)
+		  {
+		  //alert('rate'+ratingarray[i]);
+			$('#rate'+id[i]).rating('example.php', {maxvalue:5,increment:.5,curvalue:ratingarray[i]});
+		  }
+			
+			
+			
+		}
+		
+		function get_img(id)
+		{
+                    console.log("Saish...17");
+		//choosenpic='images/pencil.png';
+		var choosenpic="url(images/pencil.png) no-repeat";
+		 for(var i=0;i<id.length;i++)
+		  {
+			
+		$('#city'+id[i]+'_dummy').css("background",choosenpic);
+		$('#city'+id[i]+'_dummy').css({'background-size' : '30px 30px'});
+		$('#city'+id[i]+'_dummy').css({'width' : '30px'});
+		$('#city'+id[i]+'_dummy').css({'height' : '30px'});
+		$('#city'+id[i]+'_dummy').css({'background-color' : '#f5f5f5'});
+		//$('#city'+id[i]+'_dummy').css({'padding' : '3px;'});
+		$('#city'+id[i]+'_dummy').css({'border' : 'none'});
+		$('#city'+id[i]+'_dummy').css({'outline' : '0 none !important;'});
+		$('#city'+id[i]+'_dummy').css({'-webkit-appearance' : 'none'}); 
+		$('#city'+id[i]+'_dummy').css({'box-shadow' : 'none !important'});
+		//$('#city'+id[i]+'_dummy').css({'z-index' : '1005'});
+		 }
+		}
+		
+		
+		function get_quantity(id,quantity)
+		{
+                    console.log("Saish...18");
+			for(var i=0;i<id.length;i++)
+			{
+				for(var o=1;o<=100;o++)
+				{
+				$('#city'+id[i]).append(new Option(o, o));
+				}
+			}
+		}
+	</script>
+
+
+
+
+    
+   
+
+  
+		
+	
+	 <script type="text/javascript">
+	 
+   function sel_val(id,unit_price,checkid,val,itemid)
+  {
+      console.log("Saish...19");
+	//alert(id);
+//	alert('val'+val);
+	//alert('checkid'+checkid);
+	var num=document.getElementById('city'+id).value * unit_price;
+	var totalprice=(Math.round(num*100)/100).toFixed(2);
+	
+	 var store_id = localStorage.getItem('storeid_map');
+	  var userid= localStorage.getItem('userid');
+	  var quantity=document.getElementById('city'+id).value;
+  if(val==0)
+  {
+      console.log("Saish...20");
+    document.getElementById('pen_val'+id).innerHTML = document.getElementById('city'+id).value;
+   document.getElementById('tot'+id).innerHTML = totalprice;
+   //document.getElementById('anim_text'+id).value = document.getElementById('city'+id).value;
+   document.getElementById('pen_val'+checkid).innerHTML = document.getElementById('city'+id).value;
+   document.getElementById('tot'+checkid).innerHTML = totalprice;
+  // document.getElementById('anim_text'+checkid).value = document.getElementById('city'+id).value;
+  
+  }
+
+  else
+  {      
+   console.log("Saish...21");
+  document.getElementById('pen_val'+id).innerHTML = document.getElementById('city'+id).value;
+  document.getElementById('tot'+id).innerHTML = totalprice;
+  //document.getElementById('anim_text'+id).value = document.getElementById('city'+id).value;
+  }
+  
+   BUYDEMO.transaction(function(tx)
+   {
+				  
+				
+				 
+				 tx.executeSql('SELECT customer_items_details.ID FROM customer_items inner join customer_items_details on customer_items.ID=customer_items_details.mainid where customer_items.customerid='+userid+' and customer_items.storeid='+store_id+' and customer_items_details.itemid='+itemid+'', [], function (tx, results_trans) {
+				 var len = results_trans.rows.length;
+				
+				if(len!=0)
+				{
+					update_item(store_id,itemid,userid,unit_price,quantity,totalprice);
+				}
+				});
+  });
+  
+  
+ }
+  
+    </script>
+    
+    <style>
+		.ui-input-text.ui-shadow-inset.ui-corner-all.ui-btn-shadow.ui-body-j{
+			/*display:none;*/
+			border:none;
+		}
+		
+		div.ui-input-text{
+		position:absolute;
+		}
+	
+		#searchBar div {
+		position: relative;
+		}
+		.ui-body-i.ui-input-text.ui-focus{
+
+		border:none;
+	}
+	</style>
+ </head>
+	<body>
+ 	<div data-role="page" id="#buyNew-page" data-theme="j">
+
+	    <div id="loginHeader" data-role="header" data-position="fixed"  data-tap-toggle="false" class="headerheight" data-theme="h">
+			<a href="homepage.html" rel="external" style="margin-top:-15px;" class="ui-btn-left"><div style="width:40px; height:44px;"><img class="imagesize" style="position:relative; top:17px;width:18px;height:18px;" src="images/arrow_left.png"/></div></a>	
+			<h1>Products</h1>
+			<a href="shopping.html" rel="external" style="margin-top:-15px;" class="ui-btn-right"><div style="width:40px; height:44px;"><img class="imagesize" style="position:relative; top:17px;width:18px;height:18px;" src="images/arrow_right.png"/></div></a>	
+			
+		</div><!-- /header -->
+
+
+		
+		
+		<script type="text/javascript">
+		
+		
+		var pencilImage="images/pencil.png";
+		
+		function mobiscroll()
+		{
+                    console.log("Saish...22");
+		
+			$(function () 
+			{
+																									
+            var opt = {
+               
+					'select': {
+                    preset: 'select'
+							 }
+					  }
+
+
+          
+            var demo = $('#demo').val();
+           // alert(demo);
+                if (!demo.match(/select/i))
+				{
+                    $('.demo-test-' + demo).val('');
+                }
+
+                $('.demo-test-' + demo).scroller('destroy').scroller($.extend(opt[demo], {
+                   
+                }));
+                
+      
+				$('.demo').hide();
+                $('.demo-' + demo).show();
+          
+		
+		});
+		
+		}
+		
+		var text;
+		
+		 function search_menu_stores()
+		{
+		console.log("Saish...23");
+		if(document.getElementById('search').value.length==0)
+		 {
+		 
+		 custom_alert('Search cannot be blank','ProductsPage');
+		
+		 return false;
+		 }
+		$('#loadTry').popup("open");
+		$("#loadTry").popup({dismissible:false});
+		 document.getElementById('lblCat').style.border="1px solid #ff9000";
+		document.getElementById('lblCat1').style.border="1px solid #e5e5e5";
+        
+		var idarray=new Array();
+		var ratingarray=new Array();
+		var qtyarray=new Array();
+		var conn = checkConnection();
+		var quantity=1;
+        var storedeliveryfee4=localStorage.getItem('storedeliveryfee');
+		var storeid = localStorage.getItem('storeid_map');
+	     if(conn='true')
+	     {
+               console.log("Saish...24");  
+             text = '';
+             document.getElementById('display_id').innerHTML = "";
+             document.getElementById('display_id1').innerHTML = "";
+             
+			BUYDEMO.transaction(function(tx) {
+			
+			 tx.executeSql('SELECT * from store_deal_item where itemname LIKE "'+$("#search").val()+'%" group by category', [], function (tx, results)
+			{
+				 var len = results.rows.length;
+	   	
+			   
+				
+				  if(len=='0')
+				  {
+					 document.getElementById('display_id').innerHTML = "";
+					 text = text +'<div id="" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+					 text = text +'<p>No items available</p>';
+					 text = text +'</div>';
+					 document.getElementById('display_id').innerHTML = text;
+					 $('#loadTry').popup("close");
+				  }
+			   	 else
+				 {
+					 
+					 for(var k=0 ;k<len;k++)
+					 {
+						 var result = results.rows.item(k);
+						
+					var count=0;
+				 var l=0;
+				  
+				   tx.executeSql('select store_deal_item.* from store_deal_item where store_deal_item.category="'+result.category+'" and store_deal_item.storeid="'+storeid+'" and store_deal_item.itemid="'+result.itemid+'"',[], function (tx, results_res_item) {
+						 var len_res1 = results_res_item.rows.length;
+						 //alert('second query leng:'+len_res1);
+						
+					var s=0;
+				
+					var results_item = results_res_item.rows.item(s);
+					
+					text = text + '<div data-role="collapsible" id="test-search-collapsible'+l+'" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" style="position:relative;top:-84px;" >';
+					
+					text = text + '<h4 class="bluetext" style="background-color:#e5e5e5;" data-role="button"  onclick="del_div_search(\''+results_item.category+'\','+l+')" data-inline="true" >'+results_item.category+'('+len_res1+')</h4>';
+				   text = text + ' <ul data-role="listview">';
+				 for(var j=0;j<len_res1;j++)
+				{    
+					var price;
+					price='';
+					 
+				var results_item = results_res_item.rows.item(j);
+				
+					
+					//alert('resultqty:'+results_item.qty);
+					
+				idarray[count]=results_item.itemid;
+				ratingarray[count]=results_item.avg_rating;
+				qtyarray[count]=quantity;
+				//price=results_item.price*quantity;
+				//var num=results_item.price*quantity;
+				var totalprice=results_item.price*quantity;	
+				
+                                
+                                var store_img_name = results_item.imageurl.split('/')[1];
+                                var store_img = results_item.imageurl.split('/')[2];
+				
+				var image_animate = filePath+'/store/'+store_img_name+'/'+store_img;
+					text = text + '<li  data-icon="arrow-r2" style="border:5px solid #e5e5e5;padding-left:0px;padding-top: 2px;">';
+						text = text + '<div style="width:100%;height:20px;padding-top:9px;padding-right: 24px;right: 4px;">';
+							text = text + '<div style="margin:0;float:right;pointer-events: none;position: relative;top: -8px;right: 4px;" id="rate'+results_item.itemid+'" class="rating"></div>';
+						text = text + '</div>';
+						text = text + '<div >';
+						   text = text + '	<div style="margin:0;float:right;width:30px;" >';
+								text = text + '<img style="float:right;width:45px;height:45px;position: relative;top: 12px;right: -137px;" onclick="animate('+results_item.itemid+','+results_item.price+','+l+','+j+','+results_item.itemid+',\''+image_animate+'\',\''+results_item.itemname+'\',\''+results_item.imageurl+'\','+results_item.taxRate+','+results_item.delv_fee+','+results_item.adl_fee+')" id="basketImage'+results_item.itemid+'"  src="images/basket.png"/>';
+								text = text + '<input type="hidden" name="animate'+results_item.itemid+'" id="animate'+results_item.itemid+'" value="0"/>';
+								 text = text + '</div>';
+								 
+								
+							text = text + '<div style="float:left;width:380px;top: -10px;position:relative;">';
+								text = text + '<div style="float:left;padding-left:21px;padding-top: 1px;">';
+								
+                                 
+                               /*  var img = new Image();
+                                 var ds = new Date();
+                                 var sec = ds.getSeconds();
+                                 //document.getElementById("smallImage").src=path_arr+"/"+returnSuccess[1]+"?"+sec;
+                                 img.src = path_arr+'/'+store_img;
+                                 
+                                 if(!img.complete)
+                                 {
+                                 
+                                 text = text + '<img id="prod_'+results_item.itemid+'" src="images/no_image.png"  style="width:80px;height:80px;" />	';
+                                 }
+                                 else
+                                 {*/
+                                 text = text + '<img id="prod_'+results_item.itemid+'" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'"  style="width:80px;height:80px;" />	';
+                                // }
+                                 
+								text = text + '</div>';
+								text = text + '<div style="float:left;padding-left:8px;font-weight:normal;line-height: 18px;">';
+								
+									text = text + '<div style="float:left;padding-top:3px;width:80px;">';
+										
+										text = text + '<span id="storeRestaurant'+results_item.itemid+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+										
+										text = text + '<span class="lab" style="position:relative;left:-5px;top:-2px;">'+results_item.itemname+'</span>';
+										text = text + '</span><br/>';
+										 
+										text = text + '<span class="blacktext fontfourteen">Unit Price:</span><br/>';
+										text = text + '<span class="blacktext fontfourteen">Qty:</span><br/>';
+										text = text + '<span class="blacktext fontfourteen">Price:</span>';
+									text = text + '</div>';
+									
+									
+									
+
+									text = text + '<div style="float:left;padding-top:3px;padding-left:2px;">';
+										text = text + '<span class="blacktext fontfourteen"></span><br/>';
+										text = text + '<span class="orangetextnavbar fontfourteen">'+results_item.price+'</span><br/>';
+										text = text + '<span id="pen_val'+results_item.itemid+'" class="orangetextnavbar fontfourteen">'+quantity+'</span><br/>';
+										text = text + '<span id="tot'+results_item.itemid+'" class="orangetextnavbar fontfourteen">'+totalprice+'</span>';
+									text = text + '</div>';	
+									
+									text = text + '<div style="float:left;padding-top:0px;">';
+										
+										
+										
+										
+									text = text + '</div>';
+									
+								text = text + '</div>';
+							text = text + '</div>';
+						
+							text = text + '<div class="clr"></div>';
+						text = text + '</div>';
+						
+					text = text + '<div class="clr"></div>';
+					text = text + '<div><img align="right" style="padding-top:18px;" src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+results_item.itemid+')"/>';
+				 
+						text = text + ' <p style="font-size:14px;white-space:normal;padding-left:20px;padding-right:20px;padding-top:18px;line-height: 18px;">';
+									text = text + ''+results_item.description+''; 
+							text = text + '</p>';
+							text = text + '<div onclick="changeFile('+results_item.itemid+')" style="font-size:12px;width:65px;float:right;margin-top:-8px;margin-right:-3px;font-weight:normal;" class="seemore">See more ..</div>';
+					text = text + '</div>';
+							
+						text = text + '</li>';
+						
+						count++;
+						$('#loadTry').popup("close");
+						}
+						text = text + '</ul>';
+						text = text + '</div>';
+						
+						var price;
+						price='';
+						
+						var results_item = results_res_item.rows.item(0);
+						
+							
+						
+						var totalprice=results_item.price*1;	
+						
+						var store_img_name = results_item.imageurl.split('/')[1];
+                                                var store_img = results_item.imageurl.split('/')[2];
+                                                
+						var image_animate = filePath+'/store/'+store_img_name+'/'+store_img;
+						 text = text + '<div id="'+results_item.category+'0" class="divcolor" style="padding:10px 20px 20px 20px; display:block;position: relative;top: -95px;border: 6px solid #e5e5e5">';
+				   text = text + '<div style="width:100%;height:20px;position: relative;top: -7px;">';
+					text = text + '	<div style="margin:0;float:right;pointer-events: none;" id="rate'+l+'" class="rating"></div>';
+				   text = text + '</div>';
+				   text = text + '<div >';
+					   text = text + '<div style="margin:0;float:right;width:30px;position:relative;" >';
+							text = text + '<img style="float:right;width:45px;height:45px;position: relative;top:13px;right: -141px;" id="basketImage'+l+'" onclick="animate('+l+','+results_item.price+','+results_item.itemid+',0,'+results_item.itemid+',\''+image_animate+'\',\''+results_item.itemname+'\',\''+results_item.imageurl+'\','+results_item.taxRate+','+results_item.delv_fee+','+results_item.adl_fee+')" src="images/basket.png"/>';
+							text = text + '<input type="hidden" name="animate'+l+'" id="animate'+l+'" value="0"/>';
+						text = text + '</div>';
+						
+						text = text + ' <div id="popup'+l+'" data-role="popup" style="border-color:#007aff;padding:20px;display:none">';
+								text = text + '<label style="color:#ff9000">This product has already been added.</label><br/>';
+								
+								text = text + '<p style="text-align:center">';	
+						 text = text + '<a href="#" rel="external" data-inline="true"  style="padding-right:5px;min-width:60px" onclick="close_pop('+l+')" data-role="button" >OK</a>';
+					text = text + '</p>';
+					
+								text = text + '</div>';
+						
+						text = text + '<div style="float:left;width:300px;position: relative;top: -10px;">';
+							text = text + '<div style="float:left;padding-left:2px;padding-top:1px;">';
+                                 
+                               /*  var img = new Image();
+                                 var ds = new Date();
+                                 var sec = ds.getSeconds();
+                                 //document.getElementById("smallImage").src=path_arr+"/"+returnSuccess[1]+"?"+sec;
+                                 img.src = filePath+'/store/'+store_img_name+'/'+store_img;
+                                 
+                                 if(!img.complete)
+                                 {
+                                 text = text + '<img id="prod_'+l+'" src="images/no_image.png" style="width:80px;height:80px;" />';
+                                 }
+                                 else
+                                 {*/
+                                 text = text + '<img id="prod_'+l+'" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" style="width:80px;height:80px;" />';
+                             //    }
+								
+										
+							text = text + '</div>';
+							
+							text = text + '<div style="float:left;padding-left:8px;font-weight:normal;">';
+							
+								text = text + '<div style="float:left;padding-top:2px; width:80px;">';
+									//text = text + '<span class="bluetext fontsixteen">'+results_item.itemname+'</span><br/>';
+									text = text + '<span id="storeRestaurant'+l+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+										
+										text = text + '<span class="lab" style="position:relative;left:-5px;top:-2px">'+results_item.itemname+'</span>';
+									text = text + '</span><br/>';
+									//text = text + '<div class="clr"></div>';
+									text = text + '<span class="blacktext fontfourteen">Unit Price:</span><br/>';
+									text = text + '<span class="blacktext fontfourteen">Qty:</span><br/>';
+									text = text + '<span class="blacktext fontfourteen">Price:</span>';
+								text = text + '</div>';
+
+									
+								
+								text = text + '<div style="float:left;padding-top:2px;padding-left:2px;">';
+									text = text + '<span class="blacktext fontfourteen"></span><br/>';
+										text = text + '<span class="orangetextnavbar fontfourteen">'+results_item.price+'</span><br/>';
+										text = text + '<span id="pen_val'+l+'" class="orangetextnavbar fontfourteen">'+quantity+'</span><br/>';
+										text = text + '<span id="tot'+l+'" class="orangetextnavbar fontfourteen">'+totalprice+'</span>';
+								text = text + '</div>';	
+								
+								text = text + '<div style="float:left;padding-top:0px;">';
+									
+										
+										
+										
+								text = text + '</div>';
+							text = text + '</div>';
+						text = text + '</div>';
+						
+						text = text + '<div class="clr"></div>';
+					text = text + '</div>';
+					
+					text = text + '<div><img align="right"  src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+results_item.itemid+')"/>';
+				 
+						 text = text + '<p style="font-size:14px;">';
+									text = text + ''+results_item.description+'';  
+							text = text + '</p>';
+							text = text + '<div onclick="changeFile('+results_item.itemid+')" style="font-size:12px;width:65px;float:right;margin-top:-8px;margin-right:-3px;" class="seemore">See more ..</div>';
+					text = text + '</div>';
+				text = text + '</div>';
+				idarray[count]=l;
+				ratingarray[count]=	results_item.avg_rating;
+				qtyarray[count]=results_item.quantity;				
+					count++;
+						l++;
+						s++;
+						
+					 document.getElementById('display_id').innerHTML = text;
+					 $("#display_id").trigger("create");
+					
+					 
+					  
+					  
+					  
+					  $(window).bind('resize', function () {
+					   // alert($('#outer').width());
+					   
+					   var divWidth = $('#outer').width();
+					   var useDivWidth= divWidth-80;
+					   var radioButtonWidth=0.25*useDivWidth;
+					   var searchBar=0.5*useDivWidth;
+
+
+						
+						
+						 $('#radioCat').css({'width':radioButtonWidth});
+						 $('#radioName').css({'width':radioButtonWidth});
+						 $('#searchBar').css({'width':searchBar});
+
+
+						}).trigger('resize');
+						
+						mobiscroll();
+						cal_rating(idarray,ratingarray); 		 
+						//get_quantity(idarray,qtyarray);
+						get_img(idarray);
+						
+						});
+						
+						}
+					
+					}
+			
+			});
+			});
+			 
+		 } 
+		else
+		 {
+			
+			 custom_alert('You are currently offline','ProductsPage');
+			 $('#loadTry').popup("close");
+		 }
+  
+  
+		}
+		
+		var text1;
+		function store(resultres,storeid)
+		{
+		console.log("Saish...25");
+		text1 = '';
+		
+		//document.getElementById('display_header').innerHTML = "";
+		localStorage.setItem('storeid_map',storeid);
+		localStorage.setItem('storename',resultres.storeName);
+                localStorage.setItem('deliveryfee',resultres.deliveryfee);
+                localStorage.setItem('storeadditionalfee',resultres.additional_fee);
+		localStorage.setItem('storeimage',resultres.storeimg);
+		
+			text1 = text1 + '<div style="height:18px;"></div>';
+			text1 = text1 + '<div class="clr bluetext" style="text-align:center;position: relative;top: -28px;padding-bottom:13px;">'+resultres.storeName+'<br/><label class="blacktext" style="font-size:14px;">'+resultres.streetNumber+' '+resultres.streetName+',<br />'+resultres.city+' '+resultres.state+'</label></div>';
+					
+			
+			text1 = text1 + '<div class="clr"></div>';
+			var phoneNumber;
+			if((resultres.phoneNumber=='undefined')|| (resultres.phoneNumber==''))
+			{
+				//alert('No phone number present');
+				custom_alert('No phone number present','ProductsPage');
+			}
+			else
+			{
+				phoneNumber=resultres.phoneNumber;
+			}
+			
+			text1 = text1 + '<p style="text-align:center;position: relative;top: -57px;">';
+			text1 = text1 + '<a href="tel:'+phoneNumber+'" style="padding-right:10px;" data-inline="true"><img style="background:#F6F5F1;width:30px;height:30px;" src="images/phone.png"/></a>';
+			text1 = text1 + '<a href="googleMaps.html" rel="external" style="padding-right:10px;" data-inline="true"><img style="background:#F6F5F1;width:30px;height:30px;"  src="images/location.png"/></a>';
+			text1 = text1 + '<a href="info.html"  rel="external" data-inline="true"><img style="background:#F6F5F1;width:30px;height:30px;" src="images/info.png"/></a></p>';
+			text1 = text1 + '<div class="clr"></div>';
+			
+			
+			//text = text + '<div>';
+			 text1 = text1 + '  <div id="outer" style="position: relative;top: -73px;">';
+
+			   		text1 = text1 + '<div  id="radioCat" style="float:left">';
+			   			text1 = text1 + '<div style="float:left;width:100%">';
+			   				text1 = text1 + '<label style="font-weight:normal;border:1px solid #ff9000;min-width:62px;" id="lblCat">';
+					        text1 = text1 + '<input  type="radio" name="category" id="catergory" value="0" onclick="demo(this.value);store_details1('+storeid+');" checked >Category</label>';
+			   			   text1 = text1 + '</div>';
+			   		text1 = text1 + '</div>';
+
+			   		text1 = text1 + '<div style="float:left;width:20px;height:43px;">   </div>';
+
+			   		text1 = text1 + '<div id="radioName" style="float:left">';
+			   			text1 = text1 + '<div style="float:left;width:100%">';
+			   				text1 = text1 + '<label style="font-weight:normal;min-width:62px;" id="lblCat1">';
+					      	text1 = text1 + '<input type="radio" name="category" id="category1" value="1" onclick="demo(this.value);store_details_name('+storeid+');">Name</label>';
+			   			text1 = text1 + '</div>';
+			   		text1 = text1 + '</div>';
+
+			   		text1 = text1 + '<div style="float:left;width:20px;height:43px;">   </div>';
+			   		
+					
+					text1 = text1 + '<div id="searchBar" style="float: left;">';
+						text1 = text1 + '<input type="text" name="search" id="search" value="" placeholder="Search" style="border: none" onkeyup="changeSearch(this.id);" >';
+					text1 = text1 + '</div>';
+
+					text1 = text1 + '<div style="float: left; width: 30px; height: 30px;">';
+						text1 = text1 + '<img id="searchIcon" style="background-color: white; border: 1px solid #e5e5e5; height: 25.5px; position: relative; top: 7px; left: 2px; float: right;" src="images/search_grey.png" onclick="search_menu_stores();" alt="" />';
+					text1 = text1 + '</div>';
+			  	    text1 = text1 + '<div class="clr"></div>';
+			
+			  text1 = text1 + ' </div>';
+			//text = text + '</div>';
+			text1 = text1 + '<div class="clr"></div>';
+			
+			document.getElementById('display_header').innerHTML = text1;
+		         $("#display_header").trigger("create");
+				 
+			
+				// store_details(storeid);
+		}
+		
+		
+        
+        
+        function store_details(store_id)
+		{
+                    console.log("Saish...26");
+            text = '';
+            document.getElementById('display_id').innerHTML = "";
+            document.getElementById('display_id1').innerHTML = "";
+            //k=0;
+            var idarray=new Array();
+            var ratingarray=new Array();
+            var qtyarray=new Array();
+            var quantity=1;
+            
+		//	var storedeliveryfee=localStorage.getItem('storedeliveryfee');
+			BUYDEMO.transaction(function(tx) {
+                                
+                                tx.executeSql('SELECT count(*) as num,category,itemid from store_deal_item where storeid="'+store_id+'" group by category', [], function (tx, results)
+                                             {
+                                              var itemID = "";
+                                              var len = results.rows.length;
+                                              var numoftimes=0;
+                                              ///alert('first query leng:'+len);
+                                              
+                                              if(len=='0')
+                                              {
+                                              document.getElementById('display_id').innerHTML = "";
+                                              document.getElementById('display_id1').innerHTML = "";
+                                              text = text +'<div id="" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+                                              text = text +'<p>No items available</p>';
+                                              text = text +'</div>';
+                                              document.getElementById('display_id').innerHTML = text;
+                                              $('#loadTry').popup("close");
+                                              }
+                                              else
+                                              {
+                                              var l=0;
+                                              var counter=1;
+                                              var counter1=0;
+                                              for(var k=0 ;k<len;k++)
+                                              {
+                                              var result = results.rows.item(k);
+                                              counter1++;
+                                              var count=0;
+                                              
+                                              var imgText = "";
+                                              itemID = result.itemid;
+                                              console.log("Got the item id:"+itemID);
+                                              tx.executeSql('select store_deal_item.* from store_deal_item where store_deal_item.category="'+result.category+'" and store_deal_item.storeid="'+store_id+'"',[], function (tx, results_res_item) {
+                                                            var len_res1 = results_res_item.rows.length;
+                                                            // alert('second query leng:'+len_res1);
+                                                            numoftimes++;
+                                                            var s=0;
+                                                            //alert("testcollapsible"+l);
+                                                            var results_item = results_res_item.rows.item(s);
+                                                            
+                                                            
+                                                            
+                                                            text = text + '<div data-role="collapsible" id="testcollapsible'+l+'" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" style="position:relative;top:-84px;" >';
+                                                            
+                                                            text = text + '<h4 class="bluetext" style="background-color:#e5e5e5;" data-role="button"  onclick="del_div1(\''+results_item.category+'\','+l+')" data-inline="true" >'+results_item.category+'('+len_res1+')</h4>';
+                                                            text = text + ' <ul data-role="listview">';
+                                                    
+                                                            for(var j=0;j<len_res1;j++)
+                                                            {
+                                                            var price;
+                                                            price='';
+                                                            
+                                                            var results_item = results_res_item.rows.item(j);
+                                                            
+                                                            
+                                                            
+                                                            var returnSuccess = new Array();
+                                                            returnSuccess[0] = results_item.imageurl;
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            idarray[count]=results_item.itemid;
+                                                            ratingarray[count]=results_item.avg_rating;
+                                                            qtyarray[count]=quantity;
+                                                            
+                                                            
+                                                            var totalprice=results_item.price*1;
+                                                            console.log("store url:"+results_item.imageurl);
+                                                            
+                                                            var store_img_name = results_item.imageurl.split('/')[1];
+                                                            var store_imgin = results_item.imageurl.split('/')[2];
+                                                           //returnSuccess[1] = store_imgin;
+                                                           
+                                                          //  returnSuccess[2] = results_item.itemid;
+                                                            //callNativePlugin( returnSuccess );
+                                                            var image_animatein = filePath+'/store/'+store_img_name+'/'+store_imgin;
+                                                            text = text + '<li  data-icon="arrow-r2" style="border:5px solid #e5e5e5;padding-left:0px;padding-top: 2px;">';
+                                                            text = text + '<div style="width:100%;height:20px;padding-top:9px;padding-right: 24px;right: 4px;">';
+                                                            text = text + '<div style="margin:0;float:right;pointer-events: none;position: relative;top: -8px;right: 4px;" id="rate'+results_item.itemid+'" class="rating"></div>';
+                                                            text = text + '</div>';
+                                                            text = text + '<div >';
+                                                            text = text + '	<div style="margin:0;float:right;width:30px;" >';
+                                                            text = text + '<img style="float:right;width:45px;height:45px;position: relative;top: 12px;right: -137px;" onclick="animate('+results_item.itemid+','+results_item.price+','+l+','+j+','+results_item.itemid+',\''+image_animatein+'\',\''+results_item.itemname+'\',\''+results_item.imageurl+'\','+results_item.taxRate+','+results_item.delv_fee+','+results_item.adl_fee+')" id="basketImage'+results_item.itemid+'"  src="images/basket.png"/>';
+                                                            
+                                                            text = text + '<input type="hidden" name="animate'+results_item.itemid+'" id="animate'+results_item.itemid+'" value="0"/>';
+                                                            text = text + '</div>';
+                                                            
+                                                          
+                                                            text = text + '<div style="float:left;width:380px;top: -10px;position:relative;">';
+                                                            text = text + '<div style="float:left;padding-left:21px;padding-top: 1px;">';
+                                                            
+                                                       
+                                                            
+                                                            
+                                                         /*   var imgin = new Image();
+                                                           imgin.src=filePath+'/store/'+store_img_name+'/'+store_imgin;
+                                                            
+                                                            if (!imgin.complete) {
+                                                           
+                                                           // alert('imagepath'+imgin);
+                                                            text = text + '<img id="prod_'+results_item.itemid+'" src="images/no_image.png"  style="width:80px;height:80px;" />	';
+                                                            }
+                                                            else
+                                                            {
+                                                           // }*/
+                                                            
+                                                            text = text + '<img id="prod_'+results_item.itemid+'" src="'+filePath+'/store/'+store_img_name+'/'+store_imgin+'" style="width:80px;height:80px;" onclick="openImageScroller('+results_item.itemid+','+store_id+',\''+store_imgin+'\');" />';
+                                                            
+                                                          //  }
+                                                            
+                                                            
+                                                            text = text + '</div>';
+                                                            text = text + '<div style="float:left;padding-left:8px;font-weight:normal;line-height: 18px;">';
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:1px;width:80px;">';
+                                                            
+                                                            
+                                                            text = text + '<div id="storeRestaurant'+results_item.itemid+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+                                                            
+                                                            text = text + '<span class="lab" style="position:relative;top:-2px;">'+results_item.itemname+'</span>';
+                                                            text = text + '</div><br/>';
+                                                            //text = text + '<div class="clr"></div>';
+                                                            text = text + '<span class="blacktext fontfourteen">Unit Price:</span><br/>';
+                                                            text = text + '<span class="blacktext fontfourteen">Qty:</span><br/>';
+                                                            text = text + '<span class="blacktext fontfourteen">Price:</span>';
+                                                            text = text + '</div>';
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:3px;padding-left:2px;">';
+                                                            text = text + '<span class="blacktext fontfourteen"></span><br/>';
+                                                            text = text + '<span class="orangetextnavbar fontfourteen">'+results_item.price+'</span><br/>';
+                                                            text = text + '<span id="pen_val'+results_item.itemid+'" class="orangetextnavbar fontfourteen">'+quantity+'</span><br/>';
+                                                            text = text + '<span id="tot'+results_item.itemid+'" class="orangetextnavbar fontfourteen">'+totalprice+'</span>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:0px;">';
+                                                            
+                                                            
+                                                            
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '</div>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div class="clr"></div>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div class="clr"></div>';
+                                                            text = text + '<div><img align="right" style="padding-top:18px;" src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+results_item.itemid+')"/>';
+                                                            
+                                                            text = text + ' <p style="font-size:14px;white-space:normal;padding-left:20px;padding-right:20px;padding-top:18px;line-height: 18px;">';
+                                                            text = text + ''+results_item.description+'';
+                                                            text = text + '</p>';
+                                                            text = text + '<div onclick="changeFile('+results_item.itemid+')" style="font-size:12px;width:65px;float:right;margin-top:-8px;margin-right:-3px;font-weight:normal;" class="seemore">See more ..</div>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '</li>';
+                                                            
+                                                            count++;
+                                                            $('#loadTry').popup("close");
+                                                         
+                                                            }
+                                                            text = text + '</ul>';
+                                                            text = text + '</div>';
+                                                            
+                                                            var price;
+                                                            price='';
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            var results_item1 = results_res_item.rows.item(0);
+                                                            
+                                                            var returnSuccess1 = new Array();
+                                                            returnSuccess1[0] = results_item1.imageurl;
+                                                            //var num=results_item.price*quantity;
+                                                            var totalprice=results_item1.price*1;
+                                                            //price=results_item.price*quantity;
+                                                            
+                                                            var store_img_name = results_item1.imageurl.split('/')[1];
+                                                            var store_imgout = results_item.imageurl.split('/')[2];
+                                                            
+                                                            console.log("store_imgout:"+store_imgout);
+                                                            
+                                                           returnSuccess1[1] = store_imgout;
+                                                            returnSuccess1[2] = l;
+                                                           // callNativePlugin1( returnSuccess1 );
+                                                            
+                                                            var image_animateout = filePath+'/store/'+store_img_name+'/'+store_imgout;
+                                                            var div = results_item1.category+'0';
+                                                            text = text + '<div id="'+results_item1.category+'0" class="divcolor" style="padding:10px 20px 20px 20px; display:block;position: relative;top: -95px;border: 6px solid #e5e5e5">';
+                                                            text = text + '<div style="width:100%;height:20px;position: relative;top: -7px;">';
+                                                            text = text + '	<div style="margin:0;float:right;pointer-events: none;" id="rate'+l+'" class="rating"></div>';
+                                                            text = text + '</div>';
+                                                            text = text + '<div >';
+                                                            text = text + '<div style="margin:0;float:right;width:30px;position:relative;" >';
+                                                            text = text + '<img style="float:right;width:45px;height:45px;position: relative;top:13px;right: -141px;" id="basketImage'+l+'" onclick="animate('+l+','+results_item1.price+','+results_item1.itemid+',0,'+results_item1.itemid+',\''+image_animateout+'\',\''+results_item1.itemname+'\',\''+results_item.imageurl+'\','+results_item1.taxRate+','+results_item1.delv_fee+','+results_item1.adl_fee+')" src="images/basket.png"/>';
+                                                            text = text + '<input type="hidden" name="animate'+l+'" id="animate'+l+'" value="0"/>';
+                                                            text = text + '</div>';
+                                                            
+                                                           
+                                                            
+                                                            text = text + '<div style="float:left;width:300px;position: relative;top: -10px;">';
+                                                            text = text + '<div style="float:left;padding-left:2px;padding-top:1px;">';
+                                                            
+                                                            
+                                                          /* var imgout = new Image();
+                                                            var dsout= new Date();
+                                                            var secout = dsout.getSeconds();
+                                                            //document.getElementById("smallImage").src=path_arr+"/"+returnSuccess[1]+"?"+sec;
+                                                            imgout.src = path_arr+'/'+store_imgout;
+                                                            
+                                                            if(!imgout.complete)
+                                                            {
+                                                           // text = text + 'prod_'+l+'';
+                                                            text = text + '<img id="prod_'+l+'" src="images/no_image.png" style="width:80px;height:80px;" />';
+                                                            }
+                                                            else
+                                                            {*/
+                                                            text = text + '<img id="prod_'+l+'" src="'+filePath+'/store/'+store_img_name+'/'+store_imgout+'" style="width:80px;height:80px;" onclick="openImageScroller('+results_item1.itemid+','+store_id+',\''+store_imgout+'\');"/>';
+                                                         //   }
+                                                            
+                                                            
+                                                           
+                                                            
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div style="float:left;padding-left:8px;font-weight:normal;">';
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:2px; width:80px;">';
+                                                           
+                                                            text = text + '<span id="storeRestaurant'+l+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+                                                            
+                                                            text = text + '<span class="lab" style="position:relative;">'+results_item1.itemname+'</span>';
+                                                            text = text + '</span><br/>';
+                                                            
+                                                            text = text + '<span class="blacktext fontfourteen">Unit Price:</span><br/>';
+                                                            text = text + '<span class="blacktext fontfourteen">Qty:</span><br/>';
+                                                            text = text + '<span class="blacktext fontfourteen">Price:</span>';
+                                                            text = text + '</div>';
+                                                            
+                                                            
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:2px;padding-left:2px;">';
+                                                            text = text + '<span class="blacktext fontfourteen"></span><br/>';
+                                                            text = text + '<span class="orangetextnavbar fontfourteen">'+results_item1.price+'</span><br/>';
+                                                            text = text + '<span id="pen_val'+l+'" class="orangetextnavbar fontfourteen">'+quantity+'</span><br/>';
+                                                            text = text + '<span id="tot'+l+'" class="orangetextnavbar fontfourteen">'+totalprice+'</span>';
+                                                            text = text + '</div>';	
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:0px;">';
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            text = text + '</div>';
+                                                            text = text + '</div>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div class="clr"></div>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div><img align="right"  src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+results_item1.itemid+')"/>';
+                                                            
+                                                            text = text + '<p style="font-size:14px;">';
+                                                            text = text + ''+results_item1.description+'';
+                                                            text = text + '</p>';
+                                                            text = text + '</div>';
+                                                            text = text + '<div onclick="changeFile('+results_item1.itemid+')" style="font-size:12px;width:65px;float:right;margin-top:-8px;margin-right:-3px;" class="seemore">See more ..</div>';
+                                                            text = text + '</div>';
+                                                            idarray[count]=l;
+                                                            ratingarray[count]=	results_item1.avg_rating;
+                                                            qtyarray[count]=results_item1.quantity;
+                                                            count++;
+                                                            l++;
+                                                            s++;	
+                                                            
+                                                            document.getElementById('display_id').innerHTML = text;
+                                                            $("#display_id").trigger("create");
+                                                            
+                                                            imgText = imgText + '<img id="popUpImg_'+l+'" src="'+filePath+'/store/'+store_img_name+'/'+store_imgout+'" style="width:80px;height:80px;" />';
+                                                           
+                                                           
+                                                            counter++;
+                                                            $(window).bind('resize', function () {
+                                                                           
+                                                                           
+                                                                           var divWidth = $('#outer').width();
+                                                                           var useDivWidth= divWidth-80;
+                                                                           var radioButtonWidth=0.25*useDivWidth;
+                                                                           var searchBar=0.5*useDivWidth;
+                                                                           
+                                                                           
+                                                                        
+                                                                           
+                                                                           
+                                                                           $('#radioCat').css({'width':radioButtonWidth});
+                                                                           $('#radioName').css({'width':radioButtonWidth});
+                                                                           $('#searchBar').css({'width':searchBar});
+                                                                           
+                                                                           
+                                                                           }).trigger('resize');
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            mobiscroll();
+                                                            cal_rating(idarray,ratingarray); 		 
+                                                           
+                                                            get_img(idarray);
+                                                            
+                                                        
+                                                            
+                                                            });
+                                                           /* console.log("imgText:"+imgText);
+                                                                imgText = '<a id="popUpImg_0" href="'+filePath+'/store/Poet_Cloth/Black_T_Shirt1.png"></a>';
+                                                            imgText = imgText + '<a id="popUpImg_2" href="'+filePath+'/store/Poet_Cloth/Black_T_Shirt1.png"></a>';
+                                                            imgText = imgText + '<a id="popUpImg_3" href="'+filePath+'/store/Poet_Cloth/Black_T_Shirt1.png"></a>';
+                                                            imgText = imgText + '<a id="popUpImg_4" href="'+filePath+'/store/Poet_Cloth/Black_T_Shirt1.png"></a>';
+                                                            imgText = imgText + '<a id="popUpImg_5" href="'+filePath+'/store/Poet_Cloth/Black_T_Shirt1.png"></a>';
+                                                            var FinalImgPopup = '<div id="makeMeScrollable_'+itemID+'" class="parent-container">'+imgText+'</div>';
+                                                            document.getElementById('imagePopupData').innerHTML = FinalImgPopup;
+                                                            // None of the options are set
+                                                            $('#makeMeScrollable_'+itemID).magnificPopup({type:'image',gallery:{enabled:true},
+                                                                delegate: 'a',
+                                                                callbacks: {
+    
+                                                                    buildControls: function() {
+                                                                      // re-appends controls inside the main container
+                                                                      this.contentContainer.append(this.arrowLeft.add(this.arrowRight));
+                                                                    }
+    
+                                                            }});*/
+                                                        //    $('#loadImagePopup').popup("close");
+                                              
+                                              
+                                              
+                                              }
+                                              
+                                               setTimeout(function(){store_details_images(store_id);},3000);
+                                              }
+                                              
+                                             
+                                              
+                                              });
+                                
+                                
+                                });
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+		}
+
+
+
+function store_details_images(store_id)
+{
+    console.log("Saish...27");
+    //k=0;
+    var idarray=new Array();
+    var ratingarray=new Array();
+    var qtyarray=new Array();
+    var quantity=1;
+    text = '';
+
+    
+    BUYDEMO.transaction(function(tx) {
+                        
+                        tx.executeSql('SELECT count(*) as num,category,itemid from store_deal_item where storeid="'+store_id+'" group by category', [], function (tx, results)
+                                      {
+                                      
+                                      var len = results.rows.length;
+                                      
+                                    
+                                      
+                                      if(len=='0')
+                                      {
+                                      
+                                      }
+                                      else
+                                      {
+                                      var l=0;
+                                      var counter=1;
+                                      for(var k=0 ;k<len;k++)
+                                      {
+                                      var result = results.rows.item(k);
+                                      
+                                      var count=0;
+                                      
+                                      tx.executeSql('select store_deal_item.* from store_deal_item where store_deal_item.category="'+result.category+'" and store_deal_item.storeid="'+store_id+'"',[], function (tx, results_res_item) {
+                                                    var len_res1 = results_res_item.rows.length;
+                                                   
+                                                    
+                                                    var s=0;
+                                                   
+                                                    var results_item = results_res_item.rows.item(s);
+                                                    
+                                               
+                                                    for(var j=0;j<len_res1;j++)
+                                                    {
+                                                    var price;
+                                                    price='';
+                                                    
+                                                    var results_item = results_res_item.rows.item(j);
+                                                    
+                                                    
+                                                    
+                                                    var returnSuccess = new Array();
+                                                    returnSuccess[0] = results_item.imageurl;
+                                                    
+                                                    
+                                                    
+ 
+                                                    
+                                                    idarray[count]=results_item.itemid;
+                                                    ratingarray[count]=results_item.avg_rating;
+                                                    qtyarray[count]=quantity;
+                                                    
+                                                    var totalprice=results_item.price*1;
+                                                    
+ 
+                                                    var store_img_name = results_item.imageurl.split('/')[1];
+                                                    var store_imgin = results_item.imageurl.split('/')[2];
+                                                    
+                                                    returnSuccess[1] = store_imgin;
+                                                    returnSuccess[2] = results_item.itemid;
+                                                
+                                                  //  var imgin = new Image();
+                                                    var dsin = new Date();
+                                                    var secin = dsin.getSeconds();
+                                                    //document.getElementById("smallImage").src=path_arr+"/"+returnSuccess[1]+"?"+sec;
+                                                //    imgin.src = filePath+'/store/'+store_img_name+'/'+store_imgin;
+                                                    
+                                                 /*   if(!imgin.complete)
+                                                    {
+                                                    //ratingdiv();
+                                                    }
+                                                    else
+                                                    {
+                                                    */
+                                                    //callNativePlugincache(result.user);
+                                                    document.getElementById("prod_"+results_item.itemid).src = filePath+'/store/'+store_img_name+'/'+store_imgin;
+                                                    //document.getElementById("userimage"+i).src=path_arr+'/r.jpg';
+                                                  //  }
+
+                                                     
+                      
+                                                    }
+                                                 
+                                                    
+                                                    var price;
+                                                    price='';
+                                                    
+                                                    
+                                                    
+                                                    
+                                                    
+                                                    var results_item = results_res_item.rows.item(0);
+                                                    
+                                                    var returnSuccess1 = new Array();
+                                                    returnSuccess1[0] = results_item.imageurl;
+                                                   
+                                                    var totalprice=results_item.price*1;
+                                                  
+                                                   
+                                                    
+                                                    var store_img_name = results_item.imageurl.split('/')[1];
+                                                    var store_imgout = results_item.imageurl.split('/')[2];
+                                                    
+                                                    returnSuccess1[1] = store_imgout;
+                                                    returnSuccess1[2] = l;
+                                                   
+                                                    
+                                                   
+                                                    var imgout = new Image();
+                                                  /*  var dsout = new Date();
+                                                    var sec = dsout.getSeconds();
+                                                    //document.getElementById("smallImage").src=path_arr+"/"+returnSuccess[1]+"?"+sec;
+                                                    imgout.src = path_arr+'/'+store_imgout;
+                                                    
+                                                    if(!imgout.complete)
+                                                    {
+                                                    //ratingdiv();
+                                                    }
+                                                    else
+                                                    {*/
+                                                    
+                                                    //callNativePlugincache(result.user);
+                                                    document.getElementById("prod_"+l).src = filePath+'/store/'+store_img_name+'/'+store_imgout;
+                                                    
+                                                   // }
+                                                    l++;
+                                                 
+                                                    
+                                                    });
+                                                    
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      }
+                                      
+                                      }
+                                      
+                                      
+                                      });
+                        
+                        
+                        });
+                        
+                        
+                        
+                        
+                        
+}
+
+
+        var refreshcount1=0;
+		function store_details1(store_id)
+		{
+                    console.log("Saish...28");
+            text = '';
+            document.getElementById('display_id').innerHTML = "";
+            document.getElementById('display_id1').innerHTML = "";
+            var idarray=new Array();
+            var ratingarray=new Array();
+            var qtyarray=new Array();
+            var quantity=1;
+            var storedeliveryfee1=localStorage.getItem('storedeliveryfee');
+           
+			
+			BUYDEMO.transaction(function(tx) {
+                                
+                                tx.executeSql('SELECT count(*) as num,category,itemid from store_deal_item where storeid="'+store_id+'" group by category', [], function (tx, results)
+                                              {
+                                              //alert('in first query');
+                                              var len = results.rows.length;
+                                              
+                                             
+                                              
+                                              if(len=='0')
+                                              {
+                                              document.getElementById('display_id').innerHTML = "";
+                                              document.getElementById('display_id1').innerHTML = "";
+                                              text = text +'<div id="" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+                                              text = text +'<p>No items available</p>';
+                                              text = text +'</div>';
+                                              document.getElementById('display_id').innerHTML = text;
+                                              $('#loadTry').popup("close");
+                                              }
+                                              else
+                                              {
+                                              var l=0;
+                                              var counter=1;
+                                              for(var k=0 ;k<len;k++)
+                                              {
+                                              var result = results.rows.item(k);
+                                              
+                                              var count=0;
+                                              
+                                             
+                                              
+                                              tx.executeSql('select store_deal_item.* from store_deal_item where store_deal_item.category="'+result.category+'" and store_deal_item.storeid="'+store_id+'"',[], function (tx, results_res_item) {
+                                                            var len_res1 = results_res_item.rows.length;
+                                                            // alert('second query leng:'+len_res1);
+                                                            
+                                                            var s=0;
+                                                            //alert("testcollapsible"+l);
+                                                            var results_item = results_res_item.rows.item(s);
+                                                            
+                                                            text = text + '<div data-role="collapsible" id="testcollapsible'+l+'" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" style="position:relative;top:-84px;" >';
+                                                            
+                                                            text = text + '<h4 class="bluetext" style="background-color:#e5e5e5;" data-role="button"  onclick="del_div1(\''+results_item.category+'\','+l+')" data-inline="true" >'+results_item.category+'('+len_res1+')</h4>';
+                                                            text = text + ' <ul data-role="listview">';
+                                                            for(var j=0;j<len_res1;j++)
+                                                            {
+                                                            var price;
+                                                            price='';
+                                                            
+                                                            var results_item = results_res_item.rows.item(j);
+                                                            
+                                                            
+                                                          
+                                                            
+                                                            idarray[count]=results_item.itemid;
+                                                            ratingarray[count]=results_item.avg_rating;
+                                                            qtyarray[count]=quantity;
+                                                            
+                                                            var totalprice=results_item.price*1;
+                                                            
+                                                            
+                                                            var store_img_name = results_item.imageurl.split('/')[1];
+                                                            var store_imgin = results_item.imageurl.split('/')[2];
+                                                            
+                                                            var image_animatein = filePath+'/store/'+store_img_name+'/'+store_imgin;
+                                                            text = text + '<li  data-icon="arrow-r2" style="border:5px solid #e5e5e5;padding-left:0px;padding-top: 2px;">';
+                                                            text = text + '<div style="width:100%;height:20px;padding-top:9px;padding-right: 24px;right: 4px;">';
+                                                            text = text + '<div style="margin:0;float:right;pointer-events: none;position: relative;top: -8px;right: 4px;" id="rate'+results_item.itemid+'" class="rating"></div>';
+                                                            text = text + '</div>';
+                                                            text = text + '<div >';
+                                                            text = text + '	<div style="margin:0;float:right;width:30px;" >';
+                                                            text = text + '<img style="float:right;width:45px;height:45px;position: relative;top: 12px;right: -137px;" onclick="animate('+results_item.itemid+','+results_item.price+','+l+','+j+','+results_item.itemid+',\''+image_animatein+'\',\''+results_item.itemname+'\',\''+results_item.imageurl+'\','+results_item.taxRate+','+results_item.delv_fee+','+results_item.adl_fee+')" id="basketImage'+results_item.itemid+'"  src="images/basket.png"/>';
+                                                            
+                                                            text = text + '<input type="hidden" name="animate'+results_item.itemid+'" id="animate'+results_item.itemid+'" value="0"/>';
+                                                            text = text + '</div>';
+                                                            
+                                                            
+                                                            text = text + '<div style="float:left;width:380px;top: -10px;position:relative;">';
+                                                            text = text + '<div style="float:left;padding-left:21px;padding-top: 1px;">';
+                                                            text = text + '<img id="prod_'+results_item.itemid+'" src="'+filePath+'/store/'+store_img_name+'/'+store_imgin+'"  style="width:80px;height:80px;" onclick="openImageScroller('+results_item.itemid+','+store_id+',\''+store_imgin+'\');" />	';
+                                                            
+                                                          
+                                                            text = text + '</div>';
+                                                            text = text + '<div style="float:left;padding-left:8px;font-weight:normal;line-height: 18px;">';
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:1px;width:80px;">';
+                                                            
+                                                            
+                                                            text = text + '<div id="storeRestaurant'+results_item.itemid+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+                                                            
+                                                            text = text + '<span class="lab" style="position:relative;top:-2px;">'+results_item.itemname+'</span>';
+                                                            text = text + '</div><br/>';
+                                                            //text = text + '<div class="clr"></div>';
+                                                            text = text + '<span class="blacktext fontfourteen">Unit Price:</span><br/>';
+                                                            text = text + '<span class="blacktext fontfourteen">Qty:</span><br/>';
+                                                            text = text + '<span class="blacktext fontfourteen">Price:</span>';
+                                                            text = text + '</div>';
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:3px;padding-left:2px;">';
+                                                            text = text + '<span class="blacktext fontfourteen"></span><br/>';
+                                                            text = text + '<span class="orangetextnavbar fontfourteen">'+results_item.price+'</span><br/>';
+                                                            text = text + '<span id="pen_val'+results_item.itemid+'" class="orangetextnavbar fontfourteen">'+quantity+'</span><br/>';
+                                                            text = text + '<span id="tot'+results_item.itemid+'" class="orangetextnavbar fontfourteen">'+totalprice+'</span>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:0px;">';
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '</div>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div class="clr"></div>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div class="clr"></div>';
+                                                            text = text + '<div><img align="right" style="padding-top:18px;" src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+results_item.itemid+')"/>';
+                                                            
+                                                            text = text + ' <p style="font-size:14px;white-space:normal;padding-left:20px;padding-right:20px;padding-top:18px;line-height: 18px;">';
+                                                            text = text + ''+results_item.description+'';
+                                                            text = text + '</p>';
+                                                            text = text + '<div onclick="changeFile('+results_item.itemid+')" style="font-size:12px;width:65px;float:right;margin-top:-8px;margin-right:-3px;font-weight:normal;" class="seemore">See more ..</div>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '</li>';
+                                                            
+                                                            count++;
+                                                            $('#loadTry').popup("close");
+                                                            }
+                                                            text = text + '</ul>';
+                                                            text = text + '</div>';
+                                                            
+                                                            var price;
+                                                            price='';
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            var results_item = results_res_item.rows.item(0);
+                                                            
+                                                            
+                                                           
+                                                            var totalprice=results_item.price*1;	
+                                                            //price=results_item.price*quantity;
+                                                            var store_img_name = results_item.imageurl.split('/')[1];
+                                                            var store_imgout = results_item.imageurl.split('/')[2];
+                                                            
+                                                            
+                                                           
+                                                            
+                                                            var image_animateout = filePath+'/store/'+store_img_name+'/'+store_imgout;
+                                                            var div = results_item.category+'0';
+                                                            text = text + '<div id="'+results_item.category+'0" class="divcolor" style="padding:10px 20px 20px 20px; display:block;position: relative;top: -95px;border: 6px solid #e5e5e5">';
+                                                            text = text + '<div style="width:100%;height:20px;position: relative;top: -7px;">';
+                                                            text = text + '	<div style="margin:0;float:right;pointer-events: none;" id="rate'+l+'" class="rating"></div>';
+                                                            text = text + '</div>';
+                                                            text = text + '<div >';
+                                                            text = text + '<div style="margin:0;float:right;width:30px;position:relative;" >';
+                                                            text = text + '<img style="float:right;width:45px;height:45px;position: relative;top:13px;right: -141px;" id="basketImage'+l+'" onclick="animate('+l+','+results_item.price+','+results_item.itemid+',0,'+results_item.itemid+',\''+image_animateout+'\',\''+results_item.itemname+'\',\''+results_item.imageurl+'\','+results_item.taxRate+','+results_item.delv_fee+','+results_item.adl_fee+')" src="images/basket.png"/>';
+                                                            text = text + '<input type="hidden" name="animate'+l+'" id="animate'+l+'" value="0"/>';
+                                                            text = text + '</div>';
+                                                            
+                                                            
+                                                            
+                                                            text = text + '<div style="float:left;width:300px;position: relative;top: -10px;">';
+                                                            text = text + '<div style="float:left;padding-left:2px;padding-top:1px;">';
+                                                            text = text + '<img id="prod_'+l+'" src="'+filePath+'/store/'+store_img_name+'/'+store_imgout+'" style="width:80px;height:80px;" onclick="openImageScroller('+results_item.itemid+','+store_id+',\''+store_imgout+'\');" />';
+                                                           
+                                                            
+                                                            
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div style="float:left;padding-left:8px;font-weight:normal;">';
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:2px; width:80px;">';
+                                                           
+                                                            text = text + '<span id="storeRestaurant'+l+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+                                                            
+                                                            text = text + '<span class="lab" style="position:relative;">'+results_item.itemname+'</span>';
+                                                            text = text + '</span><br/>';
+                                                            
+                                                            text = text + '<span class="blacktext fontfourteen">Unit Price:</span><br/>';
+                                                            text = text + '<span class="blacktext fontfourteen">Qty:</span><br/>';
+                                                            text = text + '<span class="blacktext fontfourteen">Price:</span>';
+                                                            text = text + '</div>';
+                                                            
+                                                            
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:2px;padding-left:2px;">';
+                                                            text = text + '<span class="blacktext fontfourteen"></span><br/>';
+                                                            text = text + '<span class="orangetextnavbar fontfourteen">'+results_item.price+'</span><br/>';
+                                                            text = text + '<span id="pen_val'+l+'" class="orangetextnavbar fontfourteen">'+quantity+'</span><br/>';
+                                                            text = text + '<span id="tot'+l+'" class="orangetextnavbar fontfourteen">'+totalprice+'</span>';
+                                                            text = text + '</div>';	
+                                                            
+                                                            text = text + '<div style="float:left;padding-top:0px;">';
+                                                            
+                                                            
+                                                            /*text = text + '<div data-role="fieldcontain" class="demo demo-select fontfieldcontain" style="position:relative;padding:0px;border:none;">';
+                                                             text = text + '<select id="city'+l+'" style="" class="demo-test-select" data-role="none"  onchange="sel_val('+l+','+results_item.price+','+results_item.itemid+',0,'+results_item.itemid+');"></select>';
+                                                             
+                                                             //$('#city'+l+'_dummy').css("background-image","url('images/pencil.png')");
+                                                             //$('#city'+l+'_dummy').css('background-image', 'url("' + pencilImage + '")');
+                                                             
+                                                             
+                                                             text = text + '</div>';*/
+                                                            
+                                                            text = text + '</div>';
+                                                            text = text + '</div>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div class="clr"></div>';
+                                                            text = text + '</div>';
+                                                            
+                                                            text = text + '<div><img align="right"  src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+results_item.itemid+')"/>';
+                                                            
+                                                            text = text + '<p style="font-size:14px;">';
+                                                            text = text + ''+results_item.description+'';  
+                                                            text = text + '</p>';
+                                                            text = text + '</div>';
+                                                            text = text + '<div onclick="changeFile('+results_item.itemid+')" style="font-size:12px;width:65px;float:right;margin-top:-8px;margin-right:-3px;" class="seemore">See more ..</div>';
+                                                            text = text + '</div>';
+                                                            idarray[count]=l;
+                                                            ratingarray[count]=	results_item.avg_rating;
+                                                            qtyarray[count]=results_item.quantity;
+                                                            count++;
+                                                            l++;
+                                                            s++;	
+                                                            
+                                                            document.getElementById('display_id').innerHTML = text;
+                                                            $("#display_id").trigger("create");
+                                                            
+                                                           
+                                                            counter++;
+                                                             $(window).bind('resize', function () {
+                                                                           // alert($('#outer').width());
+                                                                           
+                                                                           var divWidth = $('#outer').width();
+                                                                           var useDivWidth= divWidth-80;
+                                                                           var radioButtonWidth=0.25*useDivWidth;
+                                                                           var searchBar=0.5*useDivWidth;
+                                                                           
+                                                                         
+                                                                           
+                                                                           
+                                                                           $('#radioCat').css({'width':radioButtonWidth});
+                                                                           $('#radioName').css({'width':radioButtonWidth});
+                                                                           $('#searchBar').css({'width':searchBar});
+                                                                           
+                                                                           
+                                                                           }).trigger('resize');
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                           mobiscroll();
+                                                            cal_rating(idarray,ratingarray); 		 
+                                                            //get_quantity(idarray,qtyarray);
+                                                            get_img(idarray);
+                                                            
+                                                            
+                                                            });
+                                              
+                                              
+                                              
+                                              
+                                              
+                                              
+                                              }
+                                              
+                                              }
+                                               //setTimeout(function(){store_details_images(store_id)},3000);
+                                              
+                                              });
+                                
+                                
+                                }); 
+                                
+                                
+                                
+                                
+                                
+			       
+			 
+		}
+        
+        
+        
+
+
+		function store_details_name(store_id)
+		{
+                    console.log("Saish...29");
+		// k=0;
+            text='';
+            document.getElementById('display_id1').innerHTML = "";
+            document.getElementById('display_id').innerHTML = "";
+			var idarray=new Array();
+			var ratingarray=new Array();
+			var qtyarray=new Array();
+		    var quantity=1;
+			$('#loadTry').popup("open");
+			$("#loadTry").popup({dismissible:false});
+            var storedeliveryfee2=localStorage.getItem('storedeliveryfee');
+			
+			
+			BUYDEMO.transaction(function(tx) {
+			
+			
+			 tx.executeSql('SELECT SUBSTR(itemname,1,1) GRP, COUNT(itemname) as num,itemname FROM store_deal_item WHERE storeid="'+store_id+'" GROUP BY GRP', [], function (tx, results)
+			{
+			//alert('in first query');
+	         var len = results.rows.length;
+	   	
+			   	
+				
+				  if(len=='0')
+				  {
+                      document.getElementById('display_id1').innerHTML = "";
+					 document.getElementById('display_id').innerHTML = "";
+					 text = text +'<div id="" class="divcolor" style="padding: 20px 20px; display: block; position: relative; top: -18px; border: 6px solid #e5e5e5">';
+					 text = text +'<p>No items available</p>';
+					 text = text +'</div>';
+					 document.getElementById('display_id1').innerHTML = text;
+					  $('#loadTry').popup("close");
+				  }
+			   	 else
+				 {
+				 
+				  
+		         for(var k=0 ;k<len;k++)
+	        	 {
+	                 var result = results.rows.item(k);
+					var l=0;
+					var count=0;
+			
+			  
+					   tx.executeSql('SELECT SUBSTR(store_deal_item.itemname,1,1) GRP,store_deal_item.* FROM store_deal_item where store_deal_item.itemname LIKE "'+result.GRP+'%" and store_deal_item.storeid="'+store_id+'"',[], function (tx, results_res_item) {
+							 var len_res1 = results_res_item.rows.length;
+							
+							
+						var s=0;
+						
+						var results_item = results_res_item.rows.item(s);
+						
+						text = text + '<div data-role="collapsible" id="test-collapsible'+l+'" data-mini="true" data-theme="k" data-content-theme="i" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-inline="true" style="position:relative;top:-84px;" >';
+						
+						text = text + '<h4 class="bluetext" style="background-color:#e5e5e5;" data-role="button"  onclick="del_div(\''+results_item.GRP+'\','+l+')" data-inline="true" >'+results_item.GRP+'('+len_res1+')</h4>';
+					   text = text + ' <ul data-role="listview">';
+					   
+						for(var j=0;j<len_res1;j++)
+						{    
+							
+							var price;
+							price='';
+							var results_item = results_res_item.rows.item(j);
+						
+							idarray[count]=results_item.itemid;
+							ratingarray[count]=results_item.avg_rating;
+							
+							var totalprice=results_item.price*1;	
+							
+                                                        
+                                                        var store_img_name = results_item.imageurl.split('/')[1];
+                                                        var store_imgout = results_item.imageurl.split('/')[2];
+                                                        var image_animatenamein = filePath+'/store/'+store_img_name+'/'+store_imgout;
+                                                        
+								text = text + '<li  data-icon="arrow-r2" style="border:5px solid #e5e5e5;padding-left:0px;padding-top: 2px;">';
+									text = text + '<div style="width:100%;height:20px;padding-top:9px;padding-right: 24px;right: 4px;">';
+										text = text + '<div style="margin:0;float:right;pointer-events: none;position: relative;top: -8px;right: 4px;" id="rate'+results_item.itemid+'" class="rating"></div>';
+									text = text + '</div>';
+									text = text + '<div >';
+									text = text + '	<div style="margin:0;float:right;width:30px;" >';
+									text = text + '<img style="float:right;width:45px;height:45px;position: relative;top: 12px;right: -137px;" onclick="animate1('+results_item.itemid+','+results_item.price+','+l+','+j+','+results_item.itemid+',\''+image_animatenamein+'\',\''+results_item.itemname+'\',\''+store_imgnamein+'\','+results_item.taxRate+','+results_item.delv_fee+','+results_item.adl_fee+')" id="basketImage'+results_item.itemid+'"  src="images/basket.png"/>';
+									text = text + '<input type="hidden" name="animate'+results_item.itemid+'" id="animate'+results_item.itemid+'" value="0"/>';
+									text = text + '</div>';
+											 
+									text = text + ' <div id="popup'+results_item.itemid+'" data-role="popup" style="border-color:#007aff;padding:20px;display:none">';
+									text = text + '<label style="color:#ff9000">This product has already been added.</label><br/>';
+									
+									text = text + '<p style="text-align:center">';	
+									text = text + '<a href="#" rel="external" data-inline="true"  style="padding-right:5px;min-width:60px" onclick="close_pop('+results_item.itemid+')" data-role="button" >OK</a>';
+									text = text + '</p>';
+								
+									text = text + '</div>';
+									text = text + '<div style="float:left;width:380px;top: -10px;position:relative;">';
+									text = text + '<div style="float:left;padding-left:21px;padding-top: 1px;">';
+									
+                                     var imgnamein = new Image();
+                                   /*  var dsnamein = new Date();
+                                     var secnamein = dsnamein.getSeconds();
+                                     //document.getElementById("smallImage").src=path_arr+"/"+returnSuccess[1]+"?"+sec;
+                                     imgnamein.src = path_arr+'/'+store_imgnamein;
+                                     
+                                     if(!imgnamein.complete)
+                                     {
+                                     text = text + '<img id="prod1_'+results_item.itemid+'" src="images/no_image.png" style="width:80px;height:80px;" />';
+                                     }
+                                     else
+                                     {*/
+                                     text = text + '<img id="prod1_'+results_item.itemid+'" src="'+filePath+'/store/'+store_img_name+'/'+store_imgout+'" style="width:80px;height:80px;" />';
+                                   //  }
+                                     
+									text = text + '</div>';
+									text = text + '<div style="float:left;padding-left:8px;font-weight:normal;line-height: 18px;">';
+											
+									text = text + '<div style="float:left;padding-top:3px;width:80px;">';
+													//text = text + '<span class="bluetext fontsixteen">'+results_item.itemname+'</span><br/>';
+									text = text + '<span id="storeRestaurant'+results_item.itemid+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+													
+									text = text + '<span class="lab" style="position:relative;top:-2px">'+results_item.itemname+'</span>';
+									text = text + '</span><br/>';
+													 //text = text + '<div class="clr"></div>';
+									text = text + '<span class="blacktext fontfourteen">Unit Price:</span><br/>';
+									text = text + '<span class="blacktext fontfourteen">Qty:</span><br/>';
+									text = text + '<span class="blacktext fontfourteen">Price:</span>';
+									text = text + '</div>';
+												
+							
+									text = text + '<div style="float:left;padding-top:3px;padding-left:2px;">';
+									text = text + '<span class="blacktext fontfourteen"></span><br/>';
+									text = text + '<span class="orangetextnavbar fontfourteen">'+results_item.price+'</span><br/>';
+									text = text + '<span id="pen_val'+results_item.itemid+'" class="orangetextnavbar fontfourteen">'+quantity+'</span><br/>';
+									text = text + '<span id="tot'+results_item.itemid+'" class="orangetextnavbar fontfourteen">'+totalprice+'</span>';
+									text = text + '</div>';	
+												
+									text = text + '<div style="float:left;padding-top:0px;">';
+													
+								
+													
+									text = text + '</div>';
+												
+									text = text + '</div>';
+									text = text + '</div>';
+									
+									text = text + '<div class="clr"></div>';
+									text = text + '</div>';
+									
+								text = text + '<div class="clr"></div>';
+								text = text + '<div><img align="right" style="padding-top:18px;" src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+results_item.itemid+')"/>';
+							 
+									text = text + ' <p style="font-size:14px;white-space:normal;padding-left:20px;padding-right:20px;padding-top:18px;line-height: 18px;">';
+												text = text + ''+results_item.description+''; 
+										text = text + '</p>';
+										text = text + '<div onclick="changeFile('+results_item.itemid+')" style="font-size:12px;width:65px;float:right;margin-top:-8px;margin-right:-3px;font-weight:normal;" class="seemore">See more ..</div>';
+								text = text + '</div>';
+										
+									text = text + '</li>';
+									
+									count++;
+									$('#loadTry').popup("close");
+							}
+							
+							text = text + '</ul>';
+							text = text + '</div>';
+							
+							var price;
+							price='';
+							
+							var results_item = results_res_item.rows.item(0);
+						
+							
+							var totalprice=results_item.price*1;	
+							
+                                                        
+                                                         var store_img_name = results_item.imageurl.split('/')[1];
+                                                        var store_imgout = results_item.imageurl.split('/')[2];
+                                                        var image_animatenameout = filePath+'/store/'+store_img_name+'/'+store_imgout;
+                                                        
+							var div = results_item.GRP+'0';
+							text = text + '<div id="'+results_item.GRP+'0" class="divcolor" style="padding:10px 20px 20px 20px; display:block;position: relative;top: -95px;border: 6px solid #e5e5e5">';
+							text = text + '<div style="width:100%;height:20px;position: relative;top: -7px;">';
+							text = text + '	<div style="margin:0;float:right;pointer-events: none;" id="rate'+l+'" class="rating"></div>';
+							text = text + '</div>';
+							text = text + '<div >';
+						    text = text + '<div style="margin:0;float:right;width:30px;position:relative;" >';
+							text = text + '<img style="float:right;width:45px;height:45px;position: relative;top:13px;right: -141px;" id="basketImage'+l+'" onclick="animate1('+l+','+results_item.price+','+results_item.itemid+',0,'+results_item.itemid+',\''+image_animatenameout+'\',\''+results_item.itemname+'\',\''+store_imgnameout+'\','+results_item.taxRate+','+results_item.delv_fee+','+results_item.adl_fee+')" src="images/basket.png"/>';
+							text = text + '<input type="hidden" name="animate'+l+'" id="animate'+l+'" value="0"/>';
+							text = text + '</div>';
+							
+							text = text + ' <div id="popup'+l+'" data-role="popup" style="border-color:#007aff;padding:20px;display:none">';
+							text = text + '<label style="color:#ff9000">This product has already been added.</label><br/>';
+							
+							text = text + '<p style="text-align:center">';	
+							text = text + '<a href="#" rel="external" data-inline="true"  style="padding-right:5px;min-width:60px" onclick="close_pop('+l+')" data-role="button" >OK</a>';
+							text = text + '</p>';
+						
+							text = text + '</div>';
+							
+							text = text + '<div style="float:left;width:300px;position: relative;top: -10px;">';
+							text = text + '<div style="float:left;padding-left:2px;padding-top:1px;">';
+							
+                                     /*var imgnameout = new Image();
+                                     var dsnameout= new Date();
+                                     var secnameout = dsnameout.getSeconds();
+                                     //document.getElementById("smallImage").src=path_arr+"/"+returnSuccess[1]+"?"+sec;
+                                     imgnameout.src = path_arr+'/'+store_imgnameout;
+                                     
+                                     if(!imgnameout.complete)
+                                     {
+                                     text = text + '<img id="prod1_'+l+'" src="images/no_image.png" style="width:80px;height:80px;" />';
+                                     }
+                                     else
+                                     {*/
+                                     text = text + '<img id="prod1_'+l+'" src="'+filePath+'/store/'+store_img_name+'/'+store_imgout+'" style="width:80px;height:80px;" />';
+                                   //  }
+											
+							text = text + '</div>';
+								
+							text = text + '<div style="float:left;padding-left:8px;">';
+								
+							text = text + '<div style="float:left;padding-top:2px; width:80px;">';
+										//text = text + '<span class="bluetext fontsixteen">'+results_item.itemname+'</span><br/>';
+							text = text + '<span id="storeRestaurant'+l+'" class="storeAddPopUpList" onclick="StoreAddressPopUp(this.id);">';
+											
+							text = text + '<span class="lab" style="position:relative;left:-5px;top:-2px">'+results_item.itemname+'</span>';
+							text = text + '</span><br/>';
+										//text = text + '<div class="clr"></div>';
+							text = text + '<span class="blacktext fontfourteen">Unit Price:</span><br/>';
+							text = text + '<span class="blacktext fontfourteen">Qty:</span><br/>';
+							text = text + '<span class="blacktext fontfourteen">Price:</span>';
+							text = text + '</div>';
+
+										
+									
+							text = text + '<div style="float:left;padding-top:2px;padding-left:2px;">';
+							text = text + '<span class="blacktext fontfourteen"></span><br/>';
+							text = text + '<span class="orangetextnavbar fontfourteen">'+results_item.price+'</span><br/>';
+							text = text + '<span id="pen_val'+l+'" class="orangetextnavbar fontfourteen">'+quantity+'</span><br/>';
+							text = text + '<span id="tot'+l+'" class="orangetextnavbar fontfourteen">'+totalprice+'</span>';
+							text = text + '</div>';	
+									
+							text = text + '<div style="float:left;padding-top:0px;">';
+										
+											
+											/*text = text + '<div data-role="fieldcontain" class="demo demo-select fontfieldcontain" style="position:relative;padding:0px;border:none">';
+											//$('#pencilimg').css("background-image","url('images/soda.png')");
+																text = text + '<select id="city'+l+'"  class="demo-test-select" data-role="none" style="background-color:#f5f5f5;" onchange="sel_val('+l+','+results_item.price+','+results_item.itemid+',0,'+results_item.itemid+');"></select>';
+															//	$('#city'+l).css("background-image","url('images/pencil.png')");
+											text = text + '</div>';*/
+											
+									text = text + '</div>';
+								text = text + '</div>';
+							text = text + '</div>';
+							
+							text = text + '<div class="clr"></div>';
+						text = text + '</div>';
+						
+						text = text + '<div><img align="right"  src="images/arrow_right.png" width="20px" height="20px" onclick="changeFile('+results_item.itemid+')"/>';
+					 
+							 text = text + '<p style="font-size:14px;">';
+										text = text + ''+results_item.description+'';  
+								text = text + '</p>';
+								text = text + '<div onclick="changeFile('+results_item.itemid+')" style="font-size:12px;width:65px;float:right;margin-top:-8px;margin-right:-3px;" class="seemore">See more ..</div>';
+						text = text + '</div>';
+						text = text + '</div>';
+						idarray[count]=l;
+						ratingarray[count]=	results_item.avg_rating;		
+						count++;
+							l++;
+							s++;
+							
+						 document.getElementById('display_id1').innerHTML = text;
+						 $("#display_id1").trigger("create");
+						
+						 
+						  
+						  
+						  
+						  $(window).bind('resize', function () {
+						   // alert($('#outer').width());
+						   
+						   var divWidth = $('#outer').width();
+						   var useDivWidth= divWidth-80;
+						   var radioButtonWidth=0.25*useDivWidth;
+						   var searchBar=0.5*useDivWidth;
+
+
+						   // alert(radioCat);
+						   //  alert(radioName);
+						   //  alert(searchBar);
+							
+							
+							 $('#radioCat').css({'width':radioButtonWidth});
+							 $('#radioName').css({'width':radioButtonWidth});
+							 $('#searchBar').css({'width':searchBar});
+
+
+							}).trigger('resize');
+							
+							mobiscroll();
+							cal_rating(idarray,ratingarray); 
+							//get_quantity(idarray,qtyarray);
+							get_img(idarray);
+							
+							});
+							
+							}
+					
+					}
+					
+					
+	            });
+				
+	        		 
+	          }); 
+					
+			
+			
+			
+			       
+			 
+		}	
+
+		function change_quantity()
+		{
+                    console.log("Saish...30");
+		var count=0;
+		var userid=localStorage.getItem('userid');
+       
+		BUYDEMO.transaction(function(tx) {
+		tx.executeSql('SELECT * FROM customer_items_details inner join customer_items on customer_items.ID=customer_items_details.mainid where customer_items.customerid="'+userid+'"', [], function (tx, results) {
+		var len=results.rows.length;
+            
+			for(var j=0;j<len;j++)
+			{
+			 var resultres = results.rows.item(j);
+			// alert(resultres.quantity);
+			 count=count+resultres.quantity;
+			
+			
+			
+			}
+                    
+			if(count<10)
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '16px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			else if(count>9 && count<100)
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '20px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			else if(count>99 && count<1000)
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '25px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			else
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '30px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			
+			 document.getElementById('total_count').innerHTML =count;
+		 });
+		
+		});
+		}
+        </script>
+		<div data-role="content">
+		<div id="display_header"> </div>
+		
+		
+		
+		<div id="display_id"> </div>
+        <div id="display_id1"> </div>
+		<div class="settings">
+               
+                <div data-role="fieldcontain">
+                   <input type="hidden" name="demo" id="demo" value="select"/>
+				 </div>
+        </div>
+		
+		<div data-role="popup" id="transitionExampl" class="ui-content" data-theme="d" style="border:1px solid #007aff">
+  									 
+		</div>
+		<div id="loadTry" data-role="popup" data-overlay-theme="a" class="ui-content">
+                     <img  src="images/ajax-loader.gif"/>
+		</div>
+                <div id="loadImagePopup" >
+                    <div id="imagePopupData"></div>
+		</div>
+        
+		</div><!-- /content -->
+		
+		
+		
+		<div id="footer" data-role="footer" data-id="footer" data-position="fixed" data-theme="h">
+			<div data-role="navbar">
+				<ul>
+					<li><a id="home" href="homepage.html"  rel="external" data-icon="home-blue" class="ui-state-persist"></a></li>
+					<li><div id="total_count" style="background-color:#ff9000;display:inline-block;margin-left:58%;margin-top:2%;color:black;text-align:center;z-index:2000;position:relative;font-size:12px;"></div><a id="basket" href="shopping.html" rel="external" data-icon="basket-blue" class="ui-state-persist bluetext" style="vertical-align: middle;margin-top:-22px"></a></li>
+					<li><a id="list" href="menu.html" rel="external" data-icon="list-orange" class="ui-state-persist bluetext"></a></li>
+					
+				</ul>
+			</div><!-- /navbar -->
+		</div><!-- /footer -->
+ 
+ 
+
+		
+	</div><!-- /page -->
+	<script src="js/function.js"></script>
+	<script>
+	 function del_div1(text,id)
+	 
+	 {
+		console.log("Saish...31");
+		 $(document).on( "collapse", "#testcollapsible"+id, function( event, ui ){
+			   document.getElementById(text+'0').style.display="block";
+			});
+
+			$(document).on( "expand", "#testcollapsible"+id, function( event, ui ){
+			    document.getElementById(text+'0').style.display="none";
+			}); 
+		 //store_details_images(storeid);
+	 }
+	 
+	  function del_div(text,id)
+	 
+	 {
+         console.log("Saish...32");
+		
+		 $(document).on( "collapse", "#test-collapsible"+id, function( event, ui ){
+			   document.getElementById(text+'0').style.display="block";
+			});
+
+			$(document).on( "expand", "#test-collapsible"+id, function( event, ui ){
+			    document.getElementById(text+'0').style.display="none";
+			});
+          // store_details_images(storeid);
+		 
+	 }
+	 function del_div_search(text,id)
+	 {
+             console.log("Saish...33");
+		$(document).on( "collapse", "#test-search-collapsible"+id, function( event, ui ){
+			   document.getElementById(text+'0').style.display="block";
+			});
+
+			$(document).on( "expand", "#test-search-collapsible"+id, function( event, ui ){
+			    document.getElementById(text+'0').style.display="none";
+			}); 
+	 }
+	 
+	function changeFile(itemid){
+            console.log("Saish...34");
+            var networkState = navigator.connection;
+
+        var states = {};
+        states[Connection.UNKNOWN]  = 'Unknown connection';
+        states[Connection.ETHERNET] = 'Ethernet connection';
+        states[Connection.WIFI]     = 'WiFi connection';
+        states[Connection.CELL_2G]  = 'Cell 2G connection';
+        states[Connection.CELL_3G]  = 'Cell 3G connection';
+        states[Connection.CELL_4G]  = 'Cell 4G connection';
+        states[Connection.NONE]     = 'No network connection';
+
+        
+		if(states[Connection.NONE] != states[networkState] )
+		{
+			 
+					location.href="productReview.html";
+					localStorage.setItem('itemid',itemid);
+		}
+		else
+		{
+		
+		custom_alert('You are currently offline','ProductsPage');
+		$('#loadTry').popup("close");
+		}
+		
+
+	}
+
+
+	function changeFile1(){
+
+		location.href="productReview1.html";
+
+	}
+
+	function changeSearch(s)
+		{
+                    console.log("Saish...35");
+			
+			if(document.getElementById(s).value.length>=1)
+			{
+
+				
+				document.getElementById('searchIcon').src="images/search_orange.png";
+				document.getElementById('searchIcon').style.border="1px solid #ff9000";
+			}
+			else
+			{
+				document.getElementById('searchIcon').src="images/search_grey.png";
+				document.getElementById('searchIcon').style.border="1px solid #e5e5e5";
+				var storeid=localStorage.getItem('storeid_map');
+				$('#loadTry').popup("open");
+				$("#loadTry").popup({dismissible:false});
+				store_details1(storeid);
+
+			}
+		}
+
+	function demo(value){
+            console.log("Saish...36");
+			if(value==0)
+			{
+
+				document.getElementById('lblCat').style.border="1px solid #ff9000";
+				document.getElementById('lblCat1').style.border="1px solid #e5e5e5";
+			}
+			else if(value==1)
+			{
+
+				document.getElementById('lblCat1').style.border="1px solid #ff9000";
+				document.getElementById('lblCat').style.border="1px solid #e5e5e5";
+			}
+		}
+		
+			function StoreAddressPopUp(t){
+						
+                                           console.log("Saish...37");     
+					   if ($('#'+t).innerWidth()< $('#'+t)[0].scrollWidth) {
+   							document.getElementById('transitionExampl').innerHTML = document.getElementById(t).innerHTML;
+							$( '#transitionExampl' ).popup( "open" );
+							}
+						 
+				}	
+				
+			
+	</script>
+	<script type="text/javascript">
+   function checkConnection() {
+    var networkState = navigator.connection.type;
+
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.NONE]     = 'No network connection';
+
+    
+    
+   if(states[Connection.NONE] != states[networkState] )
+	{
+	return 'true';
+	}
+	else
+	{
+	return 'false';
+	}
+
+    }
+   
+  
+	
+	document.addEventListener("online", function()
+			{
+		
+			});
+
+	document.addEventListener("offline", function()
+			{
+	
+		custom_alert('Please turn on GPS or wifi to browse through the App','ProductsPage');
+		$('#loadTry').popup("close");
+			});
+   
+	var path;
+	var path_arr;
+        var filePath = "";
+	document.addEventListener("deviceready", onDeviceReady, false);
+   function onDeviceReady()
+   {
+       console.log("Saish...1");
+		//localStorage.setItem('flag', 1);
+		var selectedval =  localStorage.getItem('selectedval');
+			var storeid	=	localStorage.getItem('menuid');
+            localStorage.setItem('menuflag','1');
+            
+			initDatabase();
+			change_quantity(); // to display the quantity in footer
+			window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+			window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, gotFS, fail);
+			
+			
+			 BUYDEMO.transaction(function(tx)
+			 {
+			 
+			   tx.executeSql('select * from store_deal where store_id="'+storeid+'"',[], function (tx, results_res) {
+			   var len_res = results_res.rows.length;
+					 
+					// var resultres = results_res.rows.item(0);
+			if(len_res!=0)	 
+			{
+                            console.log("Saish...2");
+					
+					 
+					$('#loadTry').popup("open");
+					$("#loadTry").popup({dismissible:false});
+					document.getElementById('display_header').innerHTML = "";
+					store(results_res.rows.item(0),storeid);
+					 store_details1(storeid);
+			}	 
+
+
+			else
+			{
+                            console.log("Saish...3");
+			
+                /*del_store_deal_item();
+                del_store_deal_coupon();
+                del_store_deal_review();*/
+                
+                             
+                        BUYDEMO.transaction(function(tx) {
+                                                 // alert('in storedealitem');
+                           
+                            tx.executeSql('DELETE from store_deal_item', [], function (tx, results) {
+                                                                   var len = results.rows.length, i;
+
+
+
+
+                                                                   });
+                            tx.executeSql('DELETE from store_deal_coupon', [], function (tx, results) {
+                                                                   var len = results.rows.length, i;
+
+
+
+
+                                                                   });
+                            tx.executeSql('DELETE from store_deal_item_review', [], function (tx, results) {
+                                                                   var len = results.rows.length, i;
+
+
+
+
+                                                                   });
+
+                            tx.executeSql('DELETE from store_item_images', [], function (tx, results) {
+                                                                   var len = results.rows.length, i;
+
+
+
+
+                                                                   });
+                        
+                        });                         
+			//counter_size1 = 0;
+			  var conn = checkConnection();
+
+			   if(conn='true')
+
+			   {
+			   document.getElementById('display_header').innerHTML = "";
+			 //var postal =403722;
+			$('#loadTry').popup("open");
+			$("#loadTry").popup({dismissible:false});
+			 txt1='';
+
+			 
+			 txt1='<?xml version="1.0" encoding="UTF-8"?><searchReq:searchRequest xsi:schemaLocation="http://schema.ayenda.com/smartBuy/search search.xsd" xmlns:searchReq="http://schema.ayenda.com/smartBuy/search" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><id>'+storeid+'</id><name></name><streetNumber> </streetNumber><streetName></streetName><city></city><state></state><zip></zip></searchReq:searchRequest>';
+
+			// console.log(txt1);
+
+
+
+			 $.ajax({
+
+			  url: 'http://buyzenga.com:7003/BPL/rest/CouponRESTProxy/locateStore',
+
+			  type: 'POST',
+
+			  datatype : 'application/xml',
+
+			  data: txt1,
+
+			  contentType: 'application/xml',
+
+
+
+			  success: function (result) {
+
+			// del_stores();
+			 console.log("Saish...4");
+			 var response_val = $(result).find("store").size();
+            var checkcount=1;
+                    var checkcount1=0;
+            localStorage.setItem('itemsize',$(result).find("item").size());
+                    var image_array = new Array();
+			// alert(response_val);
+			 if(response_val!= 0)
+				 {
+                                     console.log("Saish...5");
+				localStorage.setItem('size',$(result).find("store").size());
+				for(var i =0;i<response_val;i++)
+				{
+				var store_number = $(result).find("store")[i];
+				var store_num = $(store_number).find("item").size();
+			// alert($(store_number).find("category").text());
+				var catg;
+				//var location = $(result).find("location")[i];
+				/*$(store_number).find("category").each(function()
+				{
+				 catg=$(store_number).find("category").text();
+				});*/
+                    
+				insert_store_deals($(store_number).find("storeID").text(),$(store_number).find("storeNumber").text(),$(store_number).find("storeName").text(),$(store_number).find("deliveryFee").text(),$(store_number).children("imageURL").text(),$(store_number).find("streetNumber").text(),$(store_number).find("streetName").text(),$(store_number).find("city").text(),$(store_number).find("state").text(),$(store_number).find("zipCode").text(),$(store_number).find("country").text(),$(store_number ).children("category").text(),$(store_number).find("description").text(),$(store_number).find("phoneNumber").text(),$(store_number).find("website_url").text());
+				
+				/*cal_miles_deal($(store_number).find("streetNumber").text(),$(store_number).find("streetName").text(),$(store_number).find("city").text(),$(store_number).find("state").text(),$(store_number).find("country").text(),$(store_number).find("category").text(),$(store_number).find("storeID").text());*/
+                                
+				console.log('store_num:'+store_num);
+				for(var j=0;j<store_num;j++)
+				{
+                                    console.log("store_nm");
+				
+                   // alert('itemsize'+$(result).find("item").size());
+				var val =  $(store_number).find("item")[j];
+				var coupon_size =  $(val).find("coupon").size();
+				var coupon =  $(val).find("coupon")[0];
+				
+				var review_size =  $(val).find("review").size();
+				//alert('reviewsize'+review_size);
+				var itemid=$(val).find("itemID").text();
+                                console.log('$(val).find("baseDeliveryFee").text():'+$(val).find("baseDeliveryFee").text()+' $(val).find("adlFee").text()'+$(val).find("adlFee").text());
+			//alert($(val).find("itemID").text());
+                                            insert_store_deal_item($(val).find("itemID").text(),$(store_number).find("storeID").text(),$(val).find("itemName").text(),$(val).find("itemDescription").text(),$(val).find("price").text(),$(val).find("category").text(),$(val).find("totalReviews").text(),$(val).find("imageURL").text(),$(val).find("qty").text(),$(val).find("averagRating").text(),$(val).find("taxRate").text(),$(val).find("baseDeliveryFee").text(),$(val).find("adlFee").text(),checkcount);
+                                console.log('getting itemImg_number') ;  
+                                var itemImg_number =  $(store_number).find("image").size();
+                                
+                                
+                                console.log("itemImg_number:"+itemImg_number);
+                                for(var imgCount=0; imgCount<itemImg_number;imgCount++){
+                                    var imgRef = $(store_number).find("image")[imgCount];
+                                    console.log("imageLocation:"+$(imgRef).children("imageLocation").text());
+                                    
+                                    console.log("itemID"+$(val).find("itemID").text());
+                                    console.log("storeID"+$(store_number).find("storeID").text());
+                                    insert_item_images($(imgRef).children("imageLocation").text(),$(val).find("itemID").text(),$(store_number).find("storeID").text());
+                                }           
+                    
+                    image_array[checkcount1]=$(val).find("imageURL").text();
+                    
+                    var getitemsize=localStorage.getItem('itemsize');
+                   // alert('count:'+checkcount1);
+                    //alert('itemsize:'+getitemsize);
+                    checkcount1++;
+                    if(checkcount1==getitemsize)
+                    {
+                    //alert('hi');
+                    console.log("Saish...6");
+                    console.log(image_array);
+                    console.log("Calling accessStoreDir");
+                    accessStoreDir(image_array);
+                    // callNativePlugin(image_array);
+                    
+                    
+                        
+                    }
+					
+                    
+                    
+				
+					if(coupon_size!=0)
+					{
+                                            console.log("Saish...7");
+						insert_store_deal_coupon($(coupon).find("couponID").text(),itemid,$(coupon).find("couponNumber").text(),$(coupon).find("expirationDate").text(),$(coupon).find("offer").text());
+					}
+					
+					if(review_size!=0)
+					{
+                                            console.log("Saish...8");
+						for(var k=0;k<review_size;k++)
+						{
+						var review =  $(val).find("review")[k];
+						//alert('rating:'+$(review).find("rating").text());
+						//alert('comment'+$(review).find("reviewComments").text());
+						insert_store_deal_review($(review).find("review_id").text(),itemid,$(review).find("reviewComments").text(),$(review).find("rating").text(),$(review).find("user").text());
+						}
+					}
+				   
+                                
+                                   
+					
+				}
+				
+				
+				
+				   
+				 }
+				 
+				
+				
+				 
+				 }
+			 else
+				 {
+                                     console.log("Saish...9");
+				 
+				custom_alert('No results found','ProductsPage');
+				 $('#loadTry').popup("close");
+				 }
+			
+				
+				
+				 
+				
+			  },
+
+			  error: function (jqXHR, tranStatus, errorThrown) {
+
+				  
+				  custom_alert('There was an error connecting to the service.Please try again','ProductsPage');
+				  $('#loadTry').popup("close");
+			  }
+
+			 });
+
+
+
+			 }
+
+				 else
+
+					 {
+					  
+					
+					 custom_alert('You are currently offline','ProductsPage');
+					  $('#loadTry').popup("close");
+				  
+
+					 }
+			}
+			
+			});
+					
+			
+			}); 
+	}
+	
+	function fail() 
+	{
+		console.log("failed to get filesystem");
+	}
+        
+        
+        
+        function accessStoreDir(imageArray){ 
+             console.log("into accessStoreDir");
+             console.log(imageArray);
+             var imgArry = imageArray;
+             for(var i=0;imageArray.length;i++){
+                 var imgFullName = imageArray[i];
+                 var imgFolder = imgFullName.split("/")[0];
+                 var imgStore = imgFullName.split("/")[1];
+                 var imgName = imgFullName.split("/")[2];
+                 console.log("imgFolder:"+imgFolder+" imgStore:"+imgStore+" imgName:"+imgName);
+                 
+                 var directoryEntry = window.rootFS; // to get root path to directory
+                 directoryEntry.getDirectory(app_folder, { create: true, exclusive: false }, 
+                 function(parent1){
+                     //success
+                     console.log("Success 1");
+                     parent1.getDirectory("store", { create: true, exclusive: false }, 
+                        function(parent2){
+                            //success
+                            console.log("Success 2");
+                            parent2.getDirectory(imgStore, { create: true, exclusive: false }, 
+                                function(parent){
+                                    //success
+                                    console.log("accessing directory for store:"+imgStore);
+                                    begin_fileDownload(imgFolder,imgStore,imgName);
+                                },
+                                function(error){
+                                    cosole.log("Error occured creating directory for store:"+imgStore+" code:"+error.code);
+                                    
+                                });
+                        },
+                        function(error){
+                            cosole.log("Error accessing store directory, code:"+error.code);
+                             
+                        });
+                 },
+                 function(error){
+                     cosole.log("Error accesing image directory, code:"+error.code);
+                      
+                 });
+                  
+            }
+        }
+        function begin_fileDownload(imgFolder,imgStore,imgName){
+            console.log("into begin_fileDownload");
+            var fileTransfer = new FileTransfer();
+            var path;
+            var imgFullName= imgFolder+"/"+imgStore+"/"+imgName;
+            path = aws_cloud_front_url+"/"+imgFullName;
+
+            console.log("fileTransfer begining at..."+path);
+
+            fileTransfer.download(path,
+                                    filePath+"/store/"+imgStore+"/"+imgName,
+                                    function(entry) {
+                                            console.log("success image");
+                                            var store_id	= localStorage.getItem('menuid');
+                                            var size_Store = localStorage.getItem("itemsize");
+
+                                    BUYDEMO.transaction(function(tx) {
+                                    tx.executeSql('select * from store_deal where store_id="'+store_id+'"',[], function (tx, results_res) {
+                                                  var len_res = results_res.rows.length;
+
+                                                  
+                                                  store(results_res.rows.item(0),store_id);
+                                                  store_details(store_id);
+                                                  });
+                                            });
+		
+	
+      
+		
+          console.log('size_Store'+size_Store);
+                                    },
+                                    function(error) {
+                                        console.log("failed image");
+                                    }
+            );
+        }
+        
+       
+        function openImageScroller(itemid,storeid,storeImage){
+            console.log("into openImageScroller:"+itemid+" storeid"+storeid);
+            var imgText="";
+            var len = 0;
+            var itmid = "";
+            var goTo = 0;
+            imgArray = new Array;
+            BUYDEMO.transaction(function(tx) {
+                                
+                tx.executeSql('select * from store_item_images where storeid="'+storeid+'" and itemid="'+itemid+'"', [], function (trx, results){
+                    imgText="";
+                    len = results.rows.length;
+                    itmid = storeid+""+itemid;
+                    console.log("Length:"+len);
+                    for(var i=0;i<len;i++){
+                        console.log("i"+i);
+                        var results_item = results.rows.item(i);
+                        console.log(results_item.imageURL);
+                        var imgName = results_item.imageURL.split('/')[2];
+                        if(storeImage==imgName){
+                            goTo = i;
+                        }
+                            
+                        imgText = imgText + '<a id="popUpImg_"'+itmid+' href="'+aws_cloud_front_url+"/"+results_item.imageURL+'"></a>';
+                       
+                    }
+                    
+
+                });
+                                                  
+                                              
+              },function(err){
+                  console.log("Error occured in local list..."+err.code);
+                    console.log("Error occured in local list..."+err.message);
+              },function(){
+                  console.log("success  in db");
+                  if(len>0){
+                    var FinalImgPopup = '<div id="makeMeScrollable_'+itmid+'" class="parent-container">'+imgText+'</div>';
+                      document.getElementById('imagePopupData').innerHTML = FinalImgPopup;
+                      // None of the options are set
+                      $('#makeMeScrollable_'+itmid).magnificPopup({type:'image',gallery:{enabled:true},
+                          delegate: 'a',
+                          callbacks: {
+
+                              buildControls: function() {
+                                // re-appends controls inside the main container
+                                this.contentContainer.append(this.arrowLeft.add(this.arrowRight));
+                              }
+
+                      }});
+                     $('#makeMeScrollable_'+itmid).magnificPopup('open',goTo);
+                 }
+              });   
+            
+            
+            
+        }
+	
+	function gotFS(fileSystem) {
+
+
+
+    
+
+    // save the file system for later access
+
+    
+
+    window.rootFS = fileSystem.root;
+
+    path  = fileSystem.root.fullPath;
+    filePath = rootFS.toURL()+"/"+app_folder;
+    
+
+    
+
+    if( device.platform == "Android")
+
+    {
+
+		path_arr  = path.split('///');
+
+	    path_arr ='/'+path_arr[1];
+
+
+
+    }
+
+    if( device.platform == "iOS")
+
+    {
+
+        path_arr = path.split('/');
+
+        var path_len = path_arr.length;
+
+        
+
+        path_arr[path_len - 1] = 'Library/Caches';
+
+        path_arr = path_arr.join('/');
+
+    }
+
+}
+
+  function callNativePlugin( returnSuccess )
+	 {
+      console.log("Saish...10");
+         order_historyPlugin.callNativeFunction( nativePluginResultHandler, nativePluginErrorHandler, returnSuccess );
+         
+     }
+	 
+     
+	function nativePluginResultHandler (result)
+	{
+        
+       
+       var resultreceived=result.split(',');
+		var store_id	= localStorage.getItem('menuid');
+		var size_Store = localStorage.getItem("itemsize");
+        
+        BUYDEMO.transaction(function(tx) {
+        tx.executeSql('select * from store_deal where store_id="'+store_id+'"',[], function (tx, results_res) {
+                      var len_res = results_res.rows.length;
+                      
+                   
+                      store(results_res.rows.item(0),store_id);
+                      store_details(store_id);
+                      });
+                });
+		
+	
+      
+		
+          console.log('size_Store'+size_Store);
+        //  console.log('countersize'+counter_size1);
+
+
+
+	}
+
+	function nativePluginErrorHandler (error) 
+	{
+		
+		var storeid	= localStorage.getItem('menuid');
+		var size_Store = localStorage.getItem("itemsize");
+		
+		
+		
+
+
+
+
+
+	}
+    
+    
+    
+    
+    
+    function callNativePlugin1( returnSuccess1 )
+    {
+        console.log("Saish...11");
+        
+        order_historyPlugin1.callNativeFunction( nativePluginResultHandler1, nativePluginErrorHandler1, returnSuccess1 );
+        
+    }
+    
+    
+	function nativePluginResultHandler1 (result)
+	{
+        
+        console.log('result1'+result);
+        var resultreceived1=result.split(',');
+		var store_id	= localStorage.getItem('menuid');
+		
+       
+       store_details_images(store_id);
+		
+        
+		
+	}
+    
+	function nativePluginErrorHandler1 (error)
+	{
+		
+		
+		
+		
+       
+         
+         
+     
+        
+	}
+	
+	var addedto_cart;
+
+  function animate(id,unitprice,checkid,val,actual_id,imageurl,itemname,itemimage,taxrate,deliveryfee,addn_fee)
+  {
+      console.log("Saish...12");
+    
+	   var userid= localStorage.getItem('userid');
+	   var quantity;
+	    addedto_cart=0; 
+            console.log("addn_fee:"+addn_fee);
+	      if(userid==null)
+	    	  {
+	    	  custom_alert('Please login','ProductsPage');
+			  location.href="login.html";
+	    	  return false;
+	    	  }
+			  
+		  var menuid= localStorage.getItem('storeid_map');
+		  var storename= localStorage.getItem('storename');
+		  var storeimage= localStorage.getItem('storeimage');
+		  BUYDEMO.transaction(function(tx) {
+				  
+				
+				 
+				 tx.executeSql('SELECT customer_items_details.ID FROM customer_items inner join customer_items_details on customer_items.ID=customer_items_details.mainid where customer_items.customerid='+userid+' and customer_items.storeid='+menuid+' and customer_items_details.itemid='+actual_id+'', [], function (tx, results) {
+					 var len = results.rows.length;
+                                         console.log("customer_items length:"+len);
+					
+				if(len==0)
+				{
+				
+					  $("#prod_"+id).animate_from_to('#basketImage'+id, {
+						pixels_per_second: 200,
+						name:imageurl
+						});
+					   var totprice=1 * unitprice;
+						
+			
+					  insert_products(userid,menuid,unitprice,1,totprice,actual_id,itemname,itemimage,storename,storeimage,taxrate,deliveryfee,addn_fee);
+					
+				}
+				else
+				{
+						
+						$("#prod_"+id).animate_from_to('#basketImage'+id, {
+						pixels_per_second: 200,
+                        name:imageurl
+						});
+						update_item(menuid,actual_id,userid,unitprice,quantity,totprice);
+				}
+				 });
+		                        
+				 });
+	
+   }
+    
+    function animate1(id,unitprice,checkid,val,actual_id,imageurl,itemname,itemimage,taxrate,deliveryfee,addn_fee)
+    {
+       console.log("Saish...13");
+        var userid= localStorage.getItem('userid');
+        var quantity;
+	    addedto_cart=0;
+            console.log("addn_fee:"+addn_fee);
+        if(userid==null)
+        {
+            custom_alert('Please login','ProductsPage');
+            location.href="login.html";
+            return false;
+        }
+        
+        var menuid= localStorage.getItem('storeid_map');
+        var storename= localStorage.getItem('storename');
+        var storeimage= localStorage.getItem('storeimage');
+        BUYDEMO.transaction(function(tx) {
+                            
+                            
+                            
+                            tx.executeSql('SELECT customer_items_details.ID FROM customer_items inner join customer_items_details on customer_items.ID=customer_items_details.mainid where customer_items.customerid='+userid+' and customer_items.storeid='+menuid+' and customer_items_details.itemid='+actual_id+'', [], function (tx, results) {
+                                          var len = results.rows.length;
+                                          
+                                          if(len==0)
+                                          {
+                                          
+                                          $("#prod1_"+id).animate_from_to('#basketImage'+id, {
+                                                                         pixels_per_second: 200,
+                                                                         name:imageurl
+                                                                         });
+                                          var totprice=1 * unitprice;
+                                          
+                                          
+                                          insert_products(userid,menuid,unitprice,1,totprice,actual_id,itemname,itemimage,storename,storeimage,taxrate,deliveryfee,addn_fee);
+                                          
+                                          }
+                                          else
+                                          {
+                                         
+                                          $("#prod1_"+id).animate_from_to('#basketImage'+id, {
+                                                                         pixels_per_second: 200,
+                                                                         name:imageurl
+                                                                         });
+                                          update_item(menuid,actual_id,userid,unitprice,quantity,totprice);
+                                          }
+                                          });
+                            
+                            });
+                            
+    }
+  function set_quantity(id,unitprice)
+  {
+      console.log("Saish...14");
+	  document.getElementById('pen_val'+id).innerHTML = document.getElementById('anim_text'+id).value;
+	  document.getElementById('tot'+id).innerHTML = document.getElementById('anim_text'+id).value * unitprice;
+	 
+	  
+  }
+  
+    $("input, select, textarea").bind("focus",function() 
+	{
+	$("#footer").hide();
+	$("[data-role=footer]").hide();
+	});
+	$("input, select, textarea").bind("blur",function()
+	{
+	$("#footer").show();
+	$("[data-role=footer]").show();
+	});
+		
+		
+	
+	
+  function close_pop(id)
+  {
+      console.log("Saish...15");
+	  $( "#popup"+id+"" ).popup( "close" );
+	  
+  }
+	
+	</script>
+	
+ </body>
+</html>
+

@@ -1,0 +1,1331 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+   <title>Buy Live</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+
+   <script src="js/jquery-1.9.1.min.js"></script>
+   <script src="js/jquery.mobile-1.3.2.js"></script>
+    <script type="text/javascript" src="js/jquery.rating.js"></script>
+   <link rel="stylesheet" type="text/css" href="css/rating.css">
+ 
+   <script src="js/jquery.animate_from_to-1.0.js"></script>
+   <link rel="stylesheet" type="text/css" href="css/jquery.mobile.flatui.css" />
+
+ <script type="text/javascript" charset="utf-8" src="js/jsOAuth-1.3.6.js"></script>
+ <script src="cordova.js"></script>
+ <script src="js/app.js" type="text/javascript"></script>
+  <script src="js/dbsql.js" type="text/javascript"></script>
+       <script type="text/javascript" charset="utf-8" src="js/DownloadImage.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/childBrowser.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/fb.js"></script>
+          <script type="text/javascript" src="js/SocialSharing.js"></script>
+
+
+   <style>
+   .clr{
+		clear: both;
+		margin:0;
+		padding:0;
+		float:none;
+	}
+	
+	.cancel{
+		visibility:hidden;
+	}
+	
+	#disp .cancel{
+		visibility:visible;
+	}
+	
+	.ui-body-j.ui-input-text.ui-focus{
+
+		border:none;
+	}
+
+	.ui-body-j.ui-input-text{
+
+		border:none;
+	}
+
+	.demo-select input{
+		background: url("images/pencil.png") no-repeat;
+		background-size: 30px 30px;
+	}
+	
+	.demo.demo-select.ui-field-contain.ui-body.ui-br input{
+			background: url("images/pencil.png") no-repeat;
+			background-size: 30px 30px;
+			background-color: #f5f5f5;
+			border: none;
+			outline: 0 none !important;
+			-webkit-appearance: none; box-shadow: none !important;
+			
+			
+			width:23px;
+		}
+	
+	.ui-page .ui-content .ui-btn.my-btn .ui-btn-inner {
+    color      : green;
+    background : red;
+	}
+
+	 .demo {
+            display: none;
+        }
+        
+        *:focus {
+    outline: 0;
+}
+
+
+
+	</style>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+			$('#rate1').rating('example.php', {maxvalue:5,increment:.5,curvalue:2});
+			$('#rate2').rating('example.php', {maxvalue:5,increment:.5,curvalue:4});
+			$('#ratepost').rating('example.php', {maxvalue:5,increment:.5,curvalue:0});
+			$('#rateM').rating('example.php', {maxvalue:5,increment:.5,curvalue:3});
+			$('#rate6').rating('example.php', {maxvalue:5,increment:.5,curvalue:4});
+			
+			
+			
+		});
+		
+		
+		
+		
+		function mobiscroll()
+		{
+		
+			$(function () 
+			{
+																									
+            var opt = {
+               
+					'select': {
+                    preset: 'select'
+							 }
+					  }
+
+
+          
+            var demo = $('#demo').val();
+          
+                if (!demo.match(/select/i))
+				{
+                    $('.demo-test-' + demo).val('');
+                }
+
+                $('.demo-test-' + demo).scroller('destroy').scroller($.extend(opt[demo], {
+                   
+                }));
+                
+      
+				$('.demo').hide();
+                $('.demo-' + demo).show();
+          
+			for(o=1 ;o<=100;o++)
+            {
+				$('#city1').append(new Option(o, o));
+			}
+		});
+		
+		}
+		
+	function get_img()
+		{
+		
+		var choosenpic="url(images/pencil.png) no-repeat";
+		
+		$('#city1_dummy').css("background",choosenpic);
+		$('#city1_dummy').css({'background-size' : '30px 30px'});
+		$('#city1_dummy').css({'width' : '30px'});
+		$('#city1_dummy').css({'height' : '30px'});
+		$('#city1_dummy').css({'background-color' : '#f5f5f5'});
+		
+		$('#city1_dummy').css({'border' : 'none'});
+		$('#city1_dummy').css({'outline' : '0 none !important;'});
+		$('#city1_dummy').css({'-webkit-appearance' : 'none'}); 
+		$('#city1_dummy').css({'box-shadow' : 'none !important'});
+		
+		 
+		}
+
+	</script>
+	 <script src="js/mobiscroll.core.js"></script>
+    <script src="js/mobiscroll.scroller.js" type="text/javascript"></script>
+
+    <script src="js/mobiscroll.datetime.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.select.js" type="text/javascript"></script>
+
+    <script src="js/mobiscroll.scroller.jqm.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.scroller.ios.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.scroller.android.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.scroller.android-ics.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.scroller.wp.js" type="text/javascript"></script>
+
+    <script src="js/i18n/mobiscroll.i18n.de.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.es.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.fr.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.hu.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.it.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.no.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.pt-BR.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.zh.js" type="text/javascript"></script>
+	<link href="css/mobiscroll.scroller.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.jqm.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.android.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.android-ics.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.ios.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.sense-ui.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.scroller.wp.css" rel="stylesheet" type="text/css" />
+
+    <link href="css/mobiscroll.animation.css" rel="stylesheet" type="text/css" />
+
+     <script type="text/javascript">
+      
+        
+    function cal_rating(id,ratingarray)
+	{
+		
+	
+			
+          for(var i=0;i<id.length;i++)
+		  {
+		  
+			$('#rate'+id[i]).rating('example.php', {maxvalue:5,increment:.5,curvalue:ratingarray[i]});
+		  }
+	}    
+        
+   function sel_val(id,unit_price)
+  {
+  var num=document.getElementById('city'+id).value * unit_price;
+	var totalprice=(Math.round(num*100)/100).toFixed(2);
+	
+  var store_id = localStorage.getItem('storeid_map');
+  var userid= localStorage.getItem('userid');
+  var itemid=localStorage.getItem('itemid');
+  var quantity=document.getElementById('city'+id).value;
+  document.getElementById('pen_val'+id).innerHTML = document.getElementById('city'+id).value;
+  document.getElementById('tot'+id).innerHTML = totalprice;
+  if(userid==null)
+  {
+      custom_alert('Please Login','ProductReview');
+	  location.href="login.html";
+      return false;
+  }
+   BUYDEMO.transaction(function(tx)
+   {
+				  
+				
+				 
+				 tx.executeSql('SELECT customer_items_details.ID FROM customer_items inner join customer_items_details on customer_items.ID=customer_items_details.mainid where customer_items.customerid='+userid+' and customer_items.storeid='+store_id+' and customer_items_details.itemid='+itemid+'', [], function (tx, results_trans) {
+				 var len = results_trans.rows.length;
+				
+				if(len!=0)
+				{
+					update_item(store_id,itemid,userid,unit_price,quantity,totalprice);
+				}
+				});
+  });
+  
+  }
+   
+   function checkConnection() {
+	    var networkState = navigator.connection.type;
+
+	    var states = {};
+	    states[Connection.UNKNOWN]  = 'Unknown connection';
+	    states[Connection.ETHERNET] = 'Ethernet connection';
+	    states[Connection.WIFI]     = 'WiFi connection';
+	    states[Connection.CELL_2G]  = 'Cell 2G connection';
+	    states[Connection.CELL_3G]  = 'Cell 3G connection';
+	    states[Connection.CELL_4G]  = 'Cell 4G connection';
+	    states[Connection.NONE]     = 'No network connection';
+
+	    
+	    
+	  if(states[Connection.NONE] != states[networkState] )
+	{
+	return 'true';
+	}
+	else
+	{
+	return 'false';
+	}
+
+	}
+   function write_review()
+   {
+	   var conn=checkConnection();
+	   var itemid=localStorage.getItem('itemid');
+		var ratings=localStorage.getItem('ratingStar');
+		var comment=document.getElementById('comment').value;
+		var user=localStorage.getItem('cust_username');
+		var userid=localStorage.getItem('userid');
+        var num_of_rating=localStorage.getItem('num_of_rating');
+		
+		if(userid==null)
+	    {
+	    	  custom_alert('Please login','ProductReviewPage');
+              location.href="login.html";
+	    	  return false;
+	    }
+		if((ratings==null || ratings==0) && comment=='')
+			{
+			custom_alert('Please rate the item or comment','ProductReviewPage');
+			return false;
+			}
+			
+		    
+			  
+	     if(conn='true')
+
+	    	 {
+
+		 var  txt='';
+
+		 txt='<couponReview:couponReview xsi:schemaLocation="http://schema.ayenda.com/smartBuy/couponReview couponReview.xsd" xmlns:ed1="http://schema.ayenda.com/smartBuy/coupon" xmlns:couponReview="http://schema.ayenda.com/smartBuy/couponReview" xmlns:cus="http://schema.ayenda.com/smartBuy/customer" xmlns:item="http://schema.ayenda.com/smartBuy/item" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><item:item><item:review><reviewComments>'+comment+'</reviewComments><rating>'+ratings+'</rating><user>'+user+'</user></item:review><itemID>'+itemid+'</itemID></item:item></couponReview:couponReview>';
+		
+		
+		 $.ajax({
+
+		  url: 'http://buyzenga.com:7003/BPL/rest/CouponRESTProxy/reviewCoupon',
+
+		  type: 'POST',
+
+		  datatype : 'application/xml',
+
+		  data: txt,
+
+		  contentType: 'application/xml',
+
+
+
+		  success: function (result) {
+			
+			if(result)
+				{
+				insert_store_deal_review(1,itemid,comment,ratings,user);
+				localStorage.setItem('ratingStar',0);
+				
+					var avg_rating;
+					
+					get_avg_rating=document.getElementById('avg_hidden_val').value;
+					
+                var rating_val;
+					
+                    if(num_of_rating=='0')
+					{
+                        avg_rating=0;
+                        rating_val=ratings;
+                    }
+					else
+					{
+              
+                
+                        avg_rating=get_avg_rating;
+                        var op1=parseFloat(avg_rating);
+                        var op2=parseFloat(ratings);
+                        op1 = op1 * num_of_rating;
+                
+                        var cal_rating= op1 + op2;
+               
+                var total_reviews=parseInt(num_of_rating) + 1;
+                
+                       var calculated_rating=cal_rating/total_reviews;
+           
+                        rating_val=((calculated_rating*100)/100);
+                
+
+					}
+					
+					
+					
+					
+				BUYDEMO.transaction(function(tx) {
+				
+				if(ratings!=0)
+				{
+				tx.executeSql("UPDATE store_deal_item SET avg_rating='"+rating_val+"' where itemid='"+itemid+"'");  
+				}
+		 
+				location.href="productReview.html";
+			});
+				
+				}
+        
+			else
+				{
+				custom_alert('Failed to upload','ProductReview');
+				localStorage.setItem('ratingStar',0);
+				return false;
+				}
+		 	
+			
+		
+			
+			
+
+		
+			
+			 
+			
+		  },
+
+		  error: function (jqXHR, tranStatus, errorThrown) {
+
+			  custom_alert('There was an error connecting to the service.Please try again','ProductReview');
+			  localStorage.setItem('ratingStar',0);
+		  }
+
+		 }); 
+		 
+		 
+	    	 }
+	     else
+	    	 {
+	    	 
+	    	 custom_alert('You are currently offline','ProductReview');
+	    	 localStorage.setItem('ratingStar',0);
+	    	 }  
+   }
+   
+ 
+	 	var addedto_cart;
+        
+       
+  function animate(id,unitprice,checkid,val,actual_id,imageurl,itemname,itemimage,taxrate)
+  {
+	   var userid=localStorage.getItem('userid');
+	   var actual_id=localStorage.getItem('itemid');
+       if(userid==null)
+       {
+           custom_alert('Please login','ProductReview');
+           location.href="login.html";
+           return false;
+       }
+	   var quantity;
+	    addedto_cart=0; 
+	  
+		  var menuid= localStorage.getItem('storeid_map');
+		  var storename= localStorage.getItem('storename');
+           var storeimage= localStorage.getItem('storeimage');
+		  BUYDEMO.transaction(function(tx) {
+				  
+			
+                              
+                              tx.executeSql('SELECT customer_items_details.ID FROM customer_items inner join customer_items_details on customer_items.ID=customer_items_details.mainid where customer_items.customerid='+userid+' and customer_items.storeid='+menuid+' and customer_items_details.itemid='+actual_id+'', [], function (tx, results) {
+                                            var len = results.rows.length;
+                                            
+                                            if(len==0)
+                                            {
+                                            
+                                            $("#prod_"+id).animate_from_to('#basketImage'+id, {
+                                                                           pixels_per_second: 200,
+                                                                           name:imageurl
+                                                                           });
+                                            var totprice=1 * unitprice;
+                                            
+                                          
+                                            insert_products(userid,menuid,unitprice,1,totprice,actual_id,itemname,itemimage,storename,storeimage,taxrate);
+                                            
+                                            }
+                                            else
+                                            {
+                                           
+                                            $("#prod_"+id).animate_from_to('#basketImage'+id, {
+                                                                           pixels_per_second: 200,
+                                                                           name:imageurl
+                                                                           });
+                                            update_item(menuid,actual_id,userid,unitprice,quantity,totprice);
+                                            }
+				 });
+		                        
+				 });
+    }
+   function close_pop(id)
+   {
+ 	  $( "#popup"+id+"" ).popup( "close" );
+ 	  
+   }
+   
+   
+  
+  
+
+function onCloseBrowser() {
+   
+}
+    
+function locChanged(loc) {
+  
+}
+    
+function onOpenExternal() {
+   
+}
+    
+</script>
+<!--Below is the code for twitter-->
+<script>
+// GLOBAL VARS
+var oauth; // It Holds the oAuth data request
+var requestParams; // Specific param related to request
+var options = {
+		 consumerKey: 'XjDkVlBDqA08EPsisItIg', // YOUR Twitter CONSUMER_KEY
+         consumerSecret: 'lF083CeqV5Tu43umg9w3p7YtJ8nWXm0lYYyLBv0hRg', // YOUR Twitter CONSUMER_SECRET
+         callbackUrl: "http://websitedevelopmentindia.org/twitteroauth-master/response.php" 
+}; // YOU have to replace it on one more Place                   
+var twitterKey = "twtrKey"; // This key is used for storing Information related
+        
+        
+var Twitter = {
+ init:function(){
+   // Apps storedAccessData , Apps Data in Raw format
+   var storedAccessData, rawData = localStorage.getItem(twitterKey);
+   // here we are going to check whether the data about user is already with us.
+   if(localStorage.getItem(twitterKey) !== null){
+   	// when App already knows data
+   	storedAccessData = JSON.parse(rawData); //JSON parsing
+ 		
+   	options.accessTokenSecret = storedAccessData.accessTokenSecret; // data will be saved when user first first signin
+                
+   	// javascript OAuth take care of everything for app we need to provide just the options
+   	oauth = OAuth(options);
+  		oauth.get('https://api.twitter.com/1/account/verify_credentials.json?skip_status=true',
+   		function(data) {
+       	var entry = JSON.parse(data.text);
+       
+       }
+     );
+   }
+   else {
+     // we have no data for save user
+     
+     oauth = OAuth(options);
+     oauth.get('https://api.twitter.com/oauth/request_token',
+       function(data) {
+         requestParams = data.text;                       
+      		var cb = window.open('https://api.twitter.com/oauth/authorize?'+data.text,'_blank'); // This opens the Twitter  authorization / sign in page
+         cb.addEventListener('loadstart', function(loc) { alert('stop: ' + loc.url); Twitter.success(loc.url); });
+         cb.onLocationChange = function(loc){ 
+        		//alert("fdf");
+        		Twitter.success(loc.url); 
+        	}; // Here will will track the change in URL of ChildBrowser
+       },
+       function(data) {
+       	
+      	}
+     );
+   }
+ },
+	/*
+ When ChildBrowser's URL changes we will track it here.
+ We will also be acknowledged was the request is a successful or unsuccessful
+ */
+	success:function(loc){
+   //alert("m in success");     
+		  
+   //alert(loc);    
+  // alert(loc.indexOf("http://www.genorainfotech.com/instagramtest/testTwitter.php?"));    
+     	if (loc.indexOf("http://www.genorainfotech.com/instagramtest/testTwitter.php?") >= 0) {
+    // alert(loc.indexOf("http://www.genorainfotech.com/instagramtest/testTwitter.php/?"));
+        // Parse the returned URL
+     var index, verifier = '';
+     var params = loc.substr(loc.indexOf('?') + 1);
+       
+     params = params.split('&');
+     for (var i = 0; i < params.length; i++) {
+       var y = params[i].split('=');
+       if(y[0] === 'oauth_verifier') {
+         verifier = y[1];
+       }
+     }
+              
+     // Here we are going to change token for request with token for access
+        
+       /*Once user has authorised us then we have to change the token for request with token of access
+       here we will give data to localStorage.
+        */
+       // console.log('https://api.twitter.com/oauth/access_token?oauth_verifier='+verifier+'&'+requestParams);
+     oauth.get('https://api.twitter.com/oauth/access_token?oauth_verifier='+verifier+'&'+requestParams,
+       function(data) {
+         var accessParams = {};
+         var qvars_tmp = data.text.split('&');
+         for (var i = 0; i < qvars_tmp.length; i++) {
+         var y = qvars_tmp[i].split('=');
+         accessParams[y[0]] = decodeURIComponent(y[1]);
+       }
+                        
+       $('#oauthStatus').html('<span style="color:green;">Success!</span>');
+       $('#stage-auth').hide();
+       $('#stage-data').show();
+       oauth.setAccessToken([accessParams.oauth_token, accessParams.oauth_token_secret]);
+        
+       // Saving token of access in Local_Storage
+       var accessData = {};
+       accessData.accessTokenKey = accessParams.oauth_token;
+       accessData.accessTokenSecret = accessParams.oauth_token_secret;
+        
+       // Configuring Apps LOCAL_STORAGE
+      
+       localStorage.setItem(twitterKey, JSON.stringify(accessData));
+        
+       oauth.get('https://api.twitter.com/1/account/verify_credentials.json?skip_status=true',
+         function(data) {
+    	  console.log(data.text);
+           var entry = JSON.parse(data);
+           
+           $("#welcome").show();
+           document.getElementById("welcome").innerHTML="welcome " + entry.screen_name;
+           successfulLogin();
+           // Just for eg.
+           app.init();
+         },
+         function(data) {
+           
+         }
+       );
+                        
+       // Now we have to close the child browser because everthing goes on track.
+       
+       cb.close();
+       location.href = 'productReview.html';
+       },
+       function(data) {
+         
+       }
+     );
+   }
+   else {
+    
+   }
+ },
+ tweet:function(){
+   var storedAccessData, rawData = localStorage.getItem(twitterKey);
+    
+   storedAccessData = JSON.parse(rawData); // Paring Json
+   options.accessTokenKey = storedAccessData.accessTokenKey; // it will be saved on first signin
+   options.accessTokenSecret = storedAccessData.accessTokenSecret; // it will be save on first login
+    
+   // javascript OAuth will care of else for app we need to send only the options
+   oauth = OAuth(options);
+   oauth.get('https://api.twitter.com/1/account/verify_credentials.json?skip_status=true',
+     function(data) {
+       var entry = JSON.parse(data.text);
+       Twitter.post();
+     }
+   );
+ },
+ /*
+   We now have the data to tweet
+ */
+ post:function(){
+   var theTweet = $("#tweet").val(); // You can change it with what else you likes.
+    
+   oauth.post('https://api.twitter.com/1/statuses/update.json',{ 
+     'status' : theTweet,  // javascript OAuth encodes this
+     'trim_user' : 'true' },
+     function(data) {
+       var entry = JSON.parse(data.text);
+       
+       // just for eg.
+       done();
+     },
+     function(data) {
+       
+     }
+   );      
+ } 
+}
+        
+function done(){
+ $("#tweet").val('');
+}
+        
+        
+function successfulLogin(){
+	
+ $("#loginBtn").hide();
+ $("#logoutBtn,#tweet,#tweeter,#tweetBtn,#tweetText").show();
+}
+
+function logOut(){
+ 
+ window.localStorage.removeItem(twitterKey);
+ document.getElementById("welcome").innerHTML="Please Login to use this app";
+ $("#loginBtn").show();
+ $("#logoutBtn,#tweet,#tweeter,#tweetText,#tweetBtn").hide();              
+}
+        
+
+function shareapp()
+{
+
+window.plugins.socialsharing.share('ss', null, 'www/images/event.png', 'https://www.google.co.in/?gws_rd=cr&ei=x8vTUtrRDYTArAe52YGgCg')
+}
+
+ var text;
+ var text2;
+ 
+function itemdiv()
+{ 
+    console.log("into itemdiv");
+$('#loadTry').popup("open");
+	text="";
+	text2="";
+	var itemid=localStorage.getItem('itemid');
+	
+
+	BUYDEMO.transaction(function(tx) {
+			 
+		
+	       
+			tx.executeSql('select store_deal_item.* from store_deal_item where store_deal_item.itemid='+itemid+'', [], function (tx, results) {
+			
+	    
+	   
+	   
+	                 var result = results.rows.item(0);
+					 
+					 	var quantity=1;
+					
+					var avg_rating;
+					
+					if(result.avg_rating)
+					{
+						avg_rating=result.avg_rating;
+					}
+					else
+					{
+						avg_rating='0';
+					}
+					
+					var cal_avg_rating=((avg_rating*100)/100).toFixed(2);
+					var rating=cal_avg_rating+" out of 5";
+					  
+					  if(cal_avg_rating=='0.00')
+					  {
+						document.getElementById('avg_rating').innerHTML = "";
+						document.getElementById('avg_rating_text').innerHTML = "Not rated yet";
+						 $('#loadTry').popup("close");
+					  }
+					  else
+					  {
+						document.getElementById('avg_rating_text').innerHTML = "Average Rating";
+						document.getElementById('avg_rating').innerHTML = rating;
+					  }
+					document.getElementById('avg_hidden_val').value = avg_rating;
+					var totprice=result.price*1;
+					console.log('result.imageurl:');
+                                        console.log(result.imageurl);
+                                        var store_img_name = result.imageurl.split('/')[1];
+                                        var store_img = result.imageurl.split('/')[2];
+                                        
+					var image_animate = filePath+'/store/'+store_img_name+'/'+store_img;
+                                        
+					console.log('Img:'+image_animate);
+			text = text + '<div class="clr bluetext" style="text-align:center;">'+result.itemname+'</div>';
+				
+			 text = text + '<div class="clr"></div>';
+			text = text + '<br/>';
+			text = text + '<div class="divcolor" >';
+			text = text + '<div style="margin:0;float:right;position:relative;top: -18px;" >';
+			text = text + '<div style="margin:0;pointer-events: none;right: -102px;top: -15px;" id="rateM" class="rating"></div></div>';
+				text = text + '<div style="float:left;width:84%;">';
+					
+
+					text = text + '<div style="float:left;">';
+						
+                        /*  var img = new Image();
+                          var ds = new Date();
+                          var sec = ds.getSeconds();
+                          //document.getElementById("smallImage").src=path_arr+"/"+returnSuccess[1]+"?"+sec;
+                          img.src = path_arr+'/'+store_img;
+                          
+                          if(!img.complete)
+                          {
+                          text = text + '<img id="prod_1" src="images/no_image.png" style="width:80px;height:80px;" />';
+                          }
+                          else
+                          {*/
+                          text = text + '<img id="prod_1" src="'+filePath+'/store/'+store_img_name+'/'+store_img+'" style="width:80px;height:80px;" />';
+                         // }
+                    
+					text = text + '</div>';
+					text = text + '<div style="float:left;padding-left:8px;">';
+						
+
+						text = text + '<div style="float:left;padding-top:8px;">';
+							text = text + '<span class="blacktext fontfourteen">Unit Price:</span><br/>';
+							text = text + '<span class="blacktext fontfourteen">Qty:</span><br/>';
+							text = text + '<span class="blacktext fontfourteen">Price:</span><br/>';
+						text = text + '</div>';
+
+						text = text + '<div style="float:right;padding-left:5px;position:relative;top:-10px;">';
+								
+								
+          							
+						text = text + '</div>';
+
+						text = text + '<div style="float:right;padding-top:8px;padding-left:2px;">';
+							text = text + '<span class="orangetextnavbar fontfourteen">'+result.price+'</span><br/>';
+							text = text + '<span id="pen_val1" class="orangetextnavbar fontfourteen">'+quantity+'</span><br/>';
+							text = text + '<span id="tot1" class="orangetextnavbar fontfourteen">'+totprice+'</span><br/>';
+						text = text + '</div>';
+
+						
+					text = text + '</div>';
+
+					
+				text = text + '</div>';
+				
+				text = text + '<div style="float:right;width:15%;text-align:right;padding-top:17px;">';
+					text = text + '<img style="position: relative;top: -30px;" width="40px" height="40px" id="basketImage1"   onclick="animate(1,'+result.price+',1,1,'+result.itemid+',\''+image_animate+'\',\''+result.itemname+'\',\''+result.imageurl+'\','+result.taxRate+')" src="images/basket.png"/>';
+                          
+                         
+				text = text + '<input type="hidden" name="animate1" id="animate1" value="0"/>';
+				text = text + '</div>';			
+				
+				 text = text + '<div id="popup1" data-role="popup" style="border-color:#007aff;padding:20px;display:none">';
+					   		text = text + '<label style="color:#ff9000">This product has already been added.</label><br/>';
+					   		
+					   		text = text + '<p style="text-align:center">';	
+							text = text + '<a href="#" rel="external" data-inline="true"  style="padding-right:5px;min-width:60px" onclick="close_pop(1)" data-role="button" >OK</a>';
+				text = text + '</p>';
+				
+					   		text = text + '</div>'; 
+				text = text + '<div class="clr"></div>';
+
+					text = text + '<br/>';
+				text = text + '<span class="clr" style="color:#2a2a2a;padding-left:2px;">'+result.description+'</span>';
+			text = text + '</div>';
+			
+			
+
+			text = text + '<div id="coupondiv"></div>';
+			text = text + ' <div class="divcolor" style="padding:10px 10px 10px 20px">';
+                          text = text + ' <div style="float:left;width:27%;">';
+                          text = text + ' <label class="bluetext" style="line-height:30px;">Share</label>';
+                          text = text + ' </div>';
+                          
+                          text = text + ' <div style="float:left:69%">';
+                          text = text + ' 	<div style="float:left;width:23%">';
+                          text = text + ' 	<a onclick="window.plugins.socialsharing.shareViaFacebook(\''+result.itemname+'\', \''+filePath+'/store/'+store_img_name+'/'+store_img+'\', null , console.log(\'share ok\'), function(errormsg){alert(errormsg)})"   data-rel="popup" data-inline="true"><img src="images/fb.png" style="width:35px;height:35px;" /></a>';
+                        
+                          text = text + ' 	</div>';
+                          text = text + ' 	<div style="float:left;width:23%">';
+                          text = text + ' 	<img src="images/twitter.png" id="tweeter" onclick="window.plugins.socialsharing.shareViaTwitter(\''+result.itemname+'\', \''+filePath+'/store/'+store_img_name+'/'+store_img+'\', null)" style="width:35px;heigh:35px;"/>	';
+                          text = text + ' </div>';
+                          text = text + ' <div style="float:left;width:23%">';
+                          text = text + ' 	<img  onclick="window.plugins.socialsharing.share(\''+result.itemname+'\',\'hello\',\''+filePath+'/store/'+store_img_name+'/'+store_img+'\')" src="images/mail.png" style="width:35px;heigh:35px;"/>	';
+                          text = text + ' </div>';
+                          text = text + ' 	</div>';
+                          text = text + ' <div style="float:right;width:4%">';
+                          text = text + ' 	</div>';
+                          text = text + ' <div class="clr"></div>';
+                          text = text + ' </div>';
+						  
+						  text = text + '</div>';
+			
+    		         document.getElementById('div_item').innerHTML = text;
+    		         $("#div_item").trigger("create");
+					 mobiscroll();
+					
+					 get_img();
+					 
+					 			
+			tx.executeSql('SELECT * FROM store_deal_coupon where itemid='+itemid+'', [], function (tx, results1) {
+	        
+	   
+	   
+	                 var result1 = results1.rows.item(0);
+					 var len_res = results1.rows.length;
+					
+			
+					if(len_res!=0)
+					{
+					text2="";
+					
+					var expdate=(result1.expirationdate).split('Z');
+						text1 = text1 + '<div class="clr"></div>';
+						
+				text2 = text2 + '<div class="divcolor" style="padding:3px 20px 3px 20px;">';
+					text2 = text2 + ' <div>';
+						text2 = text2 + '<label class="bluetext" >Coupon Details</label>';
+						text2 = text2 + '<table>';
+							text2 = text2 + '<tr>';
+								text2 = text2 + '<td style="padding-right:7px;width:60px;" class="blacktext fontfourteen">Exp Date:</td>';
+								text2 = text2 + '<td class="blacktext fontfourteen">'+expdate[0]+'</td>';
+							text2 = text2 + '</tr>';
+							text2 = text2 + '<tr>';
+								text2 = text2 + '<td style="padding-right:7px;width:60px;" class="blacktext fontfourteen">Offer:</td>';
+								text2 = text2 + '<td class="blacktext fontfourteen">'+result1.offer+'</td>';
+							text2 = text2 + '</tr>';
+						text2 = text2 + '</table>';
+					text2 = text2 + '</div>';
+				text2 = text2 + '</div>';
+				document.getElementById('coupondiv').innerHTML = text2;
+    		        $("#coupondiv").trigger("create");
+				
+				
+					}	
+					
+			});
+		});
+		
+		});
+			 
+    		        
+
+}
+var text1;
+function userimage()
+{
+	var itemid=localStorage.getItem('itemid');
+	
+	BUYDEMO.transaction(function(tx) {
+	
+	tx.executeSql('select * from store_deal_item_review where itemid='+itemid+' ORDER BY reviewid DESC', [], function (tx, results) {
+			
+	        var len = results.rows.length;
+			localStorage.setItem('image_count',len);
+	 
+	   for( var i=0;i<len;i++)
+	   {
+	                 var result = results.rows.item(i);
+			 
+							var returnSuccess = new Array();
+				returnSuccess[0] = 'images/avatar/'+result.user+'/'+result.user+'.jpg';
+           
+
+            
+				
+				returnSuccess[1] = result.user+'.jpg';
+				
+			 
+				//callNativePlugin( returnSuccess );
+				
+					
+			
+		}
+			
+		});
+		});
+}
+function ratingdiv1()
+{
+	text1="";
+	var idarray=new Array();
+	var ratingarray=new Array();
+	var itemid=localStorage.getItem('itemid');
+	
+	BUYDEMO.transaction(function(tx) {
+	
+	tx.executeSql('select * from store_deal_item_review where itemid='+itemid+' ORDER BY reviewid DESC', [], function (tx, results) {
+			
+	        var len = results.rows.length;
+                
+                  localStorage.setItem('num_of_rating',len);
+                  
+	 
+	   for( var i=0;i<len;i++)
+	   {
+	                 var result = results.rows.item(i);
+			
+			text1 = text1 + '<div class="divcolor"  style="position:relative;top:5px;padding:10px 10px 10px 10px">';
+			
+				text1 = text1 + '<div style="float:left;width:100px;">';
+					text1 = text1 + '<div style="float:left;">';
+						
+					
+						text1 = text1 + '<img src="images/profile.png" id="userimage'+i+'" style="width:65px;height:65px;"/>';
+					
+					
+						text1 = text1 + '<br/>';
+						text1 = text1 + '<label class="orangetextnavbar">'+result.user+'</label>';
+					text1 = text1 + '</div>';
+				
+				text1 = text1 + '</div>';
+				text1 = text1 + '<div style="float:left;width:60%;">';
+					text1 = text1 + '<div style="margin:0;pointer-events: none;" id="rate'+i+'" class="rating"></div>';
+					text1 = text1 + '<br/>';
+					text1 = text1 + '<label class="blacktext fontfourteen">'+result.reviewComments+'</label>';
+				text1 = text1 + '</div>';
+				text1 = text1 + '<div class="clr"></div>';
+			text1 = text1 + '</div>';
+			text1 = text1 + '<br/>';
+			idarray[i]=i;
+			ratingarray[i]=	result.rating;
+			
+		}
+			
+    		document.getElementById('div_rating').innerHTML = text1;
+    		$("#div_rating").trigger("create");
+    		
+			cal_rating(idarray,ratingarray); 
+				 $('#loadTry').popup("close");
+		});
+		});
+			
+		
+}
+
+
+function ratingdiv(val)
+{
+
+	var idarray=new Array();
+	var ratingarray=new Array();
+	var userimage = new Array();
+	var userid = new Array();
+	var q=0;
+	var itemid=localStorage.getItem('itemid');
+	//alert(itemid);
+	BUYDEMO.transaction(function(tx) {
+	
+	tx.executeSql('select * from store_deal_item_review where itemid='+itemid+' ORDER BY reviewid DESC', [], function (tx, results) {
+			
+	        var len = results.rows.length;
+               
+                  
+                
+	   for( var i=0;i<len;i++)
+	   {
+	                   var result = results.rows.item(i);
+						
+						var e=0;
+						var img = new Image();
+						var ds = new Date();
+						var sec = ds.getSeconds();
+	
+						img.src = path_arr+'/'+result.user+'.jpg';
+                 
+						if(!img.complete)
+						{
+                  
+						}
+						else
+						{
+                  
+                  //callNativePlugincache(result.user);
+						document.getElementById("userimage"+i).src=path_arr+'/'+result.user+'.jpg'+"?"+sec;
+                  //document.getElementById("userimage"+i).src=path_arr+'/r.jpg';
+						}
+				
+					
+				
+                
+                  
+
+       }
+		
+				 	
+                  setTimeout(function(){ratingdiv(0)},4000);
+                  
+                  
+		});
+		});
+			
+        
+		
+}
+
+
+	function change_quantity()
+	{
+		var count=0;
+		var userid= localStorage.getItem('userid');
+		BUYDEMO.transaction(function(tx) {
+		tx.executeSql('SELECT * FROM customer_items_details inner join customer_items on customer_items.ID=customer_items_details.mainid where customer_items.customerid="'+userid+'"', [], function (tx, results) {
+		var len=results.rows.length;
+			for(var j=0;j<len;j++)
+			{
+			 var resultres = results.rows.item(j);
+			
+			 count=count+resultres.quantity;
+		
+			
+			
+			}
+			if(count<10)
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '16px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			else if(count>9 && count<100)
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '20px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			else if(count>99 && count<1000)
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '25px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			else
+			{
+					$('#total_count').css({'-moz-border-radius' : '50%'});
+					$('#total_count').css({'-webkit-border-radius' : '50%'});
+					$('#total_count').css({'border-radius' : '50%'});
+					$('#total_count').css({'width' : '30px'});
+					$('#total_count').css({'height' : '16px'});
+			}
+			
+			 document.getElementById('total_count').innerHTML =count;
+		 });
+		
+		});
+	}		
+    </script>
+    
+    <style>
+		.ui-input-text.ui-shadow-inset.ui-corner-all.ui-btn-shadow.ui-body-j{
+			
+			border:none;
+		}
+		
+		div.ui-input-text{
+		position:absolute;
+		}
+	
+		#searchBar div {
+		position: relative;
+		}
+		.ui-body-i.ui-input-text.ui-focus{
+
+		border:none;
+	}
+	
+	</style>
+ </head>
+ <body>
+ 	<div data-role="page" data-theme="j">
+
+	   <div id="loginHeader" data-role="header" data-position="fixed"  data-tap-toggle="false" class="headerheight" data-theme="h">
+			<a href="menu.html" rel="external" style="margin-top:-15px;" class="ui-btn-left"><div style="width:40px; height:44px;"><img class="imagesize" style="position:relative; top:17px;width:18px;height:18px;" src="images/arrow_left.png"/></div></a>	
+			<h1>Product Review</h1>
+			<a href="" rel="external" style="margin-top:-15px;" class="ui-btn-right"><div style="width:40px; height:44px;"><img class="imagesize" style="position:relative; top:17px;width:18px;height:18px;" src="images/arrow_right.png"/></div></a>	
+		</div><!-- /header -->
+
+
+
+		<div data-role="content">
+			<div class="settings">
+               
+                <div data-role="fieldcontain">
+                   <input type="hidden" name="demo" id="demo" value="select"/>
+				 </div>
+        </div>
+		
+		<div id="div_item">
+		</div>
+		
+		
+			<br/>
+			
+			<hr/>
+			<label style="padding-left:2px;line-height:30px;">
+				<label style="padding-right:2px;" class="bluetext" id="avg_rating_text"></label>
+				<label class="orangetextnavbar fontfourteen" id="avg_rating"></label>
+				<input type="hidden" id="avg_hidden_val" value=""/>
+				<a onclick="disp_pop()" href="#positionOrigin" data-inline="true" data-rel="popup" data-position-to="window" style="float:right;font-weight:bold;padding-top: 4px;" class="fontfourteen"><img src="images/edit.png"  style="width:20px;height:20px;"/><label style="position: relative;top: -3px;" class="fontChangeProductReview">Write Review</label></a>
+			</label>
+			
+
+
+
+			<div class="divcolor" id="disp" style="position:relative;top:5px;padding:8px 8px 8px 8px;display:none;">
+				
+				<div style="float:left;">
+				<label style="color:#007aff">Rating</label><br/>
+			   <div style="margin:0;" id="ratepost" class="rating"></div>
+			   
+			   <div style="width:100%;margin-top:10px;">
+				   	<div style="float:left;width:80%;">
+						<textarea style="border:2px solid #f5f5f5;background:white"  name="comment" id="comment" value="" placeholder="Your comments.."></textarea>
+					</div>
+					<div style="float:right;width:15%">			   
+				   		<p style="text-align:center;"><a style="background-color:#007aff;color:white;width:50px;top:-5px" href="#" rel="external" data-role="button"  onclick="write_review()" data-inline="true" >
+				   			Post
+				   	</a>	</p>
+				   	</div>	
+				</div>
+			   </div>
+				<div class="clr"></div>
+			</div>
+			<br/>
+			<div id="div_rating" >
+			
+			</div>
+		
+			<br/>
+			<br/>
+			<div id="loadTry" data-role="popup" data-overlay-theme="a" class="ui-content">
+                     <img  src="images/ajax-loader.gif"/>
+		</div>
+		</div><!-- /content -->
+
+ 		<div data-role="footer" data-id="footer" data-position="fixed" data-theme="h" id="footer">
+			<div data-role="navbar">
+				<ul>
+					<li><a id="home" href="homepage.html" rel="external" data-icon="home-blue" class="ui-state-persist bluetext"></a></li>
+					
+					<li><div id="total_count" style="background-color:#ff9000;display:inline-block;margin-left:58%;margin-top:2%;color:black;text-align:center;z-index:2000;position:relative;font-size:12px;"></div><a id="basket" href="shopping.html" rel="external" data-icon="basket-blue" class="ui-state-persist bluetext" style="vertical-align: middle;margin-top:-22px"></a></li>
+					<li><a id="list" href="menu.html" rel="external" data-icon="list-blue" class="ui-state-persist "></a></li>
+					
+				</ul>
+			</div><!-- /navbar -->
+		</div><!-- /footer -->
+
+		
+	</div><!-- /page -->
+ </body>
+ <script>
+ 
+document.addEventListener("deviceready", onDeviceReady, false);
+
+ function onDeviceReady()
+   {
+	initDatabase();
+	window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+    window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, gotFS, fail);
+	change_quantity();
+	itemdiv();
+	
+    ratingdiv1();
+    userimage();
+               
+    
+    
+   }
+  	document.addEventListener("online", function()
+			{
+		
+			});
+
+	document.addEventListener("offline", function()
+			{
+	
+		custom_alert('Please turn on GPS or wifi to browse through the App','ProductReviewPage');
+		$('#loadTry').popup("close");
+			}); 
+function fail() 
+{
+    console.log("failed to get filesystem");
+}
+
+$("input, select, textarea").bind("focus",function() {
+$("#footer").hide();
+});
+$("input, select, textarea").bind("blur",function() {
+$("#footer").show();
+});
+
+var path;
+var path_arr;
+var filePath = "";
+function gotFS(fileSystem) {
+
+
+
+    
+
+    window.rootFS = fileSystem.root;
+
+    path  = fileSystem.root.fullPath;
+
+    filePath = rootFS.toURL()+"/"+app_folder;
+
+    
+
+    if( device.platform == "Android")
+
+    {
+
+
+path_arr = path;
+
+    }
+
+    if( device.platform == "iOS")
+
+    {
+
+        path_arr = path.split('/');
+
+        var path_len = path_arr.length;
+
+        
+
+        path_arr[path_len - 1] = 'Library/Caches';
+
+        path_arr = path_arr.join('/');
+
+    }
+
+}
+
+  function callNativePlugin( returnSuccess ) 
+	 {
+      
+         DownloadImage.callNativeFunction( nativePluginResultHandler, nativePluginErrorHandler, returnSuccess );
+         
+     }
+	 
+     var counter_size = 0;
+	function nativePluginResultHandler (result) 
+	{
+		var size_Store = localStorage.getItem("image_count");
+        counter_size = counter_size + 1;
+		
+		if(size_Store==counter_size)
+		  {
+		 
+         
+		   ratingdiv(0);
+		 
+		  }
+        
+        
+	}
+
+	function nativePluginErrorHandler (error) 
+	{
+		
+		var size_Store = localStorage.getItem("image_count");
+		counter_size = counter_size + 1;
+		
+		if(size_Store==counter_size)
+		  {
+		  
+          ratingdiv(0);
+		  }
+	}
+ 
+
+
+function disp_pop()
+{
+
+var	disp = document.getElementById('disp');
+ disp.style.display = "";
+
+}
+</script>
+</html>
+

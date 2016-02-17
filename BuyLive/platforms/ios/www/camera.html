@@ -1,0 +1,762 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+ <title>Profile</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+   <script src="js/jquery-1.9.1.min.js"></script>
+   <script src="js/jquery.mobile-1.3.2.js"></script>
+  
+     <script src="js/dbsql.js"></script>
+      <script type="text/javascript" charset="utf-8" src="js/UploadImage.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/jquery.mobile.flatui.css" />
+   
+      <script type="text/javascript" charset="utf-8" src="js/DownloadImageprofile.js"></script>
+      <script src="cordova.js"></script>
+      <script src="js/app.js" type="text/javascript"></script>
+   <style>
+   .clr{
+		clear: both;
+		margin:0;
+		padding:0;
+		float:none;
+	}
+	
+	
+  .thumb {
+    height: 75px;
+    border: 1px solid #000;
+    margin: 10px 5px 0 0;
+  }
+ 
+</style>
+<script>
+var imagearray = new Array();
+ var pictureSource;   // picture source
+    var destinationType; // sets the format of returned value
+
+   
+
+    // Wait for device API libraries to load
+ 
+
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoDataSuccess(imageData) {
+        var smallImage = document.getElementById('smallImage');
+        
+        // Unhide image elements
+        //
+        //smallImage.style.display = 'block';
+        
+        // Show the captured photo
+        // The inline CSS rules are used to resize the image
+        //
+        smallImage.src = imageData;
+        //uploadFile(imageData);
+        
+        
+        //var username  = localStorage.getItem("cust_username");
+        imagearray[0] = imageData;
+        track_flag=1;
+    }
+
+    function callNativePlugin( returnSuccess ) 
+	 {
+     
+        UploadImage.callNativeFunction( nativePluginResultHandler, nativePluginErrorHandler, returnSuccess );
+        
+    }
+	 
+    var counter_size = 0;
+	function nativePluginResultHandler (result) 
+	{
+		
+		//alert("success upload: \r\n"+result );
+		$('#loadTry').popup("close");
+		custom_alert('User data uploaded successfully','Registration');
+	    location.href = 'settings.html';
+	}
+
+	function nativePluginErrorHandler (error) 
+	{
+		//alert("ERROR: \r\n"+error );
+		$('#loadTry').popup("close");
+	}	 
+	
+    // Called when a photo is successfully retrieved
+    //
+     function onPhotoURISuccess(imageURI) {
+      // Uncomment to view the image file URI
+      // console.log(imageURI);
+      // alert(imageURI);
+      // Get image handle
+      //
+      //var smallImage = document.getElementById('smallImage');
+
+      // Unhide image elements
+      //
+      //smallImage.style.display = 'block';
+
+      // Show the captured photo
+      // The inline CSS rules are used to resize the image
+      //
+      //smallImage.src = imageURI;
+      //uploadFile(imageURI);
+      //alert(imageURI);
+    if( device.platform == "Android")
+
+    {
+    	createFileEntry(imageURI);
+    }
+     if( device.platform == "iOS")
+
+    {
+        var smallImage = document.getElementById('smallImage');
+       
+        smallImage.src = imageURI;
+    	var  imageData =imageURI;
+        imagearray[0] = imageData;
+        track_flag=1;
+    }
+    }
+    function createFileEntry(imageURI) {
+        window.resolveLocalFileSystemURI(imageURI, copyPhoto, fail);    
+    }
+
+    function copyPhoto(fileEntry) {
+    	
+    	 var ds = new Date();
+    var sec = ds.getSeconds();
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSys) { 
+            fileSys.root.getDirectory("photos", {create: true, exclusive: false}, function(dir) { 
+                    fileEntry.copyTo(dir, "file"+sec+".jpg", onCopySuccess, fail); 
+                }, fail); 
+        }, fail); 
+    }
+
+    function onCopySuccess(entry) {
+   // alert(entry.fullPath);
+        document.getElementById("smallImage").src=entry.fullPath;
+        var  imageData = entry.fullPath;
+        imagearray[0] = imageData;
+        track_flag=1;
+    }
+
+    function fail(error) {
+    	//alert(error.code);
+    }
+    // A button will call this function
+    //
+    function capturePhoto() {
+        	
+
+      // Take picture using device camera and retrieve image as base64-encoded string
+      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
+        destinationType: destinationType.FILE_URI,
+        
+        saveToPhotoAlbum: true });
+
+      $( "#popupBasic" ).popup("close");
+      
+      
+    }
+
+   
+
+    // A button will call this function
+    //
+    function getPhoto(source) {
+      // Retrieve image file location from specified source
+      
+      navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50, 
+        destinationType: destinationType.FILE_URI,
+        sourceType: source });
+
+      $( "#popupBasic" ).popup("close");
+    }
+
+    // Called if something bad happens.
+    //
+    function onFail(message) {
+      //alert('Failed because: ' + message);
+      custom_alert('Failed because: ' + message,'Registration');
+    }
+
+    function isnumber(e)
+ {
+	 var key = e.keyCode ? e.keyCode : e.which;
+	
+if ((key>64 && key< 91)|| (key>96 && key<123)) {
+return true;
+}
+else
+	{
+	
+	return false;
+	}
+ }
+ function ischar(e)
+ {
+	 var key = e.keyCode ? e.keyCode : e.which;
+	
+if ((key>47 && key< 58)) {
+return true;
+}
+else
+	{
+	
+	return false;
+	}
+ }
+ 
+  function isspec(e)
+ {
+	 var key = e.keyCode ? e.keyCode : e.which;
+	
+if ((key>64 && key< 91)|| (key>96 && key<123) || (key>47 && key< 58)) {
+return true;
+}
+else
+	{
+	
+	return false;
+	}
+ }
+
+	</script>
+
+
+
+
+	
+	
+<script type="text/javascript">
+	 
+	document.addEventListener("deviceready", onDevReady, false);
+
+	//initDatabase();
+
+function onDevReady() { 
+	initDatabase();
+
+    document.addEventListener("backbutton", backKeyDown, true);
+
+    pictureSource = navigator.camera.PictureSourceType;
+
+    destinationType = navigator.camera.DestinationType;  
+    window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+    window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, gotFS, fail);
+  	loaddata();
+	track_flag = "";
+    //loadDefaultImage();
+
+    
+
+
+
+    
+}
+function fail() 
+{
+    console.log("failed to get filesystem");
+}
+
+var path;
+var path_arr;
+/*function gotFS(fileSystem) {
+    console.log("got filesystem");
+    
+    // save the file system for later access
+   
+    window.rootFS = fileSystem.root;
+    path  = fileSystem.root.fullPath;
+   	path_arr  = path.split('///');
+   	path_arr ='/'+path_arr[1]; 
+    console.log(path_arr);
+
+   
+}*/
+function gotFS(fileSystem) {
+
+    console.log("got filesystem");
+
+    
+
+    // save the file system for later access
+
+    
+
+    window.rootFS = fileSystem.root;
+
+    path  = fileSystem.root.fullPath;
+
+    
+
+    
+
+    if( device.platform == "Android")
+
+    {
+
+		path_arr  = path.split('///');
+
+	    path_arr ='/'+path_arr[1];
+
+		console.log(path_arr);
+
+    }
+
+    if( device.platform == "iOS")
+
+    {
+
+        path_arr = path.split('/');
+
+        var path_len = path_arr.length;
+
+        
+
+        path_arr[path_len - 1] = 'Library/Caches';
+
+        path_arr = path_arr.join('/');
+
+    }
+
+}
+var returnSuccess = new Array();
+function loaddata()
+{
+	$('#loadTry').popup("open");
+	$("#loadTry").popup({dismissible:false});
+	
+	var userid = localStorage.getItem("userid");
+	var conn = checkConnection();
+
+
+	
+	if(conn=='true')
+	{
+
+
+	$.ajax({
+	    url: 'http://buyzenga.com:7003/BPL/rest/CouponRESTProxy/retrieveCustomer',
+	    type: 'POST',
+	   	datatype : 'application/xml',
+	    data:userid ,
+	    contentType: 'application/xml',
+	   
+	    success: function (result) {
+	    	console.log("result:");
+                console.log(result);
+	    	var userName = $(result).find("userName").text();
+	    	document.getElementById('fname').value = $(result).find("firstName").text();
+	    	document.getElementById('lname').value = $(result).find("lastName").text();
+	    	document.getElementById('phone').value =$(result).find("phoneNumber").text();
+	    	
+	    	var location = $(result).find("location");
+	    	
+            document.getElementById('streetno').value = $(location).find("streetNumber").text();
+	    	document.getElementById('streetname').value = $(location).find("streetName").text();
+	    	document.getElementById('city').value = $(location).find("city").text();
+	    	document.getElementById('state').value = $(location).find("state").text();
+	    	document.getElementById('country').value = $(location).find("country").text();
+	    	document.getElementById('zipcode').value = $(location).find("zipCode").text();
+	    	
+	    	var credential = $(result).find("credential");
+	    	document.getElementById('Email').value = $(credential).find("email").text();
+	    	document.getElementById('username').value = $(credential).find("userName").text();
+	    	
+           
+			 returnSuccess[0] = $(result).find("avitar_url").text();
+      
+			
+			var imgarray  = $(result).find("avitar_url").text().split('/');
+			
+			var imglen = imgarray.length;
+		    imgname = imgarray[imglen - 1];
+          
+			returnSuccess[1] = imgname;
+                        console.log("imgae name");
+                        console.log(imgarray);
+			$('#loadTry').popup("close");
+			//callNativePlugin_download( returnSuccess );
+	    },
+	    error: function (jqXHR, tranStatus, errorThrown) {
+	    	
+	    	 custom_alert('There was an error connecting to the service.Please try again','Login');
+			$('#loadTry').popup("close");
+	    }
+	});
+	}
+	else
+	{
+	//alert('You are currently offline');
+	custom_alert('You are currently offline','Login');
+	$('#loadTry').popup("close");
+	}
+	
+}
+ function callNativePlugin_download( returnSuccess ) 
+{
+ 
+    DownloadImageprofile.callNativeFunction( nativePluginResultHandler_download, nativePluginErrorHandler_download, returnSuccess );
+    
+}
+
+var counter_size = 0;
+var countimage=0;
+function nativePluginResultHandler_download (result) 
+{
+	
+    setTimeout(function(){callimage()},2000);
+    
+ 
+}
+
+function nativePluginErrorHandler_download (error) 
+{
+	
+    custom_alert('Profile image could not be downloaded','Profile');
+    callimage();
+	
+
+}
+
+function callimage()
+{
+    var imgcam = new Image();
+    var dscam = new Date();
+    var seccam = dscam.getSeconds();
+    //document.getElementById("smallImage").src=path_arr+"/"+returnSuccess[1]+"?"+sec;
+    imgcam.src = path_arr+"/"+returnSuccess[1];
+    
+    if(!imgcam.complete)
+    {
+        
+        document.getElementById("smallImage").src='images/profile.png';
+    }
+    else
+    {
+        document.getElementById("smallImage").src=path_arr+"/"+returnSuccess[1]+"?"+seccam;
+    }
+    $('#loadTry').popup("close");
+    //alert(countimage);
+    countimage++;
+    if(countimage=='1')
+    {
+    setTimeout(function(){callimage()},2000);
+    
+    console.log('called'+countimage);
+    }
+	
+
+}
+
+function checkConnection() {
+    var networkState = navigator.connection.type;
+
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.NONE]     = 'No network connection';
+
+    
+    
+  if(states[Connection.NONE] != states[networkState] )
+{
+return 'true';
+}
+else
+{
+return 'false';
+}
+
+}
+function loadDefaultImage(){
+    
+    if(localStorage.getItem('userProfilePic') != ''){
+    	
+
+	    document.getElementById('smallImage').src = localStorage.getItem('userProfilePic');
+	} 
+}
+function backKeyDown() { 
+     // Call my back key code here.
+  location.href="settings.html";
+}
+var track_flag = "";
+function loadImage(){
+		
+		$( "#popupBasic" ).popup("open");	
+	}
+	
+	function edit_service()
+	{
+		
+		
+		if($("#fname").val()=="")
+		{
+			
+			custom_alert('Enter First Name','Profile');
+			return false;
+		}
+			
+		if($("#lname").val()=="")
+		{
+			
+			custom_alert('Enter Last Name','Profile');
+			return false;
+		}
+        if($("#phone").val()=="")
+        {
+            custom_alert('Enter phone number','Profile');
+            return false;
+        }
+		if($("#country").val()=="")
+		{
+			custom_alert('Enter Country','Profile');
+			return false;
+		}
+	
+		if($("#zipcode").val()=="")
+		{
+			custom_alert('Enter Zipcode','Profile');
+			return false;
+		}
+		
+		var userid = localStorage.getItem("userid");
+		var conn = checkConnection();
+		
+	
+		
+		if(conn=='true')
+		{
+			var avitar;
+			
+			$('#loadTry').popup("open");
+			$("#loadTry").popup({dismissible:false});
+			
+			
+			  if(track_flag==1)
+			   {
+			 // alert(imagearray[0]);
+		  var image_path = imagearray[0].split('///');
+		  var imagepath = '/'+image_path[1];
+				 returnSuccess[0] = imagepath;
+
+				
+
+				var imgarray  = image_path[1].split('/');
+				var imglen = imgarray.length;
+				var imgname = imgarray[imglen - 1];
+				var img = imgname.split('.');
+				img[0] = $("#username").val();
+				img = img.join('.');
+				returnSuccess[1] = img;
+				returnSuccess[2] = $("#username").val();
+				 
+				 avitar = 'images/avatar/'+returnSuccess[2]+'/'+returnSuccess[1];
+			   }
+               else
+               {
+                   var imgpath =   document.getElementById("smallImage").src;
+                 
+                   var imgarray  = imgpath.split('/');
+                   var imglen = imgarray.length;
+                   var imgname = imgarray[imglen - 1];
+                   var imagename = imgname.split('?');
+                
+                   var user = $("#username").val();
+                avitar = 'images/avatar/'+user+'/'+imagename[0];
+                
+               }
+              
+			  var txt='';
+			  
+			  txt +='<?xml version="1.0" encoding="UTF-8"?>';
+				  //txt +='<!--Sample XML file generated by XMLSpy v2012 (http://www.altova.com)-->';
+					  txt +='<customer:customer xsi:schemaLocation="http://schema.ayenda.com/smartBuy/customer customer.xsd" xmlns:ns2="http://schema.ayenda.com/smartBuy/credential" xmlns:customer="http://schema.ayenda.com/smartBuy/customer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+						  txt +='<customerID>'+userid+'</customerID>';
+							  txt +='<firstName>'+$("#fname").val()+'</firstName>';
+								  txt +='<lastName>'+$("#lname").val()+'</lastName>';
+									  txt +='<avitar_url>'+avitar+'</avitar_url>';
+										  txt +='<phoneNumber>'+$("#phone").val()+'</phoneNumber>';
+											  txt +='<customer:location>';
+												  txt +='<streetNumber>'+$("#streetno").val()+'</streetNumber>';
+													  txt +='<streetName>'+$("#streetname").val()+'</streetName>';
+														  txt +='<city>'+$("#city").val()+'</city>';
+															  txt +='<state>'+$("#state").val()+'</state>';
+																  txt +='<country>'+$("#country").val()+'</country>';
+																	  txt +='<zipCode>'+$("#zipcode").val()+'</zipCode>';
+																		  txt +='</customer:location>';
+																			  txt +='<ns2:credential>';
+																				txt +='<email>'+$("#Email").val()+'</email>';
+																					txt +='<userName>'+$("#username").val()+'</userName>';
+																						  txt +='<type>CUSTOMER</type>';
+																							  txt +='</ns2:credential>';
+																								  txt +='</customer:customer>';			  
+	 
+	 
+		
+																						  
+																						  
+		console.log(txt);
+
+		$.ajax({
+		    url: 'http://buyzenga.com:7003/BPL/rest/CouponRESTProxy/editCustomerProfile',
+		    type: 'POST',
+		   	datatype : 'application/xml',
+		    data:txt ,
+		    contentType: 'application/xml',
+		   
+		    success: function (result) {
+		    	
+             
+		    	
+		    	if(result==true)
+    			{
+               if(track_flag==1)
+			   {
+
+    			callNativePlugin( returnSuccess );
+               }
+               else
+               {
+               custom_alert('User data uploaded successfully','Profile');
+               $('#loadTry').popup("close");
+               location.href='settings.html';
+    			}
+               }
+    		else
+    			{
+    	 custom_alert('There was an error connecting to the service.Please try again','Profile');
+               $('#loadTry').popup("close");
+
+    			}
+		    },
+		    error: function (jqXHR, tranStatus, errorThrown) {
+		    		
+		    				    		if(jqXHR.responseText=='true')
+		    			{
+		    			
+               if(track_flag==1)
+			   {
+               console.log(returnSuccess );
+               callNativePlugin( returnSuccess );
+               }
+               else
+               {
+               custom_alert('User data uploaded successfully','Profile');
+                $('#loadTry').popup("close");
+               location.href='settings.html';
+               }
+		    			}
+		    		else
+		    			{
+		    	 custom_alert('There was an error connecting to the service.Please try again','Login');
+               $('#loadTry').popup("close");
+
+		    			}
+		      
+		    }
+		});
+		}
+		else
+		{
+		//alert('You are currently offline');
+		custom_alert('You are currently offline','Login');
+		}
+	}
+</script>
+</head>
+	<body>
+		<div data-role="page" data-theme="j">
+		<div id="loginHeader" data-role="header" data-position="fixed"  data-tap-toggle="false" class="headerheight" data-theme="h">
+			<a href="settings.html" rel="external" style="margin-top:-15px;" class="ui-btn-left"><div style="width:40px; height:44px;"><img class="imagesize" style="position:relative; top:17px;width:18px;height:18px;" src="images/arrow_left.png"/></div></a>	
+			<h1>Profile</h1>
+			<a href="" rel="external" style="margin-top:-15px;" class="ui-btn-right"><div style="width:40px; height:44px;"><img class="imagesize" style="position:relative; top:17px;width:18px;height:18px;" src="images/arrow_right.png"/></div></a>	
+			
+				</div>
+		<div data-role="content">
+			<div style="position: relative;
+
+padding-right:2px;
+float:right;">
+			<a href="password.html" rel="external"  class="fontchangeShopping" style="color:#007aff;min-width:68px;top:17px;font-size:14px"  data-inline="true">Change Password</a>
+			
+			</div>
+			<div id="loginDiv" class="divcolor ">
+			<div id="popupBasic" data-role="popup" data-overlay-theme="a" style="border-radius:0px; -webkit-border-radius:0px; padding: 10px 20px 20px 5px; vertical-align:middle; width: 250px;">
+
+		<!--<a href="#" data-icon="gear" data-corners="false" onclick="capturePhoto();">Take Photo</a>
+  		<hr/>
+  		<a href="#" data-icon="gear" data-corners="false" data-role="button" onclick="getPhoto(pictureSource.PHOTOLIBRARY);">Attach Photo</a>-->
+  		<a onclick="capturePhoto();">
+	  		<span style="color:#777777; line-height:25px;">
+	  			<img src="images/camera_icon.png" width="25px" height="25px" align="left" style="padding-right:5px;" />
+	  			Take Photo
+	  		</span>
+  		</a>
+  		<hr style="margin: 13px 0;" />
+  		<a onclick="getPhoto(navigator.camera.PictureSourceType.PHOTOLIBRARY);" >
+  			<span style="color:#777777; line-height:25px;">
+  			<img src="images/gallery_icon.png" width="25px" height="25px" align="left" style="padding-right:5px;" />
+  			Attach Photo
+  			</span>
+  		</a>
+
+  		
+	</div>
+			<p style="text-align:center;font-weight:normal;color:#898e91;font-size:14px"><a href="#"><img width="100px" height="100px" onclick="loadImage()" id="smallImage" src="images/profile.png"/></a><br>Upload Picture</p>
+			<label class="blacktext" style="padding-left:5px;" for="FName">First Name</label>
+				<input  style="border:none" type="text" name="fname" id="fname" value=""  onkeypress="return isnumber(evt)" style="font-size:14px;font-style:italic" placeholder="First Name">
+				<label class="blacktext" style="padding-left:5px;" for="LName">Last Name</label>
+				<input  style="border:none" type="text" name="lname" id="lname" value=""  onkeypress="return isnumber(evt)" style="font-size:14px;font-style:italic" placeholder="Last Name">
+				<label class="blacktext" style="padding-left:5px;" for="PhoneNo">Phone No</label>
+				<input  style="border:none" type="text" name="phone" id="phone" value="" maxlength="15" onkeypress="return ischar(evt)" style="font-size:14px;font-style:italic" placeholder="Phone No">
+				<label class="blacktext" style="padding-left:5px;" for="Email">Email</label>
+				<input  style="border:none" type="text" name="Email" id="Email" value="" style="font-size:14px;font-style:italic" placeholder="Enter Registered Email ID" readonly>
+				<label class="blacktext" style="padding-left:5px;" for="username">Username</label>
+				<input  style="border:none" type="text" name="username" id="username" value="" style="font-size:14px;font-style:italic" placeholder="Enter Username" readonly>
+				<label class="blacktext" style="padding-left:5px;" for="streetno">Street No.</label>
+				<input  style="border:none" type="text" name="streetno" id="streetno" value=""  onkeypress="return isspec(evt)" style="font-size:14px;font-style:italic" placeholder="Street Number">
+				<label class="blacktext" style="padding-left:5px;" for="streetname">Street Name</label>
+				<input  style="border:none" type="text" name="streetname" id="streetname" value="" onkeypress="return isspec(evt)" style="font-size:14px;font-style:italic" placeholder="Street Name">
+				<label class="blacktext" style="padding-left:5px;" for="city">City</label>
+				<input  style="border:none" type="text" name="city" id="city" value="" onkeypress="return isnumber(evt)" style="font-size:14px;font-style:italic" placeholder="City">
+				<label class="blacktext" style="padding-left:5px;" for="state">State</label>
+				<input  style="border:none" type="text" name="state" id="state" value="" onkeypress="return isnumber(evt)" style="font-size:14px;font-style:italic" placeholder="State">
+				<label class="blacktext" style="padding-left:5px;" for="country">Country</label>
+				<input  style="border:none" type="text" name="country" id="country" value="" onkeypress="return isspec(evt)" style="font-size:14px;font-style:italic" placeholder="Country">
+				<label class="blacktext" style="padding-left:5px;" for="zipcode">ZipCode</label>
+				<input  style="border:none" type="text" name="zipcode" id="zipcode" value="" onkeypress="return ischar(evt)" style="font-size:14px;font-style:italic" placeholder="ZipCode">
+				
+				<div class="clr"></div>
+				<br>
+				
+				<div  style="min-width:30px;float:left;width:40%;padding-left:5%">	
+					 <a href="#" rel="external" class="buttoncolor" style="padding-right:5px;" onclick="edit_service();" data-role="button" data-theme="i">Submit</a>
+				</div>
+				
+				<div style="min-width:30px;float:right;width:40%;padding-right:5%">
+					<a href="settings.html" rel="external" class="buttoncolor" data-role="button" data-theme="i">Cancel</a>
+				</div>
+				<div class="clr"></div>
+			</div>
+			
+			<div id="loadTry" data-role="popup" data-overlay-theme="a" class="ui-content">
+                     <img  src="images/ajax-loader.gif"/>
+			</div>
+		</div>
+		</div><!-- /page -->
+		</body>
+
+
+   
+ 	
+  </html>
