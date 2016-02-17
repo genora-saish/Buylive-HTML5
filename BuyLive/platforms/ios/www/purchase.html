@@ -37,6 +37,7 @@
 			order_details();
 			setuserdetails();
                         localStorage.setItem('deliverymethod','Delivery');
+                        
                        
 			
 	}
@@ -58,6 +59,7 @@
 			    $('#loginTitle').css({'margin-top':marginDiv});
 
 			}).trigger('resize');
+                        $('input[name=category]').val(1); 
 			
 		});
 		
@@ -367,7 +369,7 @@ margin-left: 0px;
 	        var returnSuccess  = new Array();
 function okies()
 {
-    edit_address();
+   // edit_address(); //commented for testing by saish
 	
     var finaltotal=localStorage.getItem('checkout_finaltotal1');
 	var cust_username = localStorage.getItem('cust_username');
@@ -587,50 +589,50 @@ function okies()
         {
          $("#initialtable").css("display","none");
          $("#initialtable1").css("display","block");
-        if(document.getElementById('Rname').innerText == "")
+        if(document.getElementById('Rname').value == "")
         {
             
             custom_alert('Enter the first name','PurchasePage');
             return false;
         }
         
-        if(document.getElementById('lname').innerText == "")
+        if(document.getElementById('lname').value == "")
         {
             
             custom_alert('Enter the last name','PurchasePage');
             return false;
         }
-        if(document.getElementById('LStreetNo').innerText == "")
+        if(document.getElementById('LStreetNo').value == "")
         {
             
             custom_alert('Enter the street number','PurchasePage');
             return false;
         }
-        if(document.getElementById('LStreetName').innerText == "")
+        if(document.getElementById('LStreetName').value == "")
         {
             
             custom_alert('Enter the street name','PurchasePage');
             return false;
         }
-        if(document.getElementById('LCity').innerText == "")
+        if(document.getElementById('LCity').value == "")
         {
             
             custom_alert('Enter the city','PurchasePage');
             return false;
         }
-        if(document.getElementById('state').innerText == "")
+        if(document.getElementById('state').value == "")
         {
             
             custom_alert('Select State','PurchasePage');
             return false;
         }
-        if(document.getElementById('LCountry').innerText == "")
+        if(document.getElementById('LCountry').value == "")
         {
             
             custom_alert('Select Country','PurchasePage');
             return false;
         }
-        if(document.getElementById('LZipCode').innerText == "")
+        if(document.getElementById('LZipCode').value == "")
         {
             
             custom_alert('Enter the zip code','PurchasePage');
@@ -648,7 +650,7 @@ function okies()
                 return false; 
             }
         }
-        if(document.getElementById('LPhone').innerText == "")
+        if(document.getElementById('LPhone').value == "")
         {
             
             custom_alert('Enter Phone Number','PurchasePage');
@@ -658,15 +660,15 @@ function okies()
      
      
 		var userid = localStorage.getItem("userid");
-		var ReceipientName=document.getElementById('Rname').innerText;
-		var ReceipientlastName=document.getElementById('lname').innerText;
-		var StoreStreetNo=document.getElementById('LStreetNo').innerText;
-                var StoreStreetName=document.getElementById('LStreetName').innerText;
-                var StoreCity=document.getElementById('LCity').innerText;
-                var StoreState=document.getElementById('state').innerText;
-                var StoreCountry=document.getElementById('LCountry').innerText;
-                var StoreZipCode=document.getElementById('LZipCode').innerText;
-		var phonenumber = localStorage.getItem('LPhone');
+		var ReceipientName=document.getElementById('Rname').value;
+		var ReceipientlastName=document.getElementById('lname').value;
+		var StoreStreetNo=document.getElementById('LStreetNo').value;
+                var StoreStreetName=document.getElementById('LStreetName').value;
+                var StoreCity=document.getElementById('LCity').value;
+                var StoreState=document.getElementById('state').value;
+                var StoreCountry=document.getElementById('LCountry').value;
+                var StoreZipCode=document.getElementById('LZipCode').value;
+		var phonenumber = document.getElementById('LPhone').value;
 		var email = localStorage.getItem("email");
 		var cust_username = localStorage.getItem("cust_username");
 		var avtarurl = localStorage.getItem("avtarurl");
@@ -712,7 +714,6 @@ function okies()
             
             
             console.log(txt);
-            
             $.ajax({
                    url: 'http://buyzenga.com:7003/BPL/rest/CouponRESTProxy/editCustomerProfile',
                    type: 'POST',
@@ -721,14 +722,15 @@ function okies()
                    contentType: 'application/xml',
                    
                    success: function (result) {
-                   
-                   return true;
+                   console.log("Success updating..");
+                    updateData();
                    
                    
                    },
                    error: function (jqXHR, tranStatus, errorThrown) {
                    
-                   
+                   console.log("error updating.."+" tranStatus:"+tranStatus+" errorThrown:"+errorThrown);
+                   updateData();
                    //custom_alert('address not updated','Profile');
                    }
                    });
@@ -736,9 +738,50 @@ function okies()
 		else
 		{
             //alert('You are currently offline');
-            custom_alert('You are currently offline','Login');
+                    custom_alert('You are currently offline','Login');
 		}
 	}
+        function updateData(){
+                        document.getElementById('EditOrSave').style.border='none';
+			document.getElementById('EditOrSave').innerHTML='<span class="ui-btn-inner"><span class="ui-btn-text"><img id="Edit" src="images/pencil.png" style="width:30px; height:30px;"/></span></span>';
+			
+			var StoreRName=document.getElementById('Rname').value;
+			var StoreLName=document.getElementById('lname').value;
+			var StoreStreetNo=document.getElementById('LStreetNo').value;
+			var StoreStreetName=document.getElementById('LStreetName').value;
+			var StoreCity=document.getElementById('LCity').value;
+			var StoreState=document.getElementById('state').value;
+			var StoreCountry=document.getElementById('LCountry').value;
+			var StoreZipCode=document.getElementById('LZipCode').value;
+                        var email = localStorage.getItem("email");
+                        var phone=document.getElementById('LPhone').value;
+                        console.log('StoreCountry:'+StoreCountry);
+			$( "#ReceipientNameEditable" ).replaceWith( "<tr id='OuterReceipientName'><td><label id='ReceipientName' class='blacktext' style='font-weight:normal'></label><label id='ReceipientlastName' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+			$( "#ReceipientlastNameEditable" ).replaceWith("<label></label>");
+			$( "#StreetNoEditable" ).replaceWith( " <tr id='OuterStreetNo'><td><label id='StreetNo' class='blacktext' style='font-weight:normal'>Lane 9</label><label class='blacktext'>,</label><label id='StreetName' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+			$( "#StreetNameEditable" ).replaceWith( "<tr id='OuterCity'><td><label id='City' class='blacktext' style='font-weight:normal'></label><label class='blacktext'>,</label><label id='State' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+            
+			$( "#CityEditable" ).replaceWith( "<tr id='OuterCountry'><td><label id='Country' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+			$( "#StateEditable" ).replaceWith( "<tr id='OuterZipCode'><td><label id='ZipCode' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+			$( "#CountryEditable" ).replaceWith( " <tr id='EmptyCountry'></tr>" );
+            
+			$( "#ZipCodeEditable" ).replaceWith( "<tr id='EmptyZip'></tr>" );
+                        
+                        $( "#EmailIdEditable" ).replaceWith( "<tr id='OuterEmail'><td class='fontTwelve'>Email</td><td><label id='EmailId' class='blacktext' style='font-weight:normal'>"+email+"</label></td></tr>" );
+                        
+                        $( "#PhoneEditable" ).replaceWith( "<tr id='OuterPhone'><td class='fontTwelve'>Phone</td><td><label id='PhoneNo' class='blacktext' style='font-weight:normal'></label></td></tr>" );
+                      
+			document.getElementById('ReceipientName').innerText=StoreRName;
+			document.getElementById('ReceipientlastName').innerText=StoreLName;
+			document.getElementById('StreetNo').innerText=StoreStreetNo;
+			document.getElementById('StreetName').innerText=StoreStreetName;
+			document.getElementById('City').innerText=StoreCity;
+			document.getElementById('State').innerText=StoreState;
+			document.getElementById('Country').innerText=StoreCountry;
+			document.getElementById('ZipCode').innerText=StoreZipCode;
+                        document.getElementById('EmailId').innerText=email;
+                        document.getElementById('PhoneNo').innerText=phone;
+        }
 			  
 
 function checkConnection() {
@@ -983,48 +1026,11 @@ return 'false';
         
 		else if(document.getElementById('Save')){
                     console.log("into Save");
-                    if(edit_address()){
-			document.getElementById('EditOrSave').style.border='none';
-			document.getElementById('EditOrSave').innerHTML='<span class="ui-btn-inner"><span class="ui-btn-text"><img id="Edit" src="images/pencil.png" style="width:30px; height:30px;"/></span></span>';
+                        edit_address();
+                        console.log("saved..");
 			
-			var StoreRName=document.getElementById('Rname').value;
-			var StoreLName=document.getElementById('lname').value;
-			var StoreStreetNo=document.getElementById('LStreetNo').value;
-			var StoreStreetName=document.getElementById('LStreetName').value;
-			var StoreCity=document.getElementById('LCity').value;
-			var StoreState=document.getElementById('state').value;
-			var StoreCountry=document.getElementById('LCountry').value;
-			var StoreZipCode=document.getElementById('LZipCode').value;
-                        var email = localStorage.getItem("email");
-                        var phone=document.getElementById('LPhone').value;
-                        console.log('StoreCountry:'+StoreCountry);
-			$( "#ReceipientNameEditable" ).replaceWith( "<tr id='OuterReceipientName'><td><label id='ReceipientName' class='blacktext' style='font-weight:normal'></label><label id='ReceipientlastName' class='blacktext' style='font-weight:normal'></label></td></tr>" );
-			$( "#ReceipientlastNameEditable" ).replaceWith("<label></label>");
-			$( "#StreetNoEditable" ).replaceWith( " <tr id='OuterStreetNo'><td><label id='StreetNo' class='blacktext' style='font-weight:normal'>Lane 9</label><label class='blacktext'>,</label><label id='StreetName' class='blacktext' style='font-weight:normal'></label></td></tr>" );
-			$( "#StreetNameEditable" ).replaceWith( "<tr id='OuterCity'><td><label id='City' class='blacktext' style='font-weight:normal'></label><label class='blacktext'>,</label><label id='State' class='blacktext' style='font-weight:normal'></label></td></tr>" );
-            
-			$( "#CityEditable" ).replaceWith( "<tr id='OuterCountry'><td><label id='Country' class='blacktext' style='font-weight:normal'></label></td></tr>" );
-			$( "#StateEditable" ).replaceWith( "<tr id='OuterZipCode'><td><label id='ZipCode' class='blacktext' style='font-weight:normal'></label></td></tr>" );
-			$( "#CountryEditable" ).replaceWith( " <tr id='EmptyCountry'></tr>" );
-            
-			$( "#ZipCodeEditable" ).replaceWith( "<tr id='EmptyZip'></tr>" );
-                        
-                        $( "#EmailIdEditable" ).replaceWith( "<tr id='OuterEmail'><td class='fontTwelve'>Email</td><td><label id='EmailId' class='blacktext' style='font-weight:normal'>"+email+"</label></td></tr>" );
-                        
-                      $( "#PhoneEditable" ).replaceWith( "<tr id='OuterPhone'><td class='fontTwelve'>Phone</td><td><label id='PhoneNo' class='blacktext' style='font-weight:normal'></label></td></tr>" );
-                      
-			document.getElementById('ReceipientName').innerText=StoreRName;
-			document.getElementById('ReceipientlastName').innerText=StoreLName;
-			document.getElementById('StreetNo').innerText=StoreStreetNo;
-			document.getElementById('StreetName').innerText=StoreStreetName;
-			document.getElementById('City').innerText=StoreCity;
-			document.getElementById('State').innerText=StoreState;
-			document.getElementById('Country').innerText=StoreCountry;
-			document.getElementById('ZipCode').innerText=StoreZipCode;
-                        document.getElementById('EmailId').innerText=email;
-                        document.getElementById('PhoneNo').innerText=phone;
                        // edit_address();
-                   }
+                   
 			
 		}
 		
